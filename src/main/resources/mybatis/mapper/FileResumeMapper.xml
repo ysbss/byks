@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.FileResumeMapper">
+    <resultMap id="fileResumeMap" type="com.wyw.pojo.FileResume">
+        <id column="FFILEID" property="fFileID"/>
+        <result column="FFILENAME" property="fFileName"/>
+        <result column="FFILESTOREPATH" property="fFileStorePath"/>
+        <result column="FFILESID" property="fFileSid"/>
+        <result column="FFILEPID" property="fFilePid"/>
+        <result column="FFILEFLAG" property="fFileFlag"/>
+    </resultMap>
+
+    <insert id="addFileResume" parameterType="FileResume" >
+        insert into ks.fileresume(FFILEID,FFILENAME,FFILESTOREPATH,FFILESID,FFILEPID)
+        values(#{fFileID},#{fFileName},#{fFileStorePath},#{fFileSid},#{fFilePid})
+    </insert>
+
+    <select id="fetchFileResumeByfId" parameterType="String" resultMap="fileResumeMap">
+        select FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID, FFILEFLAG
+        from ks.fileresume
+        where FFILEID=#{fFileID}
+    </select>
+
+    <select id="fetchFileResumesList" parameterType="map" resultMap="fileResumeMap">
+        select  FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID, FFILEFLAG
+        from ks.fileresume
+        where FFILEFLAG=0
+        <if test="fFileID != null and fFileID!= '' ">and FFILEID=#{fFileID}</if>
+        <if test="fFileName !=null and fFileName!= ''  ">and FFILENAME=#{fFileName}</if>
+        <if test="fFileStorePath != null and fFileStorePath != '' "> and FFILESTOREPATH=#{fFileStorePath}</if>
+        <if test="fFileSid != null and fFileSid != '' "> and FFILESID=#{fFileSid}</if>
+        <if test="fFilePid != null and fFilePid != '' "> and FFILEPID=#{fFilePid}</if>
+        <if test="fFileFlag != null and fFileFlag != '' "> and FFILEFLAG=#{fFileFlag}</if>
+    </select>
+
+    <update id="updateFileResume" parameterType="map">
+        update ks.fileresume
+        <set>
+            <if test="fFileName !=null and fFileName!= ''  "> FFILENAME=#{fFileName},</if>
+            <if test="fFileStorePath != null and fFileStorePath != '' ">  FFILESTOREPATH=#{fFileStorePath},</if>
+            <if test="fFileSid != null and fFileSid != '' ">  FFILESID=#{fFileSid},</if>
+            <if test="fFilePid != null and fFilePid != '' ">  FFILEPID=#{fFilePid},</if>
+            <if test="fFileFlag != null and fFileFlag != '' ">  FFILEFLAG=#{fFileFlag},</if>
+        </set>
+        <where>
+            <if test="fFileID != null and fFileID!= '' ">FFILEID=#{fFileID}</if>
+            <if test="fFileSid != null and fFileSid != '' "> and FFILESID=#{fFileSid}</if>
+            <if test="fFilePid != null and fFilePid != '' "> and FFILEPID=#{fFilePid}</if>
+        </where>
+    </update>
+
+
+
+</mapper>

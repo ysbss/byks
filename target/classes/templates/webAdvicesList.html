@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>帮帮网 — 精选事务</title>
+    <link th:href="@{/css/select2.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bft_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<div class="center_blank"></div>
+
+<!-- 内容开始 -->
+<div class="nr">
+    <!-- 搜索内容开始 -->
+        <div class="search" style="margin: auto">
+            <div class="search_blank" ></div>
+            <div class="search_c" style="width: 850px">
+                <a th:href="@{'/WebAdvice/fetchWebAdvicesList/'+${allWebAdvicesPageInfo.getNavigateFirstPage()}+'/0'}" th:text="'所有建议'"
+                   style="float: left; margin-top: 6px; margin-left: 27px; font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" ></a>
+                <a th:href="@{'/WebAdvice/fetchWebAdvicesList/'+${allWebAdvicesPageInfo.getNavigateFirstPage()}+'/10'}" th:text="'改进网站'"
+                   style="float: left; margin-top: 6px; margin-left: 136px; font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" ></a>
+                <a th:href="@{'/WebAdvice/fetchWebAdvicesList/'+${allWebAdvicesPageInfo.getNavigateFirstPage()}+'/20'}" th:text="'创意想法'"
+                   style="float: left; margin-top: 6px; margin-left:199px;  font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" ></a>
+                <a th:href="@{'/WebAdvice/fetchWebAdvicesList/'+${allWebAdvicesPageInfo.getNavigateFirstPage()}+'/30'}" th:text="'其它建议'"
+                   style="float: left; margin-top: 6px; margin-left:199px; font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" ></a>
+
+            </div>
+        </div>
+    <!-- 搜索内容结束 -->
+    <div class="bft_f" >
+        <div class="bft_f_1">
+            <ul>
+                <li>建议人所属</li>
+                <li>建议人姓名</li>
+                <li>建议类别</li>
+                <li>具体建议</li>
+                <li>操作</li>
+            </ul>
+        </div>
+        <div class="bft_f_2" th:each="allWebAdvice:${allWebAdvices}">
+            <ul th:switch="${allWebAdvice.getWaKind()}">
+                <li th:text="${allWebAdvice.getWaSource() eq '0'? '学生':'公司'}"></li>
+                <li th:text="${allWebAdvice.getWaSourceName()}"></li>
+                <li th:case="'10'" th:text="'改进网站'"></li>
+                <li th:case="'20'" th:text="'创意想法'"></li>
+                <li th:case="'30'" th:text="'其他建议'"></li>
+                <li th:text="${allWebAdvice.getWaAdvice()}"></li>
+                <li><div>
+                    <a  th:href="@{'/WebAdvice/deleteWebAdvice/'+${allWebAdvicesPageInfo.pageNum}+'/'+${allWebAdvice.getWaId()}}" onclick="alert('删除成功')" style="float: left;margin-left: 50px" th:text="'删除'"></a>
+                </div></li>
+
+            </ul>
+        </div>
+        <div class="bft_f_3">
+            <ul>
+                <li>第<span th:text="${allWebAdvicesPageInfo.pageNum}"></span>页</li>
+                <li><a th:href="@{'/WebAdvice/fetchWebAdvicesList/'+'1/'+${session.curWaKind}}">首页</a></li>
+                <li><a th:href="@{'/WebAdvice/fetchWebAdvicesList/'
+                    +${allWebAdvicesPageInfo.hasPreviousPage  ? allWebAdvicesPageInfo.prePage:1}+'/'
+                    +${session.curWaKind}
+                     } ">上一页</a> </li>
+                <li><a th:href="@{'/WebAdvice/fetchWebAdvicesList/'
+                    +${allWebAdvicesPageInfo.hasNextPage  ? allWebAdvicesPageInfo.nextPage:allWebAdvicesPageInfo.pages }
+                    +'/'+${session.curWaKind}}">下一页</a> </li>
+                <li><a th:href="@{'/WebAdvice/fetchWebAdvicesList/'
+                    +${allWebAdvicesPageInfo.pages}+'/'
+                    +${session.curWaKind}
+                        }">尾页</a></li>
+                <li><span th:text="'总'+${allWebAdvicesPageInfo.pages}+'页' "></span></li>
+            </ul>
+        </div>
+    </div>
+    <!--   -->
+
+
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+
+    <!-- 底部内容开始 -->
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}">
+        <!-- 底部内容结束 -->
+    </div>
+    <div class="submenu"></div>
+    <!-- 搜索内容结束 -->
+
+</div>
+<!-- 帮众结束 -->
+
+
+
+
+
+</div>
+<!-- 内容结束 -->
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+    <iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+    <div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+    <div id="drag">
+        <h3 id="drag_h"></h3>
+        <div id="drag_con"></div><!-- drag_con end -->
+    </div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

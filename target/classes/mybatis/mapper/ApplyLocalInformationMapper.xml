@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.ApplyLocalInformationMapper">
+
+    <resultMap id="applyLocalInformationMap" type="com.wyw.pojo.ApplyLocalInformation">
+        <id column="ALIID" property="aliId"/>
+        <result column="ALILIID" property="aliLiId"/>
+        <result column="ALISID" property="aliSid"/>
+        <result column="ALICID" property="aliCid"/>
+        <result column="ALISUBMITTIME" property="aliSubmitTime"/>
+        <result column="ALISTATUS" property="aliStatus"/>
+    </resultMap>
+
+    <resultMap id="applyLocalInformationMapWithStuAndCom" type="java.util.Map">
+        <id column="ALIID" property="aliId"/>
+        <result column="ALILIID" property="aliLiId"/>
+        <result column="ALISID" property="aliSid"/>
+        <result column="ALICID" property="aliCid"/>
+        <result column="ALISUBMITTIME" property="aliSubmitTime"/>
+        <result column="ALISTATUS" property="aliStatus"/>
+        <result column="LID" property="lId" />
+        <result column="LNAME" property="lName"/>
+        <result column="LKIND" property="lKind"/>
+        <result column="LSPECIFICKIND" property="lSpecificKind"/>
+        <result column="LCID" property="lCid"/>
+        <result column="LPHONENUMBER" property="lPhoneNumber"/>
+        <result column="LCONTACTPERSON" property="lContactPerson"/>
+        <result column="LSUBMITTIME" property="lSubmitTime"/>
+        <result column="LSPCFLAG" property="lSpcFlag"/>
+        <result column="LBROWSENUM" property="lBrowseNum"/>
+        <result column="LAPPOINTMENTNUM" property="lAppointmentNum"/>
+        <result column="CNAME" property="cName"/>
+        <result column="CADDRESS" property="cAddress"/>
+        <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="SID" property="sId"/>
+        <result column="SNAME" property="sName"/>
+        <result column="SSCHOOL" property="sSchool"/>
+        <result column="SAGE" property="sAge"/>
+        <result column="SSEX" property="sSex"/>
+        <result column="SPASSWORD" property="sPassword"/>
+        <result column="SIDENTITYNUM" property="sIdentityNum"/>
+        <result column="SEDUCATIONALDEGREE" property="sEducationalDegree"/>
+        <result column="SPHONENUMBER" property="sPhoneNumber"/>
+        <result column="SMAJOR" property="sMajor"/>
+    </resultMap>
+
+
+    <select id="isRepeatedInfoInApplyLocalInformation" parameterType="map" resultMap="applyLocalInformationMap">
+        select ALIID, ALILIID, ALISID, ALICID, ALISUBMITTIME, ALISTATUS
+        from ks.applylocalinformation
+        where 1=1
+        <if test="aliLiId != null and aliLiId !='' ">
+            and ALILIID=#{aliLiId}
+        </if>
+        <if test="aliSid != null and aliSid !='' ">
+            and ALISID=#{aliSid}
+        </if>
+        <if test="aliCid != null and aliCid !='' ">
+            and ALICID=#{aliCid}
+        </if>
+    </select>
+
+    <insert id="addApplyLocalInformation" parameterType="ApplyLocalInformation">
+        insert into ks.applylocalinformation(ALIID, ALILIID, ALISID, ALICID, ALISUBMITTIME, ALISTATUS)
+        values (#{aliId},#{aliLiId},#{aliSid},#{aliCid},#{aliSubmitTime},#{aliStatus})
+    </insert>
+
+
+    <select id="fetchApplyLocalInformationBycIdAndSearchInfo" resultMap="applyLocalInformationMapWithStuAndCom" parameterType="map">
+        select ALIID, ALILIID, ALISID, ALICID, ALISUBMITTIME, ALISTATUS, CNAME, CADDRESS, CDESCRIPTION, LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG, LBROWSENUM, LAPPOINTMENTNUM, SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR
+        from ks.applylocalinformation as a,ks.company as c,ks.localinformation as li,ks.student as s
+        where a.ALICID=#{aliCid} and a.ALICID=c.CID and a.ALILIID=li.LID and a.ALICID=li.LCID and a.ALISID=s.SID and a.ALISTATUS=30
+        <if test="applyLocalInformationSearchInfo != null and applyLocalInformationSearchInfo !='' ">
+            and(
+            li.LNAME like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            li.LKIND like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            li.LSPECIFICKIND like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            s.SNAME like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            s.SAGE like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            s.SSEX like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            s.SSCHOOL like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            s.SEDUCATIONALDEGREE like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            s.SMAJOR like concat('%',#{applyLocalInformationSearchInfo},'%')
+            )
+        </if>
+    </select>
+
+    <select id="fetchApplyLocalInformationBysIdAndSearchInfo" resultMap="applyLocalInformationMapWithStuAndCom" parameterType="map">
+        select ALIID, ALILIID, ALISID, ALICID, ALISUBMITTIME, ALISTATUS, CNAME, CADDRESS, CDESCRIPTION, LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG, LBROWSENUM, LAPPOINTMENTNUM, SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR
+        from ks.applylocalinformation as a,ks.company as c,ks.localinformation as li,ks.student as s
+        where a.ALISID=#{aliSid} and a.ALICID=c.CID and a.ALILIID=li.LID and a.ALICID=li.LCID and a.ALISID=s.SID
+        <if test="applyLocalInformationSearchInfo != null and applyLocalInformationSearchInfo !='' ">
+            and(
+            c.CNAME like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            c.CADDRESS like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            li.LNAME like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            li.LKIND like concat('%',#{applyLocalInformationSearchInfo},'%') or
+            li.LSPECIFICKIND like concat('%',#{applyLocalInformationSearchInfo},'%')
+            )
+        </if>
+    </select>
+
+
+
+
+    <update id="comDealApplyLocalInformation" parameterType="map">
+        update ks.applylocalinformation
+        set ALISTATUS = #{aliStatus}
+        <where>
+            <if test="aliId != null and aliId != '' ">
+                ALIID =#{aliId}
+            </if>
+            <if test="aliLiId != null and aliLiId != '' ">
+             and ALILIID=#{aliLiId}
+            </if>
+            <if test="aliSid != null and aliSid != '' ">
+                and ALISID=#{aliSid}
+            </if>
+            <if test="aliCid != null and aliCid != '' ">
+                and ALICID=#{aliCid}
+            </if>
+        </where>
+    </update>
+
+
+</mapper>

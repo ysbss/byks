@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.CompanyMapper">
+    <resultMap id="companyMap" type="com.wyw.pojo.Company">
+        <id column="CID" property="cId"/>
+        <result column="CNAME" property="cName"/>
+        <result column="CADDRESS" property="cAddress"/>
+        <result column="CPASSWORD" property="cPassword"/>
+        <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="CREGISTERTIME" property="cRegisterTime"/>
+        <result column="CFLAG" property="cFlag"/>
+    </resultMap>
+
+    <select id="fetchCompanyByName" resultMap="companyMap" parameterType="String">
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.company
+        where CNAME=#{cName}
+    </select>
+    <select id="fetchCompanyByCid" resultMap="companyMap" parameterType="Long">
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.company
+        where CID=#{cId}
+    </select>
+
+    <select id="fetchCompaniesList" parameterType="map" resultMap="companyMap">
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CREGISTERTIME, CFLAG
+        from ks.company
+        <where>
+            CFLAG=0
+            <if test="cId != null and cId !='' ">and CID=#{cId}</if>
+            <if test="cName != null and cName !=''">and CNAME=#{cName}</if>
+            <if test="cAddress != null and cAddress !=''">and CADDRESS=#{cAddress}</if>
+            <if test="cPassword != null and cPassword !=''">and CPASSWORD=#{cPassword}</if>
+            <if test="cDescription != null and cDescription !=''">and CDESCRIPTION=#{cDescription}</if>
+            <if test="cRegisterTime != null and cRegisterTime !=''">and CREGISTERTIME=#{cRegisterTime}</if>
+            <if test="cFlag != null and cFlag !=''">and CFLAG=#{cFlag}</if>
+            <if test="comSearchInfo != null and comSearchInfo != '' ">
+                and (
+                CNAME like concat('%',#{comSearchInfo},'%') or
+                CADDRESS like concat('%',#{comSearchInfo},'%') or
+                CDESCRIPTION like concat('%',#{comSearchInfo},'%')
+                )
+            </if>
+        </where>
+    </select>
+
+    <insert id="addCompany" parameterType="map">
+        insert into ks.company(
+            CID
+        <if test="cName != null and cName !=''">,CNAME</if>
+        <if test="cAddress != null and cAddress !=''">, CADDRESS</if>
+        <if test="cPassword != null and cPassword !=''">, CPASSWORD</if>
+        <if test="cDescription != null and cDescription !=''">, CDESCRIPTION</if>
+        <if test="cRegisterTime != null and cRegisterTime !=''">, CREGISTERTIME</if>
+        <if test="cFlag != null and cFlag !=''">, CFLAG</if>
+        )
+        values (
+        #{cId}
+        <if test="cName != null and cName !=''">,#{cName}</if>
+        <if test="cAddress != null and cAddress !=''">,#{cAddress}</if>
+        <if test="cPassword != null and cPassword !=''">,#{cPassword}</if>
+        <if test="cDescription != null and cDescription !=''">,#{cDescription}</if>
+        <if test="cRegisterTime != null and cRegisterTime !=''">,#{cRegisterTime}</if>
+        <if test="cFlag != null and cFlag !=''">,#{cFlag}</if>
+        )
+    </insert>
+
+    <update id="updateCompany" parameterType="map">
+        update ks.company
+        <set>
+            <if test="cName != null and cName !=''"> CNAME=#{cName},</if>
+            <if test="cAddress != null and cAddress !=''"> CADDRESS=#{cAddress},</if>
+            <if test="cPassword != null and cPassword !=''"> CPASSWORD=#{cPassword},</if>
+            <if test="cDescription != null and cDescription !=''"> CDESCRIPTION=#{cDescription},</if>
+            <if test="cRegisterTime != null and cRegisterTime !=''"> CREGISTERTIME=#{cRegisterTime},</if>
+            <if test="cFlag != null and cFlag !=''"> CFLAG=#{cFlag},</if>
+        </set>
+        where CID=#{cId}
+    </update>
+
+</mapper>

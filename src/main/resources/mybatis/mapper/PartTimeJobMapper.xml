@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.PartTimeJobMapper">
+
+<resultMap id="partTimeJobInfoMap" type="java.util.Map">
+    <result column="PID" property="pId"/>
+    <result column="CID" property="cId"/>
+    <result column="PNAME" property="pName"/>
+    <result column="PPOSITION" property="pPosition"/>
+    <result column="PSALARY" property="pSalary"/>
+    <result column="PNUM" property="pNum"/>
+    <result column="PEDUCATIONALDEGREE" property="pEducationalDegree"/>
+    <result column="PEXPERIENCE" property="pExperience"/>
+    <result column="PAGE" property="pAge"/>
+    <result column="PPHONENUMBER" property="pPhoneNumber"/>
+    <result column="PCONTACTPERSON" property="pContactPerson"/>
+    <result column="PSUBMITTIME" property="pSubmitTime"/>
+    <result column="SPFLAG" property="spFlag"/>
+    <result column="PBROWSENUM" property="pBrowseNum"/>
+    <result column="PAPPOINTMENTNUM" property="pAppointmentNum"/>
+    <result column="CNAME" property="cName"/>
+    <result column="CADDRESS" property="cAddress"/>
+    <result column="CDESCRIPTION" property="cDescription"/>
+</resultMap>
+
+    <resultMap id="partTimeJobInfoWithImgMap" type="java.util.Map">
+        <result column="PID" property="pId"/>
+        <result column="CID" property="cId"/>
+        <result column="PNAME" property="pName"/>
+        <result column="PPOSITION" property="pPosition"/>
+        <result column="PSALARY" property="pSalary"/>
+        <result column="PNUM" property="pNum"/>
+        <result column="PEDUCATIONALDEGREE" property="pEducationalDegree"/>
+        <result column="PEXPERIENCE" property="pExperience"/>
+        <result column="PAGE" property="pAge"/>
+        <result column="PPHONENUMBER" property="pPhoneNumber"/>
+        <result column="PCONTACTPERSON" property="pContactPerson"/>
+        <result column="PSUBMITTIME" property="pSubmitTime"/>
+        <result column="SPFLAG" property="spFlag"/>
+        <result column="PBROWSENUM" property="pBrowseNum"/>
+        <result column="PAPPOINTMENTNUM" property="pAppointmentNum"/>
+        <result column="CNAME" property="cName"/>
+        <result column="CADDRESS" property="cAddress"/>
+        <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="FFILEID" property="fFileID"/>
+        <result column="FFILENAME" property="fFileName"/>
+        <result column="FFILESTOREPATH" property="fFileStorePath"/>
+        <result column="FFILECID" property="fFileCid"/>
+    </resultMap>
+
+
+    <select id="getAllPartTimeJobs" resultMap="partTimeJobInfoMap" parameterType="String">
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.parttimejob as p ,ks.company as c
+        where p.CID=c.CID and SPFLAG!=-1
+        <if test="partTimeJobSearchInfo != null and partTimeJobSearchInfo !='' ">
+         and (
+            p.PNAME like concat('%',#{partTimeJobSearchInfo},'%') or
+            p.PPOSITION like concat('%',#{partTimeJobSearchInfo},'%') or
+            p.PSALARY like concat('%',#{partTimeJobSearchInfo},'%') or
+            c.CNAME like concat('%',#{partTimeJobSearchInfo},'%') or
+            c.CADDRESS like concat('%',#{partTimeJobSearchInfo},'%')
+            )
+        </if>
+    </select>
+
+    <select id="getAllPartTimeJobsByCidAndSearchInfo" resultMap="partTimeJobInfoMap" parameterType="map">
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.parttimejob as p ,ks.company as c
+        where p.CID=c.CID and SPFLAG!=-1
+          <if test="cId!=null and cId!= '' ">
+              and p.CID=#{cId}
+          </if>
+          <if test="partTimeJobSearchInfo != null and partTimeJobSearchInfo !='' ">
+              and(
+              p.PNAME like concat('%',#{partTimeJobSearchInfo},'%') or
+              p.PPOSITION like concat('%',#{partTimeJobSearchInfo},'%')
+              )
+          </if>
+    </select>
+
+    <insert id="addPartTimeJob" parameterType="PartTimeJob">
+        insert into ks.parttimejob(PID, CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME)
+        values (#{pId},#{cId},#{pName},#{pPosition},#{pSalary},#{pNum},#{pEducationalDegree},#{pExperience},#{pAge},#{pPhoneNumber},#{pContactPerson},#{pSubmitTime})
+    </insert>
+
+
+
+
+    <update id="updatePartTimeJob" parameterType="PartTimeJob">
+        update ks.parttimejob
+        <set>
+            <if test="cId != null and cId != '' ">
+                CID=#{cId}
+            </if>
+            <if test="pName != null and pName != '' ">
+                PNAME=#{pName},
+            </if>
+            <if test="pPosition != null and pPosition != '' ">
+                PPOSITION=#{pPosition},
+            </if>
+            <if test="pSalary != null and pSalary != '' ">
+                PSALARY=#{pSalary},
+            </if>
+            <if test="pNum != null and pNum != '' ">
+                PNUM=#{pNum},
+            </if>
+            <if test="pEducationalDegree != null and pEducationalDegree != '' ">
+                PEDUCATIONALDEGREE=#{pEducationalDegree},
+            </if>
+            <if test="pExperience != null and pExperience != '' ">
+                PEXPERIENCE=#{pExperience},
+            </if>
+            <if test="pAge != null and pAge != '' ">
+                PAGE=#{pAge},
+            </if>
+            <if test="pPhoneNumber != null and pPhoneNumber != '' ">
+                PPHONENUMBER=#{pPhoneNumber},
+            </if>
+            <if test="pContactPerson != null and pContactPerson != '' ">
+                PCONTACTPERSON=#{pContactPerson},
+            </if>
+
+            <if test="pSubmitTime != null and pSubmitTime != '' ">
+                PSUBMITTIME=#{pSubmitTime},
+            </if>
+            <if test="spFlag!= null and spFlag!= ''">
+                SPFLAG=#{spFlag},
+            </if>
+            <if test="pBrowseNum !=null and pBrowseNum != '' ">
+                PBROWSENUM=#{pBrowseNum},
+            </if>
+            <if test="pAppointmentNum !=null and pAppointmentNum != '' ">
+                PAPPOINTMENTNUM=#{pAppointmentNum},
+            </if>
+
+
+
+        </set>
+
+        where PID=#{pId}
+    </update>
+
+    <delete id="deletePartTimeJobByPid" parameterType="Long">
+        delete
+        from ks.parttimejob
+        where PID=#{pId}
+    </delete>
+
+    <select id="getAllPageSpecialPartTimeJobs" resultMap="partTimeJobInfoMap" >
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.parttimejob as p ,ks.company as c
+        where p.CID=c.CID and p.SPFLAG=1
+        limit 8
+    </select>
+
+
+    <select id="fetchSpcPartTimeJobByPid" parameterType="Long" resultMap="partTimeJobInfoMap">
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.parttimejob as p ,ks.company as c
+        where p.CID=c.CID and p.PID=#{pId} and SPFLAG!=-1
+    </select>
+
+    <select id="fetchApproximatePartTimeJobByPid" parameterType="Long" resultMap="partTimeJobInfoMap">
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.parttimejob as p ,ks.company as c
+        where p.CID=c.CID and PID!=#{pId} and SPFLAG!=-1 and p.CID=(
+            select CID from ks.parttimejob
+            where PID=#{pId}
+            )
+        limit 9
+    </select>
+
+
+    <select id="fetchLatestSpcPartTimeJob" resultMap="partTimeJobInfoMap">
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        from ks.parttimejob as p, ks.company as c
+        where p.CID=c.CID and p.SPFLAG=1
+        order by p.PSUBMITTIME desc
+        limit 2
+    </select>
+
+
+    <select id="fetchImgParTimeJobs" resultMap="partTimeJobInfoWithImgMap">
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, c.CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, FFILEID, FFILENAME, FFILESTOREPATH, FFILECID
+        from ks.parttimejob as p, ks.company as c, ks.filecompany as fc
+        where p.CID=c.CID and p.SPFLAG=1 and c.CID=fc.FFILECID
+        limit 4
+    </select>
+
+
+</mapper>

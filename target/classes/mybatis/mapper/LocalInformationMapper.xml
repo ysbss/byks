@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.LocalInformationMapper">
+    <resultMap id="localInformationMap" type="java.util.Map">
+        <id column="LID" property="lId" />
+        <result column="LNAME" property="lName"/>
+        <result column="LKIND" property="lKind"/>
+        <result column="LSPECIFICKIND" property="lSpecificKind"/>
+        <result column="LCID" property="lCid"/>
+        <result column="LPHONENUMBER" property="lPhoneNumber"/>
+        <result column="LCONTACTPERSON" property="lContactPerson"/>
+        <result column="LSUBMITTIME" property="lSubmitTime"/>
+        <result column="LSPCFLAG" property="lSpcFlag"/>
+        <result column="LBROWSENUM" property="lBrowseNum"/>
+        <result column="LAPPOINTMENTNUM" property="lAppointmentNum"/>
+        <result column="CNAME" property="cName"/>
+        <result column="CADDRESS" property="cAddress"/>
+        <result column="CDESCRIPTION" property="cDescription"/>
+    </resultMap>
+
+    <resultMap id="localInformationKindMap" type="java.util.Map">
+        <result column="LKIND" property="lKind"/>
+        <result column="LSPECIFICKIND" property="lSpecificKind"/>
+    </resultMap>
+
+<select id="fetchLocalInformationKinds" resultType="Integer" >
+    select   LKIND
+    from ks.localinformation
+    group by LKIND
+</select>
+
+    <select id="fetchLocalInformationSpecificKinds" resultMap="localInformationKindMap">
+     select distinct  LKIND, LSPECIFICKIND
+     from ks.localinformation
+     order by LKIND
+    </select>
+
+    <select id="fetchLocalInformationKindBySpecificKind" resultType="Integer" parameterType="String">
+        select  LKIND
+        from ks.localinformation
+        where LSPECIFICKIND=#{lSpecificKind}
+        order by LKIND
+    </select>
+
+    <select id="fetchAllLocalInformation" resultMap="localInformationMap" parameterType="map">
+        select  LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG, LBROWSENUM, LAPPOINTMENTNUM, CNAME,CADDRESS,CDESCRIPTION
+        from ks.localinformation as l, ks.company as c
+        where l.LCID=c.CID and LSPCFLAG!=-1
+          <if test="localInformationSearchInfo != null and localInformationSearchInfo != '' ">
+              and(
+                  l.LNAME like concat('%',#{localInformationSearchInfo},'%') or
+                  l.LKIND like concat('%',#{localInformationSearchInfo},'%') or
+                  l.LSPECIFICKIND like concat('%',#{localInformationSearchInfo},'%')
+              )
+          </if>
+        <if test="lCid !=null and lCid != '' ">
+            and l.LCID=#{lCid}
+        </if>
+        <if test="lKind != null and lKind!= 0 ">
+            and l.LKIND=#{lKind}
+        </if>
+        <if test="lSpecificKind != null and lSpecificKind!= '' ">
+            and l.LSPECIFICKIND=#{lSpecificKind}
+        </if>
+    </select>
+
+    <insert id="addLocalInformation" parameterType="LocalInformation">
+        insert into ks.localinformation(LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME)
+        values (#{lId},#{lName},#{lKind},#{lSpecificKind},#{lCid},#{lPhoneNumber},#{lContactPerson},#{lSubmitTime})
+    </insert>
+
+    <update id="updateLocalInformation" parameterType="LocalInformation">
+        update ks.localinformation
+        <set>
+            <if test="lName != null and lName != '' ">
+                LNAME=#{lName},
+            </if>
+            <if test="lKind != null and lKind != '' ">
+                LKIND=#{lKind},
+            </if>
+            <if test="lSpecificKind != null and lSpecificKind != '' ">
+                LSPECIFICKIND=#{lSpecificKind},
+            </if>
+            <if test="lCid != null and lCid != '' ">
+                LCID=#{lCid}
+            </if>
+            <if test="lPhoneNumber != null and lPhoneNumber != '' ">
+                LPHONENUMBER=#{lPhoneNumber},
+            </if>
+            <if test="lContactPerson != null and lContactPerson != '' ">
+                LCONTACTPERSON=#{lContactPerson},
+            </if>
+            <if test="lSubmitTime != null and lSubmitTime != '' ">
+                LSUBMITTIME=#{lSubmitTime},
+            </if>
+            <if test="lSpcFlag != null and lSpcFlag != '' ">
+                LSPCFLAG=#{lSpcFlag},
+            </if>
+            <if test="lBrowseNum != null and lBrowseNum != '' ">
+                LBROWSENUM=#{lBrowseNum},
+            </if>
+            <if test="lAppointmentNum != null and lAppointmentNum != '' ">
+                LAPPOINTMENTNUM=#{lAppointmentNum},
+            </if>
+        </set>
+        where LID=#{lId}
+    </update>
+
+
+    <select id="fetchHomePageLocalInformation" resultMap="localInformationMap">
+        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        from ks.localinformation as l,ks.company as c
+        where l.LSPCFLAG=1 and  l.LCID=c.CID
+        limit 11
+    </select>
+    
+    <select id="fetchLocalInformationBylId" resultMap="localInformationMap" parameterType="Long">
+        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        from ks.localinformation as l, ks.company as c
+        where l.LID=#{lId} and l.LCID=c.CID and LSPCFLAG!=-1
+    </select>
+
+    <select id="fetchApproximateLocalInformationBylKindAndLid" resultMap="localInformationMap" parameterType="map">
+        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        from ks.localinformation as l, ks.company as c
+        where l.LKIND=#{lKind} and l.LCID=c.CID and l.LID!=#{lId} and LSPCFLAG!=-1
+        limit 9
+    </select>
+
+
+    <update id="updateLocalInformationBrowsePersonByLid" parameterType="Long">
+        update ks.localinformation
+        set LBROWSENUM = LBROWSENUM + 1
+        where LID=#{lId} and LSPCFLAG!=-1
+    </update>
+
+    <update id="updateLocalInformationAppointmentByLid" parameterType="Long">
+        update ks.localinformation
+        set LAPPOINTMENTNUM = LAPPOINTMENTNUM + 1
+        where LID=#{lId} and LSPCFLAG!=-1
+    </update>
+    
+
+
+</mapper>

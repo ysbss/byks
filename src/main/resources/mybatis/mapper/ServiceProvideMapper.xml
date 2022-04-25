@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.ServiceProvideMapper">
+<resultMap id="serviceProvideMap" type="java.util.Map">
+    <id column="SPID" property="spId"/>
+    <result column="SPNAME" property="spName"/>
+    <result column="SPKIND" property="spKind"/>
+    <result column="SPSPECIFICKIND" property="spSpecificKind"/>
+    <result column="SPCID" property="spCid"/>
+    <result column="SPEXPENSE" property="spExpense"/>
+    <result column="SPPHONENUMBER" property="spPhoneNumber"/>
+    <result column="SPCONTACTPERSON" property="spContactPerson"/>
+    <result column="SPSUBMITTIME" property="spSubmitTime"/>
+    <result column="SPSPCFLAG" property="spSpcFlag"/>
+    <result column="SPBROWSENUM" property="spBrowseNum"/>
+    <result column="SPAPPOINTMENTNUM" property="spAppointmentNum"/>
+    <result column="CNAME" property="cName"/>
+    <result column="CADDRESS" property="cAddress"/>
+    <result column="CDESCRIPTION" property="cDescription"/>
+</resultMap>
+
+    <resultMap id="serviceProvideKindMap" type="java.util.Map">
+        <result column="SPKIND" property="spKind"/>
+        <result column="SPSPECIFICKIND" property="spSpecificKind"/>
+    </resultMap>
+
+    <select id="fetchServiceProvideKinds" resultType="Integer">
+        select SPKIND
+        from ks.serviceprovide
+        group by SPKIND
+    </select>
+
+    <select id="fetchServiceProvideSpecificKinds" resultMap="serviceProvideKindMap">
+        select distinct   SPKIND, SPSPECIFICKIND
+        from ks.serviceprovide
+        order by SPKIND
+    </select>
+
+    
+    <select id="fetchAllServiceProvides" parameterType="map" resultMap="serviceProvideMap">
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        from ks.serviceprovide as s,ks.company as c
+        where s.SPCID=c.CID and SPSPCFLAG!=-1
+    <if test="serviceProvideSearchInfo != null and serviceProvideSearchInfo != '' ">
+        and(
+            s.SPNAME like concat('%',#{serviceProvideSearchInfo},'%') or
+            s.SPKIND like concat('%',#{serviceProvideSearchInfo},'%') or
+      s.SPSPECIFICKIND like concat('%',#{serviceProvideSearchInfo},'%')
+
+        )
+    </if>
+        <if test="spCid !=null and spCid != '' ">
+            and s.SPCID=#{spCid}
+        </if>
+        <if test="spSpecificKind !=null and spSpecificKind !='' ">
+            and s.SPSPECIFICKIND=#{spSpecificKind}
+        </if>
+    <if test=" spKind != 0 and spKind != null  ">
+          and s.SPKIND=#{spKind}
+    </if>
+
+    </select>
+    
+    <insert id="addServiceProvide" parameterType="ServiceProvide">
+        insert into ks.serviceprovide(SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME)
+        values (#{spId},#{spName},#{spKind},#{spSpecificKind},#{spCid},#{spExpense},#{spPhoneNumber},#{spContactPerson},#{spSubmitTime})
+    </insert>
+    
+    <update id="updateServiceProvide" parameterType="ServiceProvide">
+        update ks.serviceprovide
+        <set>
+            <if test="spName != null and spName != '' ">
+                SPNAME=#{spName},
+            </if>
+            <if test="spKind != null and spKind != '' ">
+                SPKIND=#{spKind},
+            </if>
+            <if test="spSpecificKind != null and spSpecificKind != '' ">
+                SPSPECIFICKIND=#{spSpecificKind},
+            </if>
+            <if test="spCid != null and spCid != '' ">
+                SPCID=#{spCid},
+            </if>
+            <if test="spExpense != null and spExpense != '' ">
+                SPEXPENSE=#{spExpense},
+            </if>
+            <if test="spPhoneNumber != null and spPhoneNumber != '' ">
+                SPPHONENUMBER=#{spPhoneNumber},
+            </if>
+            <if test="spContactPerson != null and spContactPerson != '' ">
+                SPCONTACTPERSON=#{spContactPerson},
+            </if>
+            <if test="spSubmitTime != null and spSubmitTime != '' ">
+                SPSUBMITTIME=#{spSubmitTime},
+            </if>
+            <if test="spSpcFlag != null and spSpcFlag != '' ">
+                SPSPCFLAG=#{spSpcFlag},
+            </if>
+            <if test="spBrowseNum != null and spBrowseNum != '' ">
+                SPBROWSENUM=#{spBrowseNum},
+            </if>
+            <if test="spAppointmentNum != null and spAppointmentNum != '' ">
+                SPAPPOINTMENTNUM=#{spAppointmentNum},
+            </if>
+        </set>
+        where SPID=#{spId}
+    </update>
+    
+    
+    
+    <select id="fetchHomePageServiceProvides" resultMap="serviceProvideMap">
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        from ks.serviceprovide as s,ks.company as c
+        where s.SPSPCFLAG=1 and s.SPCID=c.CID
+        limit 11
+    </select>
+
+
+    <select id="fetchServiceProvideBySpId" resultMap="serviceProvideMap" parameterType="Long">
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        from ks.serviceprovide as s,ks.company as c
+        where SPID=#{spId} and s.SPCID=c.CID and SPSPCFLAG!=-1
+    </select>
+
+    <select id="fetchApproximateServiceProvidesBySpKindAndSpId" parameterType="map" resultMap="serviceProvideMap">
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG, SPBROWSENUM, SPAPPOINTMENTNUM, CNAME, CADDRESS, CDESCRIPTION
+        from ks.serviceprovide as s,ks.company as c
+        where s.SPKIND=#{spKind} and s.SPCID=c.CID and s.SPID!=#{spId} and SPSPCFLAG!=-1
+        limit 9
+    </select>
+
+
+    <update id="updateServiceProvideBrowsePersonBySpId" parameterType="Long">
+        update ks.serviceprovide
+        set SPBROWSENUM = SPBROWSENUM + 1
+        where SPID=#{spId} and SPSPCFLAG!=-1
+    </update>
+
+    <update id="updateServiceProvideAppointmentBySpId" parameterType="Long">
+        update ks.serviceprovide
+        set SPAPPOINTMENTNUM = SPAPPOINTMENTNUM + 1
+        where SPID=#{spId} and SPSPCFLAG!=-1
+    </update>
+
+
+    
+</mapper>

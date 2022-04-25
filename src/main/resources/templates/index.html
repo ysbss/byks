@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>帮帮网 — 首页</title>
+<link th:href="@{/css/select2.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"  />
+<script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+<script type="text/javascript" th:src="@{/js/js.js}"></script>
+<script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+</head>
+
+<body class="bs_bg" >
+<!-- top内容开始 -->
+
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<!-- 公告和介绍开始  -->
+<div th:replace="~{commons/common::context}"></div>
+<!-- 公告和介绍结束  -->
+<!-- 内容开始 -->
+<div class="nr">
+    <div th:replace="~{commons/common::left-latestPos}"></div>
+    
+    <div class="bang">
+    	<!-- 标签切换开始 -->
+        <div class="itab">
+        	<dl class="slideBox">
+        		<dt>
+        			<span style="width:162px">学生进帮</span>
+        			<span style="width:162px; border-left:1px solid #fff; border-right:1px solid #fff;">公司进帮</span>
+                    <span style="width:162px">管理员</span>
+        		</dt>
+                <dt style="width:100%; height:2px; float:left"></dt>
+                <dd>
+                	<div class="zhuce">
+                        <div class="zhuce_name">
+                            <!--                        	<div class="zhuce_balnk"></div>-->
+                            <!--                            <div class="zhuce_nam"><input type="text" /></div>-->
+                            <!--                            <div class="zhuce_balnk1"></div>-->
+                            <!--                            <div class="zhuce_nam"><input type="text" /></div>-->
+                            <!--                            <div class="zhuce_balnk2"></div>-->
+                            <!--                            <div class="zhuce_nam1"><input type="text" /></div>-->
+                            <!--                            <div class="zhuce_nam2">-->
+                            <form th:action="@{/student/studentLogin}" method="post" class="form-horizontal">
+                                <p th:if="${sMsg}" th:text="${sMsg}" style="color: red"></p>
+                                <p th:if="${lMsg}" th:text="${lMsg}" style="color: red"></p>
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">用户名</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" min="0" name="sId" placeholder="用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">密码</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" name="sPassword" placeholder="Password">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-default">登录</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!--                                <a href=""><img src="images/yzm.jpg" /></a>-->
+                            <!--                            </div>-->
+                            <div class="zhuce_nam">&nbsp;&nbsp;&nbsp;&nbsp;<a th:href="@{/toStuForgetPassword}">忘记密码？</a>&nbsp;<a th:href="@{/toStuAdd}">注册用户</a></div>
+                        </div>
+                    </div>
+                </dd>
+                <dd>
+                	<div class="zhuce1">
+                    	<div class="zhuce_name">
+<!--                        	<div class="zhuce_balnk"></div>-->
+<!--                            <div class="zhuce_nam"><input type="text" /></div>-->
+<!--                            <div class="zhuce_balnk1"></div>-->
+<!--                            <div class="zhuce_nam"><input type="text" /></div>-->
+<!--                            <div class="zhuce_balnk2"></div>-->
+<!--                            <div class="zhuce_nam1"><input type="text" /></div>-->
+<!--                            <div class="zhuce_nam2">-->
+                                <form th:action="@{/company/companyLogin}" method="post" class="form-horizontal">
+                                    <p th:if="${cMsg}" th:text="${cMsg}" style="color: red"></p>
+                                    <p th:if="${lMsg}" th:text="${lMsg}" style="color: red"></p>
+                                    <div class="form-group">
+                                        <label  class="col-sm-2 control-label">公司名</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" name="cName" placeholder="用户名">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-2 control-label">密码</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" name="cPassword" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-default">登录</button>
+                                        </div>
+                                    </div>
+                                </form>
+<!--                                <a href=""><img src="images/yzm.jpg" /></a>-->
+<!--                            </div>-->
+                            <div class="zhuce_nam">&nbsp;&nbsp;&nbsp;&nbsp;<a th:href="@{/toComForgetPassword}">忘记密码？</a>&nbsp;<a th:href="@{/toComAdd}">注册用户</a></div>
+                        </div>
+                    </div>
+                </dd>
+                <dd>
+                	<div class="zhuce">
+                        <div class="zhuce_name">
+                            <!--                        	<div class="zhuce_balnk"></div>-->
+                            <!--                            <div class="zhuce_nam"><input type="text" /></div>-->
+                            <!--                            <div class="zhuce_balnk1"></div>-->
+                            <!--                            <div class="zhuce_nam"><input type="text" /></div>-->
+                            <!--                            <div class="zhuce_balnk2"></div>-->
+                            <!--                            <div class="zhuce_nam1"><input type="text" /></div>-->
+                            <!--                            <div class="zhuce_nam2">-->
+                            <form th:action="@{/admin/adminLogin}" method="post" class="form-horizontal">
+                                <p th:if="${amsg}" th:text="${amsg}" style="color: red"></p>
+                                <p th:if="${lMsg}" th:text="${lMsg}" style="color: red"></p>
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">用户名</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" name="aId" placeholder="用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">密码</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" name="aPassword" placeholder="Password">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-default">登录</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!--                                <a href=""><img src="images/yzm.jpg" /></a>-->
+                            <!--                            </div>-->
+                            <div class="zhuce_nam">&nbsp;&nbsp;&nbsp;&nbsp;<a th:href="@{/toAdminForgetPassword}">忘记密码？</a>&nbsp;<a th:href="@{/toAdminAdd}">注册用户</a></div>
+                        </div>
+                    </div>
+                </dd>
+             </dl>
+        </div>
+        <!-- 标签切换结束 -->
+    </div>
+
+    <div th:replace="~{commons/common::right-latestPos}"></div>
+    
+    <!-- 搜索内容开始 -->
+<!--    <div class="blank"></div>-->
+<!--    <div class="search">-->
+<!--    	<div class="search_blank"></div>-->
+<!--        <div class="search_c">-->
+<!--&lt;!&ndash;            <input class="s_t" style="width:690px; height:17px; padding:8px; font-size:14px; color:#b8b8b8; letter-spacing:2px;" &ndash;&gt;-->
+<!--&lt;!&ndash;                   onblur="if(this.value==''){this.value='请输入职位名、公司名等关键词';this.style.color='#aaa'}" &ndash;&gt;-->
+<!--&lt;!&ndash;                   onfocus="if(this.value=='请输入职位名、公司名等关键词'){this.value='';this.style.color='#666'}" &ndash;&gt;-->
+<!--&lt;!&ndash;                   value="请输入职位名、公司名等关键词" name="keyword" />&ndash;&gt;-->
+<!--            <input class="s_t" style="width:690px; height:17px; padding:8px; font-size:14px; color:#b8b8b8; letter-spacing:2px;"-->
+<!--                   placeholder="请输入职位名、公司名等关键词" th:name="pagePartTimeJobSearchInfo"/>-->
+<!--        </div>-->
+<!--        <div class="search_btn"><a href="bft_more.html"><img th:src="@{/images/search_btn.jpg}" /></a></div>-->
+<!--    </div>-->
+    <!-- 搜索内容结束 -->
+    
+    <!-- 帮众开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::serviceProvide}"></div>
+	<!-- 帮众结束 -->
+    
+    <!-- 帮交开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::localInformation}"></div>
+
+
+	<!-- 帮交结束 -->
+    
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+    
+    <!-- 底部内容开始 -->
+	<div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}"></div>
+	<!-- 底部内容结束 -->
+    
+</div>
+<!-- 内容结束 -->
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+<iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+<div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+	<div id="drag">
+		<h3 id="drag_h"></h3>
+		<div id="drag_con"></div><!-- drag_con end -->
+	</div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+
+
+</body>
+</html>

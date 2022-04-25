@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.FileCompanyMapper">
+    <resultMap id="fileCompanyMap" type="com.wyw.pojo.FileCompany">
+        <id column="FFILEID" property="fFileID"/>
+        <result column="FFILENAME" property="fFileName"/>
+        <result column="FFILESTOREPATH" property="fFileStorePath"/>
+        <result column="FFILECID" property="fFileCid"/>
+    </resultMap>
+
+    <insert id="addFileCompany" parameterType="FileCompany">
+        insert into ks.filecompany (FFILEID, FFILENAME, FFILESTOREPATH, FFILECID)
+        values (#{fFileID},#{fFileName},#{fFileStorePath},#{fFileCid})
+    </insert>
+
+    <update id="updateFileCompany" parameterType="FileCompany">
+        update ks.filecompany
+        set FFILENAME = #{fFileName},FFILESTOREPATH=#{fFileStorePath}
+        where FFILECID=#{fFileCid} and FFILEID=#{fFileID}
+    </update>
+
+    <select id="isRepeatedCompanyFile" parameterType="Long" resultMap="fileCompanyMap">
+        select FFILEID, FFILENAME, FFILESTOREPATH, FFILECID
+        from ks.filecompany
+        where FFILECID=#{fFileCid}
+    </select>
+
+
+</mapper>

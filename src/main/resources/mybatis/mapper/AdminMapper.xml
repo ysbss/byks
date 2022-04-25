@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.AdminMapper">
+
+    <resultMap id="adminMap" type="com.wyw.pojo.Admin">
+        <id column="AID" property="aId"/>
+        <result column="ANAME" property="aName"/>
+        <result column="APASSWORD" property="aPassword"/>
+    </resultMap>
+
+
+
+    <select id="fetchAdminById" resultMap="adminMap" parameterType="Long">
+        select AID, ANAME, APASSWORD
+        from ks.admin
+        where AID=#{aId}
+    </select>
+
+
+</mapper>

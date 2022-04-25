@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>帮帮网 — 事务信息</title>
+    <link th:href="@{/css/select2.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bft_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<div class="center_blank"></div>
+<!-- 内容开始 -->
+<div class="nr">
+    <div class="zzy_nr">
+        <div class="zzy"><p style="float: left" th:text="${session.get('currentName')}"></p><p style="float: right;margin-right: 50px;margin-top: 20px"><a th:href="@{'/toComAddLocalInformationList/'+${session.currentComId}}" th:text="'返回'"
+                                                                                                                                                           style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" ></a></p></div>
+        <div class="zzy_1">
+            <ul>
+                <!--                <li><span th:text="'☆'+${partTimeJob.get('pSubmitTime')}+'更新'"></span>&nbsp;</li>-->
+                <!--                <li><span th:text="'¤'+${partTimeJob.get('pBrowseNum')}+'人浏览'"></span>&nbsp;</li>-->
+                <!--                <li><span th:text="'♥'+${partTimeJob.get('pAppointmentNum')}+'人预约'"></span>&nbsp;</li>-->
+            </ul>
+        </div>
+        <div class="zzy_2">
+            <form th:action="@{'/LocalInformation/comUpdateLocalInformation/'+${localInformation.get('lId')}}">
+                <table width="600" border="1" cellspacing="1" cellpadding="1">
+                    <tr>
+                        <td><span>信息名：</span> <input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="lName" th:placeholder="${localInformation.get('lName')}" th:value="${localInformation.get('lName')}"/> </td>
+                    </tr>
+                    <!--                    <tr>-->
+                    <!--                        <td><span>信息种类：</span>-->
+                    <!--                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind">-->
+                    <!--                            <option value="1">吃</option>-->
+                    <!--                            <option value="2">穿</option>-->
+                    <!--                            <option value="3">住</option>-->
+                    <!--                            <option value="4">行</option>-->
+                    <!--                            <option value="5">娱乐</option>-->
+                    <!--                        </select></td>-->
+                    <!--                    </tr>-->
+                    <tr>
+                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lSpecificKind">
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '火锅类' }" value="'火锅类'">火锅类</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '特色菜系' }" value="'特色菜系'">特色菜系</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '大众美食' }" value="'大众美食'">大众美食</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '风味小吃' }" value="'风味小吃'">风味小吃</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '春装' }" value="'春装'">春装</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '夏装' }" value="'夏装'">夏装</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '秋装' }" value="'秋装'">秋装</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '冬装' }" value="'冬装'">冬装</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '房屋' }" value="'房屋'">房屋</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '建材' }" value="'建材'">建材</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '骑行' }" value="'骑行'">骑行</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '自驾' }" value="'自驾'">自驾</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '景点' }" value="'景点'">景点</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '嗨歌' }" value="'嗨歌'">嗨歌</option>
+                            <option th:selected="${localInformation.get('lSpecificKind') eq '运动' }" value="'运动'">运动</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td><span>信息联系方式：</span><input min="10000000000" max="99999999999" style="border-radius: 18px;border: 1px solid gray;outline: none" type="number" name="lPhoneNumber" th:placeholder="${localInformation.get('lPhoneNumber')}" th:value="${localInformation.get('lPhoneNumber')}"/></td>
+                    </tr>
+                    <tr>
+                        <td><span>信息联系人：</span><input  style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="lContactPerson" th:placeholder="${localInformation.get('lContactPerson')}" th:value="${localInformation.get('lContactPerson')}"/></td>
+                    </tr>
+                    <tr>
+                        <td><button style="color: #0066cc;width: 100px;height: 50px;border-radius: 18px" type="submit">提交</button></td>
+
+                    </tr>
+                </table>
+
+            </form>
+        </div>
+        <p th:if="${updateMsg}" th:text="${updateMsg}" style="color: red"></p>
+
+        <!--        <div style="background: #0066cc;margin-left: 25%;margin-right: 25%; width: 35%; height: 0%; float: right"><p>123</p></div>-->
+        <div class="zzy_4">
+            <ul>
+                <a  href="javascript:void (0)" onclick="document.getElementById('uploadResume').style.display='block';alert('请上传简历')" th:if="${session.loginKind} eq '学生' "><li>申请职位</li></a>
+            </ul>
+        </div>
+        <div class="zzy_5">
+            <!--            <p style="width:680px; height:40px; line-height:40px; background:#f7f7f7; color:#333; font-weight:bold; text-indent:10px; border:1px solid #ddd; margin-bottom:30px; "><span>公司介绍</span></p>-->
+            <!--            <p th:text="${partTimeJob.get('cDescription')}"></p>-->
+            <!--                    <p>由上海地纬(集团)股份有限公司重磅打造的复合型商业旗舰广场『地纬生活广场』项目招商现场火爆，客户持币踊跃待租，万众期待的财富核爆席卷川沙。地纬生活广场集餐饮、娱乐、休闲、购物、健身、早教六大高端功能于一体。铂金地标、便捷交通、一流配置、超强人气，全力构筑浦东高端商业带，引领川沙商业区崛起。　　</p>-->
+            <!--					<p>立足“两镇一区”打造中环新地标川沙新城正进行高打造中环新地标川沙新城正进行高起点规划建设打造中环新打造中环新地标川沙新城正进行高起点规划建设地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设起点规划建设，强势崛起的上海国际空港城以及迪士尼落户川沙为区域积攒强大人气。拔地而起的『地纬生活广场』，地处川沙镇、唐镇、张江科技园区“两镇一区”合围处，川沙新城核心位置。“两镇一区”拥有深厚的商业沉淀与积累，目前区域常住人口60多万，区域内有3000多家核心企业和近万家注册企业，政府部门、研发机构以及各类高校300多所。由于川沙改革发展的滞后，周边一直没有成型的商业配套，地纬生活广场的启航，填补了川沙集中性商业的空白，迎合了更多有实力人群对生活、居住品质的更高追求。显著的区位优势使『地纬生活广场』在东部商业区熠熠生辉，打造中环新地标。</p>-->
+        </div>
+
+    </div>
+    <!-- 内容结束 -->
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+
+    <!-- 底部内容开始 -->
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}">
+        <!-- 底部内容结束 -->
+    </div>
+    <div class="submenu"></div>
+    <!-- 搜索内容结束 -->
+
+</div>
+<!-- 帮众结束 -->
+
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+    <iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+    <div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+    <div id="drag">
+        <h3 id="drag_h"></h3>
+        <div id="drag_con"></div><!-- drag_con end -->
+    </div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

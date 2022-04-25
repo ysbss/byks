@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.StudentMapper">
+    <resultMap id="studentMap" type="com.wyw.pojo.Student">
+        <id column="SID" property="sId"/>
+        <result column="SNAME" property="sName"/>
+        <result column="SSCHOOL" property="sSchool"/>
+        <result column="SAGE" property="sAge"/>
+        <result column="SSEX" property="sSex"/>
+        <result column="SPASSWORD" property="sPassword"/>
+        <result column="SIDENTITYNUM" property="sIdentityNum"/>
+        <result column="SEDUCATIONALDEGREE" property="sEducationalDegree"/>
+        <result column="SPHONENUMBER" property="sPhoneNumber"/>
+        <result column="SMAJOR" property="sMajor"/>
+        <result column="SREGISTERTIME" property="sRegisterTime"/>
+        <result column="SFLAG" property="sFlag"/>
+    </resultMap>
+
+    <resultMap id="studentWithFile" type="java.util.Map">
+        <id column="SID" property="sId"/>
+        <result column="SNAME" property="sName"/>
+        <result column="SSCHOOL" property="sSchool"/>
+        <result column="SAGE" property="sAge"/>
+        <result column="SSEX" property="sSex"/>
+        <result column="SPASSWORD" property="sPassword"/>
+        <result column="SIDENTITYNUM" property="sIdentityNum"/>
+        <result column="SEDUCATIONALDEGREE" property="sEducationalDegree"/>
+        <result column="SPHONENUMBER" property="sPhoneNumber"/>
+        <result column="SMAJOR" property="sMajor"/>
+        <result column="FFILEID" property="fFileID"/>
+        <result column="FFILENAME" property="fFileName"/>
+        <result column="FFILESTOREPATH" property="fFileStorePath"/>
+        <result column="FFILESID" property="fFileSid"/>
+        <result column="FFILEPID" property="fFilePid"/>
+    </resultMap>
+<select id="fetchStuById" parameterType="Long" resultMap="studentMap">
+    select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG
+    from ks.student
+    where SID=#{sId} and SFLAG=0
+</select>
+
+    <select id="fetchStusList" parameterType="map" resultMap="studentMap">
+        select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG
+        from ks.student
+        <where>
+            SFLAG=0
+            <if test="sId != null and sId!= '' ">and SID=#{sId}</if>
+            <if test="sName !=null and sName!= ''  ">and SNAME=#{sName}</if>
+            <if test="sSchool != null and sSchool != '' "> and SSCHOOL=#{sSchool}</if>
+            <if test="sAge != null and sAge != '' "> and SAGE=#{sAge}</if>
+            <if test="sSex != null and sSex != '' "> and SSEX=#{sSex}</if>
+            <if test="sPassword != null and sPassword != '' "> and SPASSWORD=#{sPassword}</if>
+            <if test="sIdentityNum != null and sIdentityNum != '' ">and SIDENTITYNUM=#{sIdentityNum}</if>
+            <if test="sEducationalDegree != null and sEducationalDegree != '' ">and SEDUCATIONALDEGREE=#{sEducationalDegree}</if>
+            <if test="sPhoneNumber != null and sPhoneNumber != '' ">and SPHONENUMBER=#{sPhoneNumber}</if>
+            <if test="sMajor != null and sMajor != '' ">and SMAJOR=#{sMajor}</if>
+            <if test="sRegisterTime != null and sRegisterTime != '' ">and SREGISTERTIME=#{sRegisterTime}</if>
+            <if test="sFlag != null and sFlag != '' ">and SFLAG=#{sFlag}</if>
+            <if test="stuSearchInfo != null and stuSearchInfo != '' ">
+            and (
+                SNAME like concat('%',#{stuSearchInfo},'%') or
+                SSCHOOL like concat('%',#{stuSearchInfo},'%') or
+                SAGE like concat('%',#{stuSearchInfo},'%') or
+                SSEX like concat('%',#{stuSearchInfo},'%') or
+                SEDUCATIONALDEGREE like concat('%',#{stuSearchInfo},'%') or
+                SMAJOR like concat('%',#{stuSearchInfo},'%')
+                )
+            </if>
+        </where>
+    </select>
+
+    <insert id="addStudent" parameterType="map">
+        insert into ks.student(
+        SID
+        <if test="sName !=null and sName!= ''  "> ,SNAME</if>
+        <if test="sSchool != null and sSchool != '' ">  ,SSCHOOL</if>
+        <if test="sAge != null and sAge != '' ">  ,SAGE</if>
+        <if test="sSex != null and sSex != '' ">  ,SSEX</if>
+        <if test="sPassword != null and sPassword != '' ">  ,SPASSWORD</if>
+        <if test="sIdentityNum != null and sIdentityNum != '' "> ,SIDENTITYNUM</if>
+        <if test="sEducationalDegree != null and sEducationalDegree != '' "> ,SEDUCATIONALDEGREE</if>
+        <if test="sPhoneNumber != null and sPhoneNumber != '' "> ,SPHONENUMBER</if>
+        <if test="sMajor != null and sMajor != '' "> ,SMAJOR</if>
+        <if test="sRegisterTime != null and sRegisterTime != '' "> ,SREGISTERTIME</if>
+        <if test="sFlag != null and sFlag != '' "> ,SFLAG</if>
+
+        )
+        values (
+        #{sId}
+        <if test="sName !=null and sName!= ''  ">, #{sName}</if>
+        <if test="sSchool != null and sSchool != '' "> , #{sSchool}</if>
+        <if test="sAge != null and sAge != '' "> , #{sAge}</if>
+        <if test="sSex != null and sSex != '' "> , #{sSex}</if>
+        <if test="sPassword != null and sPassword != '' "> , #{sPassword}</if>
+        <if test="sIdentityNum != null and sIdentityNum != '' ">, #{sIdentityNum}</if>
+        <if test="sEducationalDegree != null and sEducationalDegree != '' ">, #{sEducationalDegree}</if>
+        <if test="sPhoneNumber != null and sPhoneNumber != '' ">, #{sPhoneNumber}</if>
+        <if test="sMajor != null and sMajor != '' ">, #{sMajor}</if>
+        <if test="sRegisterTime != null and sRegisterTime != '' ">, #{sRegisterTime}</if>
+        <if test="sFlag != null and sFlag != '' ">, #{sFlag}</if>
+        )
+    </insert>
+    
+    <update id="updateStudent" parameterType="map">
+        update ks.student
+        <set>
+            <if test="sName !=null and sName!= ''  "> SNAME=#{sName},</if>
+            <if test="sSchool != null and sSchool != '' ">  SSCHOOL=#{sSchool},</if>
+            <if test="sAge != null and sAge != '' ">  SAGE=#{sAge},</if>
+            <if test="sSex != null and sSex != '' ">  SSEX=#{sSex},</if>
+            <if test="sPassword != null and sPassword != '' ">  SPASSWORD=#{sPassword},</if>
+            <if test="sIdentityNum != null and sIdentityNum != '' "> SIDENTITYNUM=#{sIdentityNum},</if>
+            <if test="sEducationalDegree != null and sEducationalDegree != '' "> SEDUCATIONALDEGREE=#{sEducationalDegree},</if>
+            <if test="sPhoneNumber != null and sPhoneNumber != '' "> SPHONENUMBER=#{sPhoneNumber},</if>
+            <if test="sMajor != null and sMajor != '' "> SMAJOR=#{sMajor},</if>
+            <if test="sRegisterTime != null and sRegisterTime != '' "> SREGISTERTIME=#{sRegisterTime},</if>
+            <if test="sFlag != null and sFlag != '' "> SFLAG=#{sFlag},</if>
+        </set>
+        where SID=#{sId}
+    </update>
+
+
+<select id="fetchStuWithResumeById" parameterType="map" resultMap="studentWithFile">
+    select  SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID
+    from ks.student as s,ks.fileresume as fr
+    where s.SID=fr.FFILESID
+    <if test="sId != null and sId !='' ">
+        and s.SID=#{sId}
+    </if>
+       <if test="fFilePid != null and fFilePid !='' ">
+           and fr.FFILEPID=#{fFilePid}
+       </if>
+
+    group by SID
+</select>
+
+    <select id="fetchStuWithResumesList" parameterType="Long" resultMap="studentWithFile">
+        select  SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID
+        from ks.student as s,ks.fileresume as fr
+        where s.SID=fr.FFILESID and s.SID=#{sId}
+    </select>
+
+
+</mapper>

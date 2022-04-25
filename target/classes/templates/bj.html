@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>帮帮网 — 帮交</title>
+<link th:href="@{/css/select2.css}" rel="stylesheet"/>
+<link th:href="@{/css/style.css}" rel="stylesheet"  />
+<script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+<script type="text/javascript" th:src="@{/js/js.js}"></script>
+<script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bj_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<!-- 公告和介绍开始  -->
+<!--<div class="bfd_a">-->
+<!--	<div class="center_blank"></div>-->
+<!--	<div class="center_b">-->
+<!--    	<div class="bfd_a_2">-->
+<!--        	<div class="bft_b">-->
+<!--            	<div class="bft_b_1"><img src="images/pic_dt.jpg" /></div>-->
+<!--                <div class="bft_b_2">所在地 ：<span>灵宝市</span></div>-->
+<!--                <div class="bft_b_3">晴</div>-->
+<!--                <div class="bft_b_4"><span>12 ~ 21℃</span></div>-->
+<!--                <div class="bft_b_4"><span>3-4</span>级转微风</div>-->
+<!--            </div>-->
+<!--            <div class="bfd_a_1">-->
+<!--            	<img src="images/map.jpg" width="625" height="219" />-->
+<!--            </div>-->
+<!--    	</div>-->
+<!--        -->
+<!--        <div class="bfd_js">-->
+<!--            <div class="bfd_banner">-->
+<!--            	&lt;!&ndash;  banner图片开始 &ndash;&gt;-->
+<!--                <div class="main_visual_a">-->
+<!--                	<div class="flicking_con_a">-->
+<!--                		<a href="#">1</a>-->
+<!--                		<a href="#">2</a>-->
+<!--                		<a href="#">3</a>-->
+<!--                		<a href="#">4</a>	-->
+<!--                        <a href="#">5</a>-->
+<!--                	</div>-->
+<!--                	<div class="main_image_a">-->
+<!--                		<ul>-->
+<!--                			<li><a href="zzy.html"><span class="img_5"></span></a></li>-->
+<!--                			<li><a href="zzy.html"><span class="img_6"></span></a></li>-->
+<!--                			<li><a href="zzy.html"><span class="img_7"></span></a></li>-->
+<!--                			<li><a href="zzy.html"><span class="img_8"></span></a></li>-->
+<!--                            <li><a href="zzy.html"><span class="img_9"></span></a></li>-->
+<!--                		</ul>-->
+
+<!--                	</div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash;  banner图片结束 &ndash;&gt;-->
+<!--            </div>-->
+<!--         </div>-->
+<!-- -->
+<!--    </div>-->
+<!--</div>-->
+<!-- 公告和介绍结束  -->
+
+<!--  事务公告 -->
+<div class="bft_swgg">
+	<div class="center_gga">
+		<div class="center_gga_1">事务公告</div>
+		<!--    	<div class="more"><a href="bft_more.html">更多>></a></div>-->
+	</div>
+	<div class="bft_gg">
+		<ul>
+			<li th:each="homePageLocalInformatio:${homePageLocalInformation}"><a th:href="@{'/toLocalInformationPage/'+${homePageLocalInformatio.get('lId')}}"><span th:text="${#dates.format(homePageLocalInformatio.get('lSubmitTime'),'yyyy/MM/dd')}"></span>[[${homePageLocalInformatio.get("lName")}]]</a></li>
+		</ul>
+	</div>
+</div>
+<!--  事务公告结束 -->
+
+
+<!-- 内容开始 -->
+<div class="nr">
+    <!-- 帮交开始 -->
+    <div class="blank"></div>
+	<div class="bfs_search">
+		<div th:replace="~{commons/common::localInformation}"></div>
+        <!-- 搜索内容开始 -->
+			<form  th:action="@{'/LocalInformation/fetchLocalInformationList/'+
+                    ${ allLocalKindInformationPageInfo.pageNum }
+                    }">
+				<div class="search" style="margin: auto">
+					<div class="search_blank"></div>
+					<div class="search_c">
+						<input class="s_t" style="width:690px; height:17px; padding:8px; font-size:14px; color:#b8b8b8; letter-spacing:2px; "
+							   placeholder="请输入职位名、公司名等关键词" th:name="pageLocalInformationSearchInfo" /></div>
+					<div class="search_btn">
+						<button type="submit">
+							<img th:src="@{/images/search_btn.jpg}" /></button>
+					</div>
+				</div>
+			</form>
+		<!--   -->
+		<div class="bft_f">
+			<div class="bft_f_1" >
+				<ul>
+					<li>区域</li>
+					<li>内容</li>
+					<li>联系人</li>
+					<li>联系方式</li>
+					<li></li>
+				</ul>
+			</div>
+			<div class="bft_f_2" th:each="allLocalKindInformatio:${allLocalKindInformation}">
+				<ul>
+					<li><span th:text="${allLocalKindInformatio.get('cAddress')}"></span></li>
+					<li ><a th:href="@{'/toLocalInformationPage/'+${allLocalKindInformatio.get('lId')}}"  th:text="${allLocalKindInformatio.get('lName')}"></a></li>
+					<li th:text="${allLocalKindInformatio.get('lContactPerson')}"></li>
+					<li th:text="${allLocalKindInformatio.get('lPhoneNumber')}" ></li>
+					<li th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toLocalInformationPage/'+${allLocalKindInformatio.get('lId')}}"><img th:src="@{/images/shenqing.jpg}" /></a></li>
+				</ul>
+			</div>
+			<div class="bft_f_3">
+				<ul>
+					<li>第<span th:text="${allLocalKindInformationPageInfo.pageNum}"></span>页</li>
+					<li><a th:href="@{'/LocalInformation/fetchLocalInformationList/'+'1'+'?pageLocalInformationSearchInfo='+${session.curLocalInformationSearchInfo}+'&lKind='+${session.curLKind}+'&lSpecificKind='+${session.curLSpecificKind}  }">首页</a></li>
+					<li><a th:href="@{'/LocalInformation/fetchLocalInformationList/'+
+                    ${allLocalKindInformationPageInfo.hasPreviousPage  ? allLocalKindInformationPageInfo.prePage:1}
+                    +'?pageLocalInformationSearchInfo='+${session.curLocalInformationSearchInfo}
+                     +'&lKind='+${session.curLKind}+'&lSpecificKind='+${session.curLSpecificKind}
+                     } ">上一页</a> </li>
+
+					<li><a th:href="@{'/LocalInformation/fetchLocalInformationList/'+
+                    ${allLocalKindInformationPageInfo.hasNextPage  ? allLocalKindInformationPageInfo.nextPage:allLocalKindInformationPageInfo.pages }
+                    +'?pageLocalInformationSearchInfo='+${session.curLocalInformationSearchInfo}+'&lKind='+${session.curLKind}
+                    +'&lSpecificKind='+${session.curLSpecificKind} }">下一页</a> </li>
+
+					<li><a th:href="@{'/LocalInformation/fetchLocalInformationList/'+${allLocalKindInformationPageInfo.pages}
+                    +'?pageLocalInformationSearchInfo='+${session.curLocalInformationSearchInfo}+
+                    '&lKind='+${session.curLKind}
+                    +'&lSpecificKind='+${session.curLSpecificKind}    }">尾页</a></li>
+
+					<li><span th:text="'总'+${allLocalKindInformationPageInfo.pages}+'页' "></span></li>
+				</ul>
+			</div>
+		</div>
+		<!--   -->
+
+
+<!--    	<div class="bfs_search1">-->
+<!--    		<div class="bfs_search_blank"></div>-->
+<!--    		<ul id="accordion" class="accordion">-->
+<!--				<li>-->
+<!--               	  	<div class="bfs_search_a"><input class="s_t" style="width:643px; height:17px; padding:10px; font-size:14px; color:#b8b8b8; letter-spacing:2px;" onblur="if(this.value==''){this.value='请输入职位名、公司名等关键词';this.style.color='#aaa'}" onfocus="if(this.value=='请输入职位名 公司名等关键字'){this.value='';this.style.color='#666'}" value="请输入职位名 公司名等关键字" name="keyword" /></div>-->
+<!--					<A href="bft_more.html"><div class="linka"></div></A>-->
+<!--                    <div class="linkb"></div>-->
+<!--                    &lt;!&ndash; 展开 &ndash;&gt; -->
+<!--					<ul class="submenu">-->
+<!--                  		-->
+<!--        				<div class="bft_e">-->
+<!--                        	-->
+<!--                            <div class='diy_select_2'>-->
+<!--							<input type='hidden' name='' class='diy_select_input'/>-->
+<!--							<div class='diy_select_txt'>地区</div>-->
+<!--							<div class='diy_select_btn'></div>-->
+<!--								<ul class='diy_select_list'>-->
+<!--                                	<li>灵宝市</li>-->
+<!--									<li>陕县</li>-->
+<!--									<li>渑池县</li>-->
+<!--									<li>卢氏县</li>-->
+<!--									<li>义马市</li>-->
+<!--                                    <li>湖滨区</li>-->
+<!--								</ul>-->
+<!--							</div>-->
+<!--                            -->
+<!--                            <div class='diy_select'>-->
+<!--							<input type='hidden' name='' class='diy_select_input'/>-->
+<!--							<div class='diy_select_txt'>生活服务</div>-->
+<!--							<div class='diy_select_btn'></div>-->
+<!--								<ul class='diy_select_list'>-->
+<!--									<li>销售</li>-->
+<!--									<li>技工</li>-->
+<!--									<li>服务</li>-->
+<!--									<li>会计</li>-->
+<!--									<li>物业管理</li>-->
+<!--								</ul>-->
+<!--							</div>-->
+<!--                            -->
+<!--                            <div class='diy_select'>-->
+<!--							<input type='hidden' name='' class='diy_select_input'/>-->
+<!--							<div class='diy_select_txt'>时段</div>-->
+<!--							<div class='diy_select_btn'></div>-->
+<!--								<ul class='diy_select_list'>-->
+<!--									<li>电话销售</li>-->
+<!--									<li>餐厅经理</li>-->
+<!--									<li>钟点服务员</li>-->
+<!--								</ul>-->
+<!--							</div>-->
+<!--                            -->
+<!--                            <div class='diy_select'>-->
+<!--							<input type='hidden' name='' class='diy_select_input'/>-->
+<!--							<div class='diy_select_txt'>优惠信息</div>-->
+<!--							<div class='diy_select_btn'></div>-->
+<!--								<ul class='diy_select_list'>-->
+<!--									<li>10-30元/小时</li>-->
+<!--									<li>150元/天</li>-->
+<!--								</ul>-->
+<!--							</div>-->
+<!--                            -->
+<!--                            -->
+<!--                        </div>-->
+<!--					</ul>-->
+<!--                    &lt;!&ndash; 展开结束 &ndash;&gt; -->
+<!--				</li>-->
+<!--			</ul>-->
+<!--            -->
+<!--<script type="text/javascript">-->
+<!--function diy_select(){this.init.apply(this,arguments)};-->
+<!--diy_select.prototype={-->
+<!--	 init:function(opt)-->
+<!--	 {-->
+<!--		this.setOpts(opt);-->
+<!--		this.o=this.getByClass(this.opt.TTContainer,document,'div');//容器-->
+<!--		this.b=this.getByClass(this.opt.TTDiy_select_btn);//按钮-->
+<!--		this.t=this.getByClass(this.opt.TTDiy_select_txt);//显示-->
+<!--		this.l=this.getByClass(this.opt.TTDiv_select_list);//列表容器-->
+<!--		this.ipt=this.getByClass(this.opt.TTDiy_select_input);//列表容器-->
+<!--		this.lengths=this.o.length;-->
+<!--		this.showSelect();-->
+<!--	 },-->
+<!--	 addClass:function(o,s)//添加class-->
+<!--	 {-->
+<!--		o.className = o.className ? o.className+' '+s:s;-->
+<!--	 },-->
+<!--	 removeClass:function(o,st)//删除class-->
+<!--	 {-->
+<!--		var reg=new RegExp('\\b'+st+'\\b');-->
+<!--		o.className=o.className ? o.className.replace(reg,''):'';-->
+<!--	 },-->
+<!--	 addEvent:function(o,t,fn)//注册事件-->
+<!--	 {-->
+<!--		return o.addEventListener ? o.addEventListener(t,fn,false):o.attachEvent('on'+t,fn);-->
+<!--	 },-->
+<!--	 showSelect:function()//显示下拉框列表-->
+<!--	 {-->
+<!--		var This=this;-->
+<!--		var iNow=0;-->
+<!--		this.addEvent(document,'click',function(){-->
+<!--			 for(let i=0;i<This.lengths;i++)-->
+<!--			 {-->
+<!--				This.l[i].style.display='none';-->
+<!--			 }-->
+<!--		})-->
+<!--		for(var i=0;i<this.lengths;i++)-->
+<!--		{-->
+<!--			this.l[i].index=this.b[i].index=this.t[i].index=i;-->
+<!--			this.t[i].onclick=this.b[i].onclick=function(ev)  -->
+<!--			{-->
+<!--				var e=window.event || ev;-->
+<!--				var index=this.index;-->
+<!--				This.item=This.l[index].getElementsByTagName('li');-->
+
+<!--				This.l[index].style.display= This.l[index].style.display=='block' ? 'none' :'block';-->
+<!--				for(var j=0;j<This.lengths;j++)-->
+<!--				{-->
+<!--					if(j!=index)-->
+<!--					{-->
+<!--						This.l[j].style.display='none';-->
+<!--					}-->
+<!--				}-->
+<!--				This.addClick(This.item);-->
+<!--				e.stopPropagation ? e.stopPropagation() : (e.cancelBubble=true); //阻止冒泡-->
+<!--			}-->
+<!--		}-->
+<!--	 },-->
+<!--	 addClick:function(o)//点击回调函数-->
+<!--	 {-->
+
+<!--		if(o.length>0)-->
+<!--		{-->
+<!--			var This=this;-->
+<!--			for(var i=0;i<o.length;i++)-->
+<!--			{-->
+<!--				o[i].onmouseover=function()-->
+<!--				{-->
+<!--					This.addClass(this,This.opt.TTFcous);-->
+<!--				}-->
+<!--				o[i].onmouseout=function()-->
+<!--				{-->
+<!--					This.removeClass(this,This.opt.TTFcous);-->
+<!--				}-->
+<!--				o[i].onclick=function()-->
+<!--				{-->
+<!--					var index=this.parentNode.index;//获得列表-->
+<!--					This.t[index].innerHTML=This.ipt[index].value=this.innerHTML.replace(/^\s+/,'').replace(/\s+&/,'');-->
+<!--					This.l[index].style.display='none';-->
+<!--				}-->
+<!--			}-->
+<!--		}-->
+<!--	 },-->
+<!--	 getByClass:function(s,p,t)//使用class获取元素-->
+<!--	 {-->
+<!--		var reg=new RegExp('\\b'+s+'\\b');-->
+<!--		var aResult=[];-->
+<!--		var aElement=(p||document).getElementsByTagName(t || '*');-->
+
+<!--		for(var i=0;i<aElement.length;i++)-->
+<!--		{-->
+<!--			if(reg.test(aElement[i].className))-->
+<!--			{-->
+<!--				aResult.push(aElement[i])-->
+<!--			}-->
+<!--		}-->
+<!--		return aResult;-->
+<!--	 },-->
+
+<!--	 setOpts:function(opt) //以下参数可以不设置  //设置参数-->
+<!--	 { -->
+<!--		this.opt={-->
+<!--			 TTContainer:'diy_select',//控件的class-->
+<!--			 TTDiy_select_input:'diy_select_input',//用于提交表单的class-->
+<!--			 TTDiy_select_txt:'diy_select_txt',//diy_select用于显示当前选中内容的容器class-->
+<!--			 TTDiy_select_btn:'diy_select_btn',//diy_select的打开按钮-->
+<!--			 TTDiv_select_list:'diy_select_list',//要显示的下拉框内容列表class-->
+<!--			 TTFcous:'focus'//得到焦点时的class-->
+<!--		}-->
+<!--		for(var a in opt)  //赋值 ,请保持正确,没有准确判断的-->
+<!--		{-->
+<!--			this.opt[a]=opt[a] ? opt[a]:this.opt[a];-->
+<!--		}-->
+<!--	 }-->
+<!--}-->
+
+
+<!--var TTDiy_select=new diy_select({  //参数可选-->
+<!--	TTContainer:'diy_select',//控件的class-->
+<!--	TTDiy_select_input:'diy_select_input',//用于提交表单的class-->
+<!--	TTDiy_select_txt:'diy_select_txt',//diy_select用于显示当前选中内容的容器class-->
+<!--	TTDiy_select_btn:'diy_select_btn',//diy_select的打开按钮-->
+<!--	TTDiv_select_list:'diy_select_list',//要显示的下拉框内容列表class-->
+<!--	TTFcous:'focus'//得到焦点时的class-->
+<!--});//如同时使用多个时请保持各class一致.-->
+<!--</script>-->
+
+          <!--   -->
+          
+           
+
+          <!-- 友情链接开始 -->
+          <div class="blank"></div>
+			<div th:replace="~{commons/common::friendLink}">
+			</div>
+    <!-- 友情链接结束 -->
+    
+    <!-- 底部内容开始 -->
+	<div class="blank"></div>
+    <div class="blank"></div>
+	<div th:replace="~{commons/common::bottom}">
+		<!-- 底部内容结束 -->
+    	</div>
+        <div class="submenu"></div>
+    	<!-- 搜索内容结束 -->
+        
+    </div>
+	<!-- 帮众结束 -->
+    
+    
+   
+   
+    
+</div>
+<!-- 内容结束 -->
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+<iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+<div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+	<div id="drag">
+		<h3 id="drag_h"></h3>
+		<div id="drag_con"></div><!-- drag_con end -->
+	</div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

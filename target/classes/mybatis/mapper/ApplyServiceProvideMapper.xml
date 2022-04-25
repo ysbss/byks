@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.ApplyServiceProvideMapper">
+
+    <resultMap id="applyServiceProvideMap" type="com.wyw.pojo.ApplyServiceProvide">
+        <id column="ASPID" property="aspId"/>
+        <result column="ASPSPID" property="aspSpId"/>
+        <result column="ASPSID" property="aspSid"/>
+        <result column="ASPCID" property="aspCid"/>
+        <result column="ASPSUBMITTIME" property="aspSubmitTime"/>
+        <result column="ASPSTATUS" property="aspStatus"/>
+<!--        注意property不能有空格 eg:property=" aspStatus" 会报错org.apache.ibatis.reflection.ReflectionException: There is no setter for property named ' aspStatus' in 'class com.wyw.pojo.ApplyServiceProvide'-->
+    </resultMap>
+
+    <resultMap id="applyServiceProvideMapWithStuAndCom" type="java.util.Map">
+        <result column="ASPID" property="aspId"/>
+        <result column="ASPSPID" property="aspSpId"/>
+        <result column="ASPSID" property="aspSid"/>
+        <result column="ASPCID" property="aspCid"/>
+        <result column="ASPSUBMITTIME" property="aspSubmitTime"/>
+        <result column="ASPSTATUS" property="aspStatus"/>
+        <result column="SPID" property="spId"/>
+        <result column="SPNAME" property="spName"/>
+        <result column="SPKIND" property="spKind"/>
+        <result column="SPSPECIFICKIND" property="spSpecificKind"/>
+        <result column="SPCID" property="spCid"/>
+        <result column="SPEXPENSE" property="spExpense"/>
+        <result column="SPPHONENUMBER" property="spPhoneNumber"/>
+        <result column="SPCONTACTPERSON" property="spContactPerson"/>
+        <result column="SPSUBMITTIME" property="spSubmitTime"/>
+        <result column="SPSPCFLAG" property="spSpcFlag"/>
+        <result column="SPBROWSENUM" property="spBrowseNum"/>
+        <result column="SPAPPOINTMENTNUM" property="spAppointmentNum"/>
+        <result column="CNAME" property="cName"/>
+        <result column="CADDRESS" property="cAddress"/>
+        <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="SID" property="sId"/>
+        <result column="SNAME" property="sName"/>
+        <result column="SSCHOOL" property="sSchool"/>
+        <result column="SAGE" property="sAge"/>
+        <result column="SSEX" property="sSex"/>
+        <result column="SPASSWORD" property="sPassword"/>
+        <result column="SIDENTITYNUM" property="sIdentityNum"/>
+        <result column="SEDUCATIONALDEGREE" property="sEducationalDegree"/>
+        <result column="SPHONENUMBER" property="sPhoneNumber"/>
+        <result column="SMAJOR" property="sMajor"/>
+    </resultMap>
+
+
+    <select id="isRepeatedInfoInApplyServiceProvide" parameterType="map" resultMap="applyServiceProvideMap">
+        select ASPID, ASPSPID, ASPSID, ASPCID, ASPSUBMITTIME, ASPSTATUS
+        from ks.applyserviceprovide
+        where 1=1
+        <if test="aspSpId != null and aspSpId !='' ">
+            and ASPSPID=#{aspSpId}
+        </if>
+        <if test="aspSid != null and aspSid !='' ">
+            and ASPSID=#{aspSid}
+        </if>
+        <if test="aspCid != null and aspCid !='' ">
+            and ASPCID=#{aspCid}
+        </if>
+    </select>
+
+    <insert id="addApplyServiceProvide" parameterType="ApplyServiceProvide">
+        insert into ks.applyserviceprovide(ASPID, ASPSPID, ASPSID, ASPCID, ASPSUBMITTIME, ASPSTATUS)
+        values (#{aspId},#{aspSpId},#{aspSid},#{aspCid},#{aspSubmitTime},#{aspStatus})
+    </insert>
+
+
+    <select id="fetchApplyServiceProvidesBycIdAndSearchInfo" resultMap="applyServiceProvideMapWithStuAndCom" parameterType="map">
+        select ASPID, ASPSPID, ASPSID, ASPCID, ASPSUBMITTIME, ASPSTATUS, CNAME, CADDRESS, CDESCRIPTION, SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG, SPBROWSENUM, SPAPPOINTMENTNUM, SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR
+        from ks.applyserviceprovide as a,ks.company as c,ks.serviceprovide as sp,ks.student as s
+        where a.ASPCID=#{aspCid} and a.ASPCID=c.CID and a.ASPSPID=sp.SPID and a.ASPCID=sp.SPCID and a.ASPSID=s.SID and a.ASPSTATUS=30
+        <if test="applyServiceProvidesSearchInfo != null and applyServiceProvidesSearchInfo !='' ">
+            and(
+            sp.SPNAME like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            sp.SPKIND like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            sp.SPSPECIFICKIND like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            s.SNAME like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            s.SAGE like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            s.SSEX like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            s.SSCHOOL like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            s.SEDUCATIONALDEGREE like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            s.SMAJOR like concat('%',#{applyServiceProvidesSearchInfo},'%')
+            )
+        </if>
+    </select>
+
+    <select id="fetchApplyServiceProvidesBysIdAndSearchInfo" resultMap="applyServiceProvideMapWithStuAndCom" parameterType="map">
+        select ASPID, ASPSPID, ASPSID, ASPCID, ASPSUBMITTIME, ASPSTATUS, CNAME, CADDRESS, CDESCRIPTION, SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG, SPBROWSENUM, SPAPPOINTMENTNUM, SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR
+        from ks.applyserviceprovide as a,ks.company as c,ks.serviceprovide as sp,ks.student as s
+        where a.ASPSID=#{aspSid} and a.ASPCID=c.CID and a.ASPSPID=sp.SPID and a.ASPCID=sp.SPCID and a.ASPSID=s.SID
+        <if test="applyServiceProvidesSearchInfo != null and applyServiceProvidesSearchInfo !='' ">
+            and(
+            c.CNAME like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            c.CADDRESS like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            sp.SPNAME like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            sp.SPKIND like concat('%',#{applyServiceProvidesSearchInfo},'%') or
+            sp.SPSPECIFICKIND like concat('%',#{applyServiceProvidesSearchInfo},'%')
+            )
+        </if>
+    </select>
+
+
+
+
+    <update id="comDealApplyServiceProvide" parameterType="map">
+        update ks.applyserviceprovide
+        set ASPSTATUS = #{aspStatus}
+        <where>
+        <if test="aspId !=null and aspId != '' ">
+            ASPID =#{aspId}
+        </if>
+        <if test="aspSpId !=null and aspSpId != '' ">
+            and ASPSPID= #{aspSpId}
+        </if>
+            <if test="aspSid !=null and aspSid != '' ">
+                and ASPSID =#{aspSid}
+            </if>
+            <if test="aspCid !=null and aspCid != '' ">
+                and ASPCID= #{aspCid}
+            </if>
+        </where>
+    </update>
+
+
+
+</mapper>

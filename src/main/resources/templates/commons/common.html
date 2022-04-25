@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>commonComponent</title>
+</head>
+<body>
+<!--页面top公共部分-->
+<div class="top" th:fragment="top">
+    <div class="top_a">
+        <div class="top_a3">您好，欢迎来到邦邦网！
+<!--            <span style="font-size:14px; font-weight:bold; color:#424242">三门峡&nbsp;</span>[<input id="btn_nation" type="button" value="切换市区▼" onclick="nationSelect()" />]-->
+        </div>
+        <div class="top_a1">
+<!--            <div class="top_a2"><img th:src="@{/images/help.jpg}" /></div>-->
+<!--            <div class="top_a2"><img th:src="@{/images/home.jpg}" /></div>-->
+<!--            <div class="top_a2"><a href="#" onclick="javascript:window.external.addFavorite('http://www.hwedus.com','惠文教育')"><img th:src="@{/images/join.jpg}" /></a></div>-->
+        </div>
+    </div>
+    <div class="top_bg">
+        <div class="top_bga">
+            <div class="top_bga_1"></div>
+            <div class="top_bga_2">
+                <ul>
+                    <a th:href="@{/toBzPage}"><li>帮 主</li></a>
+                    <a th:href="@{/toBjPage}"><li>帮 交</li></a>
+                    <a th:href="@{/toBftPage}"><li>帮 众</li></a>
+                    <a th:href="@{/toIndexPage}" th:unless="${session.currentName}"><li>帮 首</li></a>
+                    <a th:href="@{/toBsPage}" th:if="${session.currentName}"><li>帮 首</li></a>
+                    <h1>[[${session.currentName}]]</h1>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--内容公共部分-->
+<div class="center_a" th:fragment="context">
+    <div class="center_blank"></div>
+    <div class="center_b">
+        <div class="center_gg" style="width: 1000px">
+            <div class="center_gga">
+                <div class="center_gga_1" style="width:130px">精选事务公告</div>
+                <div class="more"><a th:href="@{/toBftMorePage}">更多>></a></div>
+            </div>
+            <div class="center_ggb" style="width: 900px">
+                <ul >
+
+                    <li th:each="spcPartTimeJob:${spcPartTimeJobs}"><a th:href="@{'/PartTimeJob/fetchSpcPartTimeJob/'+${spcPartTimeJob.get('pId')}}"><span th:text="${#dates.format(spcPartTimeJob.get('pSubmitTime'),'yyyy/MM/dd')}"></span>[[${spcPartTimeJob.get("pName")}]]</a> </li>
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>职前台接待及前台接待及活活动支活动活活动支活动</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>聘兼职营业员前营业员前台接待及活动宝山万达</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>业余网拍前台接待及活模拍前台接待及活模特幕结200-600</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>薪500急聘打字员,前台接待及资资日结前台接待</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>时尚精品服前台接接待及待及动饰模特待及待饰模特</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>直前台接待及待及待及动饰模特活兼动招兼职模特</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>规淘宝网拍模正规淘宝特杂志模特直招待及待及动饰模特</a></li>-->
+<!--                    <li><a th:href="@{/toZzyPage}"><span>11-6 08：24</span>职前待及待及动饰模特待及饰模接待及前台接待及活活动支活动</a></li>-->
+                </ul>
+            </div>
+        </div>
+
+<!--        <div class="center_js">-->
+<!--            <div class="center_gga">本帮介绍</div>-->
+<!--            <div class="banner">-->
+<!--                &lt;!&ndash;  banner图片开始 &ndash;&gt;-->
+<!--                <div class="main_visual">-->
+<!--                    <div class="flicking_con">-->
+<!--                        <a href="#">1</a>-->
+<!--                        <a href="#">2</a>-->
+<!--                        <a href="#">3</a>-->
+<!--                        <a href="#">4</a>-->
+<!--                    </div>-->
+<!--                    <div class="main_image">-->
+
+
+<!--                        <ul th:each="imgParTimeJob:${imgParTimeJobs}">-->
+
+<!--&lt;!&ndash;                            <img th:src="@{${imgParTimeJob.get('fFileStorePath')}}"/>&ndash;&gt;-->
+<!--                            <a th:href="@{'/PartTimeJob/fetchSpcPartTimeJob/'+${imgParTimeJob.get('pId')}}"> <li><span class="img_1" ></span></li></a>-->
+<!--&lt;!&ndash;                            <a href="zzy.html"><li><span ></span></li></a>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <a href="zzy.html"><li><span ></span></li></a>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <a href="zzy.html"><li><span ></span></li></a>&ndash;&gt;-->
+<!--                        </ul>-->
+<!--                        <a href="javascript;" id="btn_prev"></a>-->
+<!--                        <a href="javascript;" id="btn_next"></a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash;  banner图片结束 &ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+
+    </div>
+</div>
+
+<!--左侧最新职位开始-->
+<div class="newPos" th:fragment="left-latestPos">
+    <div class="newPos_a">最新职位</div>
+    <div class="newPos_b">
+<!--        <div class="newPos_b_img"><img th:src="@{/images/pos_pic1.jpg}" /></div>-->
+        <div class="newPos_b_title"><p>工作地点：<span th:text="${latestSpcPartTimeJobs[0].get('cAddress')}"></span></p>  <p>学历要求：<span th:text="${latestSpcPartTimeJobs[0].get('pEducationalDegree')}"></span></p><p>工作经验：<span th:text="${latestSpcPartTimeJobs[0].get('pExperience')}+'年'"></span></p></div>
+    </div>
+    <div class="newPos_c">
+        <ul>
+            <a th:href="@{'/PartTimeJob/fetchSpcPartTimeJob/'+${latestSpcPartTimeJobs[0].get('pId')}}"><li><span th:text="${#dates.format(latestSpcPartTimeJobs[0].get('pSubmitTime'),'yyyy/MM/dd')}"></span>[[${latestSpcPartTimeJobs[0].get("pName")}]]</li></a>
+        </ul>
+    </div>
+</div>
+<!--左侧最新职位结束-->
+
+
+<!--右侧最新职位开始-->
+<div class="newPos" th:fragment="right-latestPos">
+    <div class="newPos_a">最新职位</div>
+    <div class="newPos_b">
+<!--        <div class="newPos_b_img"><img th:src="@{/images/pos_pic1.jpg}" /></div>-->
+        <div class="newPos_b_title"><p>工作地点：<span th:text="${latestSpcPartTimeJobs[1].get('cAddress')}"></span></p> <p>学历要求：<span th:text="${latestSpcPartTimeJobs[1].get('pEducationalDegree')}"></span></p><p>工作经验：<span th:text="${latestSpcPartTimeJobs[1].get('pExperience')}+'年'"></span></p> </div>
+    </div>
+    <div class="newPos_c">
+        <ul>
+            <a th:href="@{'/PartTimeJob/fetchSpcPartTimeJob/'+${latestSpcPartTimeJobs[1].get('pId')}}"><li><span th:text="${#dates.format(latestSpcPartTimeJobs[1].get('pSubmitTime'),'yyyy/MM/dd')}"></span>[[${latestSpcPartTimeJobs[1].get("pName")}]]</li></a>
+        </ul>
+    </div>
+</div>
+<!--右侧最新职位结束-->
+
+
+<!-- 帮众开始 -->
+
+<div class="bz" th:fragment="serviceProvide" >
+    <div class="center_gga"   style="float:left">
+        <div class="center_gga_1" >帮众类别</div>
+        <div class="center_ggc"  >
+            <a th:each="serviceProvideKind:${serviceProvideKinds}" th:if="${serviceProvideKind eq 1} " th:href="@{'/toBftPage'+'?spKind='+${serviceProvideKind}+'&spSpecificKind='}" th:text="'杂工类'"></a>
+            <a th:each="serviceProvideKind:${serviceProvideKinds}" th:if="${serviceProvideKind eq 2} " th:href="@{'/toBftPage'+'?spKind='+${serviceProvideKind}+'&spSpecificKind='}" th:text="'管道类'"></a>
+            <a th:each="serviceProvideKind:${serviceProvideKinds}" th:if="${serviceProvideKind eq 3} " th:href="@{'/toBftPage'+'?spKind='+${serviceProvideKind}+'&spSpecificKind='}" th:text="'电工类'"></a>
+            <a th:each="serviceProvideKind:${serviceProvideKinds}" th:if="${serviceProvideKind eq 4} " th:href="@{'/toBftPage'+'?spKind='+${serviceProvideKind}+'&spSpecificKind='}" th:text="'木工类'"></a>
+            <a th:each="serviceProvideKind:${serviceProvideKinds}" th:if="${serviceProvideKind eq 5} " th:href="@{'/toBftPage'+'?spKind='+${serviceProvideKind}+'&spSpecificKind='}" th:text="'清洁、零工类'"></a>
+        </div>
+    </div>
+    <div class="bz_a" th:each="serviceProvideKind:${serviceProvideKinds}">
+        <div class="bz_a_1" th:if="${serviceProvideKind eq 1}" th:text="'杂工类'"></div>
+        <div class="bz_a_1" th:if="${serviceProvideKind eq 2}" th:text="'管道类'"></div>
+        <div class="bz_a_1" th:if="${serviceProvideKind eq 3}" th:text="'电工类'"></div>
+        <div class="bz_a_1" th:if="${serviceProvideKind eq 4}" th:text="'木工类'"></div>
+        <div class="bz_a_1" th:if="${serviceProvideKind eq 5}" th:text="'清洁、零工类'"></div>
+        <div class="bz_a_2">
+            <ul>
+                <li th:each="serviceProvideSpecificKind:${serviceProvideSpecificKinds}" th:if="${serviceProvideSpecificKind.get('spKind') } eq ${serviceProvideKind}"><a   th:href="@{'/toBftPage'+'?spKind='+${serviceProvideSpecificKind.get('spKind')}+'&spSpecificKind='+${serviceProvideSpecificKind.get('spSpecificKind')}}" th:text="${serviceProvideSpecificKind.get('spSpecificKind')}"> <br/></a></li>
+                <!--                    <li><a href="bft_more.html">粉刷工</a></li>-->
+                <!--                    <li><a href="bft_more.html">油漆工</a></li>-->
+            </ul>
+        </div>
+    </div>
+    <!--        <div class="bz_a">-->
+    <!--        	<div class="bz_a_1">管道类</div>-->
+    <!--            <div class="bz_a_2">-->
+    <!--            	<ul>-->
+    <!--                	<li><a href="bft_more.html">地暖的铺设</a></li>-->
+    <!--                    <li><a href="bft_more.html">给、排水路的设计安装</a></li>-->
+    <!--                    <li><a href="bft_more.html">城市供暖入户安装</a></li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="bz_a">-->
+    <!--        	<div class="bz_a_1">电工类</div>-->
+    <!--            <div class="bz_a_2">-->
+    <!--            	<ul>-->
+    <!--                	<li><a href="bft_more.html">线路设计安装</a></li>-->
+    <!--                    <li><a href="bft_more.html">开关、插座的安装</a></li>-->
+    <!--                    <li><a href="bft_more.html">灯具的安装</a></li>-->
+    <!--                    <li><a href="bft_more.html">电器的运送、安装 </a></li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="bz_a">-->
+    <!--        	<div class="bz_a_1">木工类</div>-->
+    <!--            <div class="bz_a_2">-->
+    <!--            	<ul>-->
+    <!--                	<li><a href="bft_more.html">装修设计施工</a></li>-->
+    <!--                    <li><a href="bft_more.html">附属装饰安装</a></li>-->
+    <!--                    <li><a href="bft_more.html">各种门类安装</a></li>-->
+    <!--                    <li><a href="bft_more.html">家具的运送、安装</a></li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div class="bz_a" style="border:none">-->
+    <!--        	<div class="bz_a_1">清洁、零工类</div>-->
+    <!--            <div class="bz_a_2">-->
+    <!--            	<ul>-->
+    <!--                	<li><a href="bft_more.html">家居室内清洁</a></li>-->
+    <!--                    <li><a href="bft_more.html">零工</a></li>-->
+    <!--                </ul>-->
+    <!--            </div>-->
+    <!--        </div>-->
+</div>
+<!-- 帮众结束 -->
+
+
+<!-- 帮交开始 -->
+<div class="bz" th:fragment="localInformation">
+    <div class="center_gga" style="float:left">
+        <div class="center_gga_1">帮交类别</div>
+        <div class="center_ggc">
+            <a th:each="localInformationKind:${localInformationKinds}" th:if="${localInformationKind eq 1} " th:href="@{'/toBjPage'+'?lKind='+${localInformationKind}+'&lSpecificKind='}" th:text="'吃'"></a>
+            <a th:each="localInformationKind:${localInformationKinds}" th:if="${localInformationKind eq 2} " th:href="@{'/toBjPage'+'?lKind='+${localInformationKind}+'&lSpecificKind='}" th:text="'穿'"></a>
+            <a th:each="localInformationKind:${localInformationKinds}" th:if="${localInformationKind eq 3} " th:href="@{'/toBjPage'+'?lKind='+${localInformationKind}+'&lSpecificKind='}" th:text="'住'"></a>
+            <a th:each="localInformationKind:${localInformationKinds}" th:if="${localInformationKind eq 4} " th:href="@{'/toBjPage'+'?lKind='+${localInformationKind}+'&lSpecificKind='}" th:text="'行'"></a>
+            <a th:each="localInformationKind:${localInformationKinds}" th:if="${localInformationKind eq 5} " th:href="@{'/toBjPage'+'?lKind='+${localInformationKind}+'&lSpecificKind='}" th:text="'娱乐'"></a>
+        </div>
+    </div>
+    <div class="bz_a" th:each="localInformationKind:${localInformationKinds}">
+        <div class="bz_a_1" th:if="${localInformationKind eq 1}" th:text="'吃'"></div>
+        <div class="bz_a_1" th:if="${localInformationKind eq 2}" th:text="'穿'"></div>
+        <div class="bz_a_1" th:if="${localInformationKind eq 3}" th:text="'住'"></div>
+        <div class="bz_a_1" th:if="${localInformationKind eq 4}" th:text="'行'"></div>
+        <div class="bz_a_1" th:if="${localInformationKind eq 5}" th:text="'娱乐'"></div>
+        <div class="bz_a_2">
+            <ul>
+                <li th:each="localInformationSpecificKind:${localInformationSpecificKinds}" th:if="${localInformationSpecificKind.get('lKind') } eq ${localInformationKind}"><a   th:href="@{'/toBjPage'+'?lKind='+${localInformationSpecificKind.get('lKind')}+'&lSpecificKind='+${localInformationSpecificKind.get('lSpecificKind')}}" th:text="${localInformationSpecificKind.get('lSpecificKind')}"> <br/></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- 帮交结束 -->
+
+
+
+
+
+<!--友情连接部分-->
+<div class="link" th:fragment="friendLink">
+    <div class="link_a">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;友情链接</div>
+    <div class="link_b">
+        <ul>
+            <li><a href="https://sh.ganji.com/"><img th:src="@{/images/link_pic.jpg}" /></a></li>
+            <li><a href="https://sh.58.com/"><img th:src="@{/images/link_pic2.jpg}" /></a></li>
+            <li><a href="https://shanghai.baixing.com/"><img th:src="@{/images/link_pic3.jpg}" /></a></li>
+            <li><a href="http://www.chinahr.com/home/sh/"><img th:src="@{/images/link_pic4.jpg}" /></a></li>
+            <li><a href="https://www.zhipin.com/"><img th:src="@{/images/link_pic5.jpg}" /></a></li>
+            <li><a href="https://www.linkedin.cn/"><img th:src="@{/images/link_pic6.jpg}" /></a></li>
+            <li><a href="https://www.liepin.com/"><img th:src="@{/images/link_pic7.jpg}" /></a></li>
+        </ul>
+    </div>
+</div>
+</div>
+<!--底部内容部分-->
+<div class="button" th:fragment="bottom">
+    <a href="">关于我们</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">商务合作</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">网站声明</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="">联系方式</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">服务中心</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="">加入我们</a><br />
+    版权所有©跟版网模板 GENBAN.ORG  兼职网    豫88888888号
+</div>
+
+</body>
+
+
+</html>

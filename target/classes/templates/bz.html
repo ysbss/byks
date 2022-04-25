@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>帮帮网 — 帮主</title>
+<link th:href="@{/css/select2.css}" rel="stylesheet"/>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+<script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+<script type="text/javascript" th:src="@{/js/js.js}"></script>
+<script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bz_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+<div class="center_blank"></div>
+<!-- 公告和介绍开始  --><!-- 公告和介绍结束  -->
+<!-- 内容开始 -->
+<div class="nr">
+	
+    
+    <div class="bzz">
+    	<div class="center_gga">
+			<div class="center_gga_1">&nbsp;帮&nbsp;&nbsp;主</div>
+		</div>
+        <div class="bzz_a">
+        	<div class="bzz_left">
+            	<div class="bzz_b">
+                	<p><span>帮助中心</span></p>
+<!--                    <p>★ 新手导航 （在册帮众/雇主）</p>-->
+                    <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyPartTimeJob/'+${session.currentComId}}">★ 查看岗位申请</a>/<a th:href="@{'/toComAddPartTimeJobList/'+${session.currentComId}}">发布岗位</a></p>
+                    <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyServiceProvide/'+${session.currentComId}}">★ 查看服务预约</a>/<a th:href="@{'/toComAddServiceProvideList/'+${session.currentComId}}">发布服务</a></p>
+                    <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyLocalInformation/'+${session.currentComId}}">★ 查看便民信息预约</a>/<a th:href="@{'/toComAddLocalInformationList/'+${session.currentComId}}">发布便民信息</a></p><!--                    <p th:if="${session.loginKind eq '公司'}">-->
+<!--                    <a href="javascript:void (0)" onclick="document.getElementById('uploadImg').style.display='block';alert('请上传图片')">★ 上传公司经典图</a></p>-->
+<!--                    <form style="width: 330px;height: 0px;" enctype="multipart/form-data" method="post" th:action="@{'/company/downloadCompanyClassicImg/'+${session.currentComId}}">-->
+<!--                        <div id="uploadImg" style="margin-left: 250px; height: 0px;; display: none">-->
+<!--                            <div >-->
+<!--                                <input type="file" class="form-control" id="imgFile" name="imgFile">-->
+<!--                            </div>-->
+<!--                            <input type="submit" value="申请"/>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                    <p th:if="${ciMsg}" th:text="${ciMsg}" style="color: red"></p>-->
+                    <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuApplyPartTimeJob/'+${session.currentStuId}}">★ 查看岗位投递情况</a></p>
+                    <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuApplyServiceProvide/'+${session.currentStuId}}">★ 查看服务预约情况</a></p>
+                    <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuApplyLocalInformation/'+${session.currentStuId}}">★ 查看便民信息预约情况</a></p>
+                    <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuUpdate/'+${session.currentStuId}}">★ 查看/编辑个人信息</a></p>
+
+                    <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toWebAdvicesList}">★ 查看网站建议</a></p>
+                    <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toAllStusList}">★ 查看所有学生</a></p>
+                    <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toWebAdvicesList}">★ 查看所有公司</a></p>
+                    <p><a>★ 登录/</a><a>注册</a></p>
+                </div>
+                <div class="bzz_c">
+                	<br />
+                	<p>客服中心</p>
+                    <a href="tencent://message/?uin=2268755950&Site=xxx&Menu=yes"><img th:src="@{/images/QQ.jpg}" /></a>&nbsp;&nbsp;&nbsp;
+                    <a href="tencent://message/?uin=2268755950&Site=xxx&Menu=yes"><img th:src="@{/images/QQ.jpg}" /></a>&nbsp;&nbsp;&nbsp;
+                    <a href="tencent://message/?uin=2268755950&Site=xxx&Menu=yes"><img th:src="@{/images/QQ.jpg}" /></a>
+                </div>
+                <div class="bzz_d" th:if="${session.loginKind eq '学生'}">
+                	<p><span>网站建议</span></p>
+                    <form th:method="post" th:action="@{'/WebAdvice/addWebService/'+${session.loginKind}+'/'+${session.currentStuId}+'/'+${session.currentName}}">
+                        <p>
+                            类型：
+                            <input type="radio" name="waKind" value="10" checked />&nbsp;改进网站
+                            <input type="radio" name="waKind" value="20"  />&nbsp;创意想法
+                            <input type="radio" name="waKind" value="30"  />&nbsp;其他建议
+                        </p>
+                        <p th:if="${waMsg}" th:text="${waMsg}" style="color: red"></p>
+                        <p class="item">
+                        <div class="bzz_e">内容：</div>
+                        <textarea style="width:360px; height:100px; border:1px solid #c9c9c9; color:#666; padding:5px;" name="waAdvice"></textarea>
+                        </p>　
+                        <p>&nbsp;&nbsp;&nbsp;<input style="width:50px; height:50px;" class="btn btn-default" type="reset" value="重置">
+                            <input style="width:50px; height:50px;" class="btn btn-default" type="submit" value="提交"></p>
+                    </form>
+                    　　
+                </div>
+                <div class="bzz_d" th:if="${session.loginKind eq '公司'}">
+                    <p><span>网站建议</span></p>
+                    <form th:method="post" th:action="@{'/WebAdvice/addWebService/'+${session.loginKind}+'/'+${session.currentComId}+'/'+${session.currentName}}">
+                        <p>
+                            类型：
+                            <input type="radio" name="waKind" value="10" checked  />&nbsp;改进网站
+                            <input type="radio" name="waKind" value="20"  />&nbsp;创意想法
+                            <input type="radio" name="waKind" value="30"  />&nbsp;其他建议
+                        </p>
+                        <p th:if="${waMsg}" th:text="${waMsg}" style="color: red"></p>
+                        <p class="item">
+                        <div class="bzz_e">内容：</div>
+                        <textarea style="width:360px; height:100px; border:1px solid #c9c9c9; color:#666; padding:5px;" name="waAdvice"></textarea>
+                        </p>　
+                        <p>&nbsp;&nbsp;&nbsp;<input style="width:50px; height:50px;" class="btn btn-default" type="reset" value="重置">
+                            <input style="width:50px; height:50px;" class="btn btn-default" type="submit" value="提交"></p>
+                    </form>
+                    　　
+                </div>
+
+
+            </div>
+            <div class="bzz_left"><img th:src="@{/images/bzz_1.jpg}" /></div>
+        </div>
+    </div>
+
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+    
+    <!-- 底部内容开始 -->
+	<div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}">
+	<!-- 底部内容结束 -->
+    
+</div>
+<!-- 内容结束 -->
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+<iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+<div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+	<div id="drag">
+		<h3 id="drag_h"></h3>
+		<div id="drag_con"></div><!-- drag_con end -->
+	</div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

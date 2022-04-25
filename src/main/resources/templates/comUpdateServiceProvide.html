@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>帮帮网 — 事务信息</title>
+    <link th:href="@{/css/select2.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bft_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<div class="center_blank"></div>
+<!-- 内容开始 -->
+<div class="nr">
+    <div class="zzy_nr">
+        <div class="zzy"><p style="float: left" th:text="${session.get('currentName')}"></p><p style="float: right;margin-right: 50px;margin-top: 20px"><a th:href="@{'/toComAddServiceProvideList/'+${session.currentComId}}" th:text="'返回'"
+                                                                                                                                                           style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" ></a></p></div>
+        <div class="zzy_1">
+            <ul>
+                <!--                <li><span th:text="'☆'+${partTimeJob.get('pSubmitTime')}+'更新'"></span>&nbsp;</li>-->
+                <!--                <li><span th:text="'¤'+${partTimeJob.get('pBrowseNum')}+'人浏览'"></span>&nbsp;</li>-->
+                <!--                <li><span th:text="'♥'+${partTimeJob.get('pAppointmentNum')}+'人预约'"></span>&nbsp;</li>-->
+            </ul>
+        </div>
+        <div class="zzy_2">
+            <form th:action="@{'/ServiceProvide/comUpdateServiceProvide/'+${serviceProvide.get('spId')}}">
+                <table width="600" border="1" cellspacing="1" cellpadding="1">
+                    <tr>
+                        <td><span>信息名：</span> <input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="spName" th:placeholder="${serviceProvide.get('spName')}" th:value="${serviceProvide.get('spName')}"/> </td>
+                    </tr>
+                    <!--                    <tr>-->
+                    <!--                        <td><span>信息种类：</span>-->
+                    <!--                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind">-->
+                    <!--                            <option value="1">吃</option>-->
+                    <!--                            <option value="2">穿</option>-->
+                    <!--                            <option value="3">住</option>-->
+                    <!--                            <option value="4">行</option>-->
+                    <!--                            <option value="5">娱乐</option>-->
+                    <!--                        </select></td>-->
+                    <!--                    </tr>-->
+                    <tr>
+                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spSpecificKind">
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '地板、面砖的铺设' }" value="'地板、面砖的铺设'">地板、面砖的铺设</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '粉刷工' }" value="'粉刷工'">粉刷工</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '油漆工' }" value="'油漆工'">油漆工</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '地暖的铺设' }" value="'地暖的铺设'">地暖的铺设</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '给、排水路的设计安装' }" value="'给、排水路的设计安装'">给、排水路的设计安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '城市供暖入户安装' }" value="'城市供暖入户安装'">城市供暖入户安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '线路设计安装' }" value="'线路设计安装'">线路设计安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '开关、插座的安装' }" value="'开关、插座的安装'">开关、插座的安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '灯具的安装' }" value="'灯具的安装'">灯具的安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '电器的运送、安装' }" value="'电器的运送、安装'">电器的运送、安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '装修设计施工' }" value="'装修设计施工'">装修设计施工</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '附属装饰安装' }" value="'附属装饰安装'">附属装饰安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '各种门类安装' }" value="'各种门类安装'">各种门类安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '家具的运送、安装' }" value="'家具的运送、安装'">家具的运送、安装</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '家居室内清洁' }" value="'家居室内清洁'">家居室内清洁</option>
+                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '零工' }" value="'零工'">零工</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td><span>服务价格：</span><input min="0" max="999999999" style="border-radius: 18px;border: 1px solid gray;outline: none" type="number"  name="spExpense1" th:placeholder="${serviceProvide.get('spExpense1')}" th:value="${serviceProvide.get('spExpense1')}"/>—<input min="0" max="999999999" style="border-radius: 18px;border: 1px solid gray;outline: none" type="number" name="spExpense2" th:placeholder="${serviceProvide.get('spExpense2')}" th:value="${serviceProvide.get('spExpense2')}"/></td>
+                    </tr>
+                    <tr>
+                        <td><span>信息联系方式：</span><input min="10000000000" max="99999999999" style="border-radius: 18px;border: 1px solid gray;outline: none" type="number" name="spPhoneNumber" th:placeholder="${serviceProvide.get('spPhoneNumber')}" th:value="${serviceProvide.get('spPhoneNumber')}"/></td>
+                    </tr>
+                    <tr>
+                        <td><span>信息联系人：</span><input  style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="spContactPerson" th:placeholder="${serviceProvide.get('spContactPerson')}" th:value="${serviceProvide.get('spContactPerson')}"/></td>
+                    </tr>
+                    <tr>
+                        <td><button style="color: #0066cc;width: 100px;height: 50px;border-radius: 18px" type="submit">提交</button></td>
+
+                    </tr>
+                </table>
+
+            </form>
+        </div>
+        <p th:if="${updateMsg}" th:text="${updateMsg}" style="color: red"></p>
+
+        <!--        <div style="background: #0066cc;margin-left: 25%;margin-right: 25%; width: 35%; height: 0%; float: right"><p>123</p></div>-->
+
+    </div>
+    <!-- 内容结束 -->
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+
+    <!-- 底部内容开始 -->
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}">
+        <!-- 底部内容结束 -->
+    </div>
+    <div class="submenu"></div>
+    <!-- 搜索内容结束 -->
+
+</div>
+<!-- 帮众结束 -->
+
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+    <iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+    <div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+    <div id="drag">
+        <h3 id="drag_h"></h3>
+        <div id="drag_con"></div><!-- drag_con end -->
+    </div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

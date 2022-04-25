@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>帮帮网 — 精选事务</title>
+    <link th:href="@{/css/select2.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bft_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<div class="center_blank"></div>
+
+<!-- 内容开始 -->
+<div class="nr">
+    <!-- 搜索内容开始 -->
+    <form  th:action="@{'/ApplyLocalInformation/fetchApplyLocalInformationBycIdAndSearchInfo/'+${session.currentComId}+'/'+${allApplyLocalInformationPageInfo.pageNum}    }">
+        <div class="search" style="margin: auto">
+            <div class="search_blank"></div>
+            <div class="search_c">
+                <input class="s_t" style="width:690px; height:17px; padding:8px; font-size:14px; color:#b8b8b8; letter-spacing:2px; "
+                       placeholder="请输入职位名、公司名等关键词" th:name="pageApplyLocalInformationComSearchInfo" /></div>
+            <div class="search_btn"><button type="submit">
+                <img th:src="@{/images/search_btn.jpg}" /></button>
+            </div>
+        </div>
+    </form>
+    <!-- 搜索内容结束 -->
+    <div class="bft_f" >
+        <div class="bft_f_1">
+            <ul>
+                <li>申请人姓名</li>
+                <li>服务名</li>
+                <li>申请人性别</li>
+                <li>申请人联系方式</li>
+                <li></li>
+            </ul>
+        </div>
+        <div class="bft_f_2" th:each="allApplyLocalInformatio:${allApplyLocalInformation}">
+            <ul >
+                <li th:text="${allApplyLocalInformatio.get('sName')}"></li>
+                <li th:text="${allApplyLocalInformatio.get('lName')}"></li>
+                <li th:text="${allApplyLocalInformatio.get('sSex') eq 0? '女':'男'}"></li>
+                <li><span th:text="${allApplyLocalInformatio.get('sPhoneNumber')}"></span></li>
+                <li><div>
+                    <a  th:href="@{'/ApplyLocalInformation/comDealApplyLocalInformation/'+${session.currentComId}+'/'+${allApplyLocalInformationPageInfo.pageNum}+'?pageApplyLocalInformationComSearchInfo='+${session.curApplyLocalInformationComSearchInfo}+'&pageAliId='+${allApplyLocalInformatio.get('aliId')}+'&pageDealStatus=10'}" onclick="alert('同意成功')" style="float: left;margin-left: 50px" th:text="'同意'"></a>
+                    <a  th:href="@{'/ApplyLocalInformation/comDealApplyLocalInformation/'+${session.currentComId}+'/'+${allApplyLocalInformationPageInfo.pageNum}+'?pageApplyLocalInformationComSearchInfo='+${session.curApplyLocalInformationComSearchInfo}+'&pageAliId='+${allApplyLocalInformatio.get('aliId')}+'&pageDealStatus=20'}" onclick="alert('拒绝成功')" style="float: right;margin-right: 50px" th:text="'拒绝'"></a>
+                </div></li>
+
+            </ul>
+        </div>
+        <div class="bft_f_3">
+            <ul>
+                <li>第<span th:text="${allApplyLocalInformationPageInfo.pageNum}"></span>页</li>
+                <li><a th:href="@{'/ApplyLocalInformation/fetchApplyLocalInformationBycIdAndSearchInfo/'+${session.currentComId}+'/1'+'?pageApplyLocalInformationComSearchInfo='+${session.curApplyLocalInformationComSearchInfo}}">首页</a></li>
+                <li><a th:href="@{'/ApplyLocalInformation/fetchApplyLocalInformationBycIdAndSearchInfo/'+${session.currentComId}+'/'
+                    +${allApplyLocalInformationPageInfo.hasPreviousPage  ? allApplyLocalInformationPageInfo.prePage:1}
+                    +'?pageApplyLocalInformationComSearchInfo='+${session.curApplyLocalInformationComSearchInfo} } ">上一页</a> </li>
+                <li><a th:href="@{'/ApplyLocalInformation/fetchApplyLocalInformationBycIdAndSearchInfo/'+${session.currentComId}+'/'
+                    +${allApplyLocalInformationPageInfo.hasNextPage  ? allApplyLocalInformationPageInfo.nextPage:allApplyLocalInformationPageInfo.pages }
+                    +'?pageApplyLocalInformationComSearchInfo='+${session.curApplyLocalInformationComSearchInfo} }">下一页</a> </li>
+                <li><a th:href="@{'/ApplyLocalInformation/fetchApplyLocalInformationBycIdAndSearchInfo/'+${session.currentComId}+'/'
+                    +${allApplyLocalInformationPageInfo.pages}
+                    +'?pageApplyLocalInformationComSearchInfo='+${session.curApplyLocalInformationComSearchInfo}    }">尾页</a></li>
+                <li><span th:text="'总'+${allApplyLocalInformationPageInfo.pages}+'页' "></span></li>
+            </ul>
+        </div>
+    </div>
+    <!--   -->
+
+
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+
+    <!-- 底部内容开始 -->
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}">
+        <!-- 底部内容结束 -->
+    </div>
+    <div class="submenu"></div>
+    <!-- 搜索内容结束 -->
+
+</div>
+<!-- 帮众结束 -->
+
+
+
+
+
+</div>
+<!-- 内容结束 -->
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+    <iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+    <div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+    <div id="drag">
+        <h3 id="drag_h"></h3>
+        <div id="drag_con"></div><!-- drag_con end -->
+    </div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

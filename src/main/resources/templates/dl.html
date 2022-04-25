@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>帮帮网 — 首页</title>
+    <link th:href="@{/css/select2.css}" rel="stylesheet"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet"  />
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+
+    <script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+</head>
+
+<body class="zc_bg">
+<!-- top内容开始 -->
+<div class="top">
+	<div class="top_a">
+
+        <div class="top_a3">您好，欢迎来到邦邦网！</div>
+    </div>
+
+    <div class="top_bg">
+        <div class="top_bga">
+            <div class="top_bga_1"></div>
+        </div>
+    </div>
+</div>
+<!-- top内容结束 -->
+<div class="center_blank"></div>
+<!-- 公告和介绍开始  --><!-- 公告和介绍结束  -->
+<!-- 内容开始 -->
+<div class="nr">
+	
+    
+    <div class="bzz">
+    	<div class="center_gga">
+			<div class="center_gga_1">&nbsp;登&nbsp;&nbsp;陆</div>
+		</div>
+        <div class="zc_a" style="width: 1024px">
+        	<div class="zc_left"><img src="images/zc_2.jpg" usemap="#Map" border="0" />
+              <map name="Map" id="Map">
+                <area shape="rect" coords="67,37,98,66" href="#" />
+                <area shape="rect" coords="111,36,146,65" href="#" />
+                <area shape="rect" coords="162,37,190,66" href="#" />
+              </map>
+       	  </div>
+            <div class="zzy_4" style="margin-left: 130px; margin-top: 130px; width:430px; height:300px; float:left;">
+                <ul>
+                    <a   th:href="@{/toIndexPage}" ><li>进入首页</li></a>
+                </ul>
+            </div>
+    </div>
+
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+    
+    <!-- 底部内容开始 -->
+    <div class="blank"></div>
+    <div class="blank"></div>
+        <div th:replace="~{commons/common::bottom}"></div>
+	<!-- 底部内容结束 -->
+    
+</div>
+    <div class="submenu"></div>
+<!-- 内容结束 -->
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+<iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+<div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+	<div id="drag">
+		<h3 id="drag_h"></h3>
+		<div id="drag_con"></div><!-- drag_con end -->
+	</div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

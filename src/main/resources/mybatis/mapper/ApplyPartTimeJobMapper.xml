@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.ApplyPartTimeJobMapper">
+    <resultMap id="applyPartTimeJobMap" type="com.wyw.pojo.ApplyPartTimeJob">
+        <result column="APID" property="apId"/>
+        <result column="APPID" property="apPid"/>
+        <result column="APSID" property="apSid"/>
+        <result column="APCID" property="apCid"/>
+        <result column="APSUBMITTIME" property="apSubmitTime"/>
+        <result column="APSTATUS" property="apStatus"/>
+    </resultMap>
+    
+    <resultMap id="applyPartTimeJobMapWithStuAndCom" type="java.util.Map">
+        <result column="APID" property="apId"/>
+        <result column="APPID" property="apPid"/>
+        <result column="APSID" property="apSid"/>
+        <result column="APCID" property="apCid"/>
+        <result column="APSUBMITTIME" property="apSubmitTime"/>
+        <result column="APSTATUS" property="apStatus"/>
+        <result column="PID" property="pId"/>
+        <result column="CID" property="cId"/>
+        <result column="PNAME" property="pName"/>
+        <result column="PPOSITION" property="pPosition"/>
+        <result column="PSALARY" property="pSalary"/>
+        <result column="PNUM" property="pNum"/>
+        <result column="PEDUCATIONALDEGREE" property="pEducationalDegree"/>
+        <result column="PEXPERIENCE" property="pExperience"/>
+        <result column="PAGE" property="pAge"/>
+        <result column="PPHONENUMBER" property="pPhoneNumber"/>
+        <result column="PCONTACTPERSON" property="pContactPerson"/>
+        <result column="PSUBMITTIME" property="pSubmitTime"/>
+        <result column="SPFLAG" property="spFlag"/>
+        <result column="CNAME" property="cName"/>
+        <result column="CADDRESS" property="cAddress"/>
+        <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="SID" property="sId"/>
+        <result column="SNAME" property="sName"/>
+        <result column="SSCHOOL" property="sSchool"/>
+        <result column="SAGE" property="sAge"/>
+        <result column="SSEX" property="sSex"/>
+        <result column="SPASSWORD" property="sPassword"/>
+        <result column="SIDENTITYNUM" property="sIdentityNum"/>
+        <result column="SEDUCATIONALDEGREE" property="sEducationalDegree"/>
+        <result column="SPHONENUMBER" property="sPhoneNumber"/>
+        <result column="SMAJOR" property="sMajor"/>
+    </resultMap>
+
+    <select id="isRepeatedInfoInApplyPartTimeJob" parameterType="map" resultMap="applyPartTimeJobMap">
+        select APID, APPID, APSID, APCID, APSUBMITTIME, APSTATUS
+        from ks.applyparttimejob
+        where 1=1
+        <if test="apPid != null and apPid !='' ">
+        and APPID=#{apPid}
+        </if>
+        <if test="apSid != null and apSid !='' ">
+        and APSID=#{apSid}
+        </if>
+        <if test="apCid != null and apCid !='' ">
+        and APCID=#{apCid}
+        </if>
+    </select>
+
+    <insert id="addApplyPartTimeJob" parameterType="ApplyPartTimeJob">
+        insert into ks.applyparttimejob(APID,APPID,APSID,APCID,APSUBMITTIME,APSTATUS)
+        values (#{apId},#{apPid},#{apSid},#{apCid},#{apSubmitTime},#{apStatus})
+    </insert>
+
+    <select id="fetchApplyPartTimeJobsBycIdAndSearchInfo" resultMap="applyPartTimeJobMapWithStuAndCom" parameterType="map">
+        select APID, a.APPID, a.APSID, a.APCID, APSUBMITTIME, APSTATUS, c.CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, p.PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, s.SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR
+        from ks.applyparttimejob as a,ks.company as c,ks.parttimejob as p,ks.student as s
+        where a.APCID=#{apCid} and a.APCID=c.CID and a.APPID=p.PID and a.APCID=p.CID and a.APSID=s.SID and a.APSTATUS=30
+    <if test="applyPartTimeJobSearchInfo != null and applyPartTimeJobSearchInfo !='' ">
+        and(
+            p.PNAME like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            p.PPOSITION like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            s.SNAME like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            s.SAGE like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            s.SSEX like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            s.SSCHOOL like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            s.SEDUCATIONALDEGREE like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            s.SMAJOR like concat('%',#{applyPartTimeJobSearchInfo},'%')
+        )
+    </if>
+    </select>
+
+    <select id="fetchApplyPartTimeJobsBysIdAndSearchInfo" resultMap="applyPartTimeJobMapWithStuAndCom" parameterType="map">
+        select APID, a.APPID, a.APSID, a.APCID, APSUBMITTIME, APSTATUS, c.CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, p.PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, s.SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR
+        from ks.applyparttimejob as a,ks.company as c,ks.parttimejob as p,ks.student as s
+        where a.APSID=#{apSid} and a.APCID=c.CID and a.APPID=p.PID and a.APCID=p.CID and a.APSID=s.SID
+        <if test="applyPartTimeJobSearchInfo != null and applyPartTimeJobSearchInfo !='' ">
+            and(
+            c.CNAME like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            c.CADDRESS like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            p.PNAME like concat('%',#{applyPartTimeJobSearchInfo},'%') or
+            p.PPOSITION like concat('%',#{applyPartTimeJobSearchInfo},'%')
+            )
+        </if>
+    </select>
+
+    
+    <update id="comDealApplyPartTimeJob" parameterType="map">
+        update ks.applyparttimejob
+        set APSTATUS = #{apStatus}
+        <where>
+            <if test="apId !=null and apId!='' ">
+                APID =#{apId}
+            </if>
+            <if test="apPid !=null and apPid!= ''">
+                and APPID=#{apPid}
+            </if>
+            <if test="apSid !=null and apSid!='' ">
+                and APSID =#{apSid}
+            </if>
+            <if test="apCid !=null and apCid!= ''">
+                and APCID=#{apCid}
+            </if>
+        </where>
+
+    </update>
+
+
+
+</mapper>

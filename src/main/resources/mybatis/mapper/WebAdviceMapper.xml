@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.WebAdviceMapper">
+<resultMap id="webAdviceMap" type="com.wyw.pojo.WebAdvice">
+    <id column="WAID" property="waId"/>
+    <result column="WAKIND" property="waKind"/>
+    <result column="WASOURCE" property="waSource"/>
+    <result column="WASOURCEID" property="waSourceId"/>
+    <result column="WASOURCENAME" property="waSourceName"/>
+    <result column="WASUBMITTME" property="waSubmitTime"/>
+    <result column="WAADVICE" property="waAdvice"/>
+    <result column="WAFLAG" property="waFlag"/>
+</resultMap>
+
+<insert id="addWebAdvice" parameterType="map">
+    insert into ks.webadvice(
+    WAID
+    <if test="waKind !=null and waKind!= ''  ">,WAKIND</if>
+    <if test="waSource != null and waSource != '' ">,WASOURCE</if>
+    <if test="waSourceId != null and waSourceId != '' ">,WASOURCEID</if>
+    <if test="waSourceName != null and waSourceName != '' ">,WASOURCENAME </if>
+    <if test="waSubmitTime != null and waSubmitTime != '' ">,WASUBMITTME</if>
+    <if test="waAdvice != null and waAdvice != '' ">,WAADVICE</if>
+                             )
+    values (
+    #{waId}
+    <if test="waKind !=null and waKind!= ''  ">,#{waKind}</if>
+    <if test="waSource != null and waSource != '' ">,#{waSource}</if>
+    <if test="waSourceId != null and waSourceId != '' ">,#{waSourceId}</if>
+    <if test="waSourceName != null and waSourceName != '' ">,#{waSourceName} </if>
+    <if test="waSubmitTime != null and waSubmitTime != '' ">,#{waSubmitTime}</if>
+    <if test="waAdvice != null and waAdvice != '' ">,#{waAdvice}</if>
+    )
+</insert>
+    <select id="fetchWebAdvice" parameterType="map" resultMap="webAdviceMap">
+        select WAID, WAKIND, WASOURCE, WASOURCEID, WASOURCENAME, WASUBMITTME, WAADVICE,WAFLAG
+        from ks.webadvice
+        <where>
+            WAFLAG=0
+            <if test="waId != null and waId!= '' ">and WAID=#{waId}</if>
+            <if test="waKind !=null and waKind!= ''  ">and WAKIND=#{waKind}</if>
+            <if test="waSource != null and waSource != '' "> and WASOURCE=#{waSource}</if>
+            <if test="waSourceId != null and waSourceId != '' "> and WASOURCEID=#{waSourceId}</if>
+            <if test="waSourceName != null and waSourceName != '' "> and WASOURCENAME=#{waSourceName}</if>
+            <if test="waSubmitTime != null and waSubmitTime != '' "> and WASUBMITTME=#{waSubmitTime}</if>
+            <if test="waAdvice != null and waAdvice != '' ">and WAADVICE=#{waAdvice}</if>
+        </where>
+    </select>
+
+    <update id="updateWebAdvice" parameterType="map">
+        update ks.webadvice
+        <set>
+            <if test="waKind !=null and waKind!= ''  "> WAKIND=#{waKind},</if>
+            <if test="waSource != null and waSource != '' ">  WASOURCE=#{waSource},</if>
+            <if test="waSourceId != null and waSourceId != '' ">  WASOURCEID=#{waSourceId},</if>
+            <if test="waSourceName != null and waSourceName != '' ">  WASOURCENAME=#{waSourceName},</if>
+            <if test="waSubmitTime != null and waSubmitTime != '' ">  WASUBMITTME=#{waSubmitTime},</if>
+            <if test="waAdvice != null and waAdvice != '' "> WAADVICE=#{waAdvice},</if>
+            <if test="waFlag != null and waFlag != '' "> WAFLAG=#{waFlag},</if>
+        </set>
+        where WAID=#{waId}
+    </update>
+
+    <delete id="deleteWebAdvice" parameterType="map">
+        delete
+        from ks.webadvice
+        <where>
+            <if test="waId != null and waId!= '' ">and WAID=#{waId}</if>
+            <if test="waKind !=null and waKind!= ''  ">and WAKIND=#{waKind}</if>
+            <if test="waSource != null and waSource != '' "> and WASOURCE=#{waSource}</if>
+            <if test="waSourceId != null and waSourceId != '' "> and WASOURCEID=#{waSourceId}</if>
+            <if test="waSourceName != null and waSourceName != '' "> and WASOURCENAME=#{waSourceName}</if>
+            <if test="waSubmitTime != null and waSubmitTime != '' "> and WASUBMITTME=#{waSubmitTime}</if>
+            <if test="waAdvice != null and waAdvice != '' ">and WAADVICE=#{waAdvice}</if>
+            <if test="waFlag != null and waFlag != '' ">and WAFLAG=#{waFlag}</if>
+        </where>
+    </delete>
+
+
+</mapper>
