@@ -8,6 +8,7 @@
         <result column="FFILENAME" property="fFileName"/>
         <result column="FFILESTOREPATH" property="fFileStorePath"/>
         <result column="FFILECID" property="fFileCid"/>
+        <result column="FFILEFLAG" property="fFileFlag"/>
     </resultMap>
 
     <insert id="addFileCompany" parameterType="FileCompany">
@@ -15,10 +16,30 @@
         values (#{fFileID},#{fFileName},#{fFileStorePath},#{fFileCid})
     </insert>
 
+    <select id="fetchFileCompanyList" parameterType="map" resultMap="fileCompanyMap">
+        select FFILEID, FFILENAME, FFILESTOREPATH, FFILECID, FFILEFLAG
+        from ks.filecompany
+        where FFILEFLAG=0
+        <if test="fFileID != null and fFileID!= '' ">and FFILEID=#{fFileID}</if>
+        <if test="fFileName !=null and fFileName!= ''  ">and FFILENAME=#{fFileName}</if>
+        <if test="fFileStorePath != null and fFileStorePath != '' "> and FFILESTOREPATH=#{fFileStorePath}</if>
+        <if test="fFileCid != null and fFileCid != '' "> and FFILECID=#{fFileCid}</if>
+        <if test="fFileFlag != null and fFileFlag != '' "> and FFILEFLAG=#{fFileFlag}</if>
+    </select>
+
+
+
     <update id="updateFileCompany" parameterType="FileCompany">
         update ks.filecompany
-        set FFILENAME = #{fFileName},FFILESTOREPATH=#{fFileStorePath}
-        where FFILECID=#{fFileCid} and FFILEID=#{fFileID}
+        <set>
+            <if test="fFileName !=null and fFileName!= ''  "> FFILENAME = #{fFileName},</if>
+            <if test="fFileStorePath != null and fFileStorePath != '' ">  FFILESTOREPATH=#{fFileStorePath},</if>
+            <if test="fFileFlag != null and fFileFlag != '' ">  FFILEFLAG=#{fFileFlag},</if>
+        </set>
+        <where>
+            <if test="fFileID != null and fFileID!= '' ">FFILEID=#{fFileID}</if>
+            <if test="fFileCid != null and fFileCid != '' "> and FFILECID=#{fFileCid}</if>
+        </where>
     </update>
 
     <select id="isRepeatedCompanyFile" parameterType="Long" resultMap="fileCompanyMap">

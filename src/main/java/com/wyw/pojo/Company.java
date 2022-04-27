@@ -18,4 +18,5 @@ public class Company {
     private String cDescription;
     private String cRegisterTime;
     private String cFlag;
+    private String cEmail;
 }

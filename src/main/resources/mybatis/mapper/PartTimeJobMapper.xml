@@ -23,6 +23,7 @@
     <result column="CNAME" property="cName"/>
     <result column="CADDRESS" property="cAddress"/>
     <result column="CDESCRIPTION" property="cDescription"/>
+    <result column="CEMAIL" property="cEmail"/>
 </resultMap>
 
     <resultMap id="partTimeJobInfoWithImgMap" type="java.util.Map">
@@ -44,6 +45,7 @@
         <result column="CNAME" property="cName"/>
         <result column="CADDRESS" property="cAddress"/>
         <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="CEMAIL" property="cEmail"/>
         <result column="FFILEID" property="fFileID"/>
         <result column="FFILENAME" property="fFileName"/>
         <result column="FFILESTOREPATH" property="fFileStorePath"/>
@@ -52,7 +54,7 @@
 
 
     <select id="getAllPartTimeJobs" resultMap="partTimeJobInfoMap" parameterType="String">
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION,CEMAIL
         from ks.parttimejob as p ,ks.company as c
         where p.CID=c.CID and SPFLAG!=-1
         <if test="partTimeJobSearchInfo != null and partTimeJobSearchInfo !='' ">
@@ -67,7 +69,7 @@
     </select>
 
     <select id="getAllPartTimeJobsByCidAndSearchInfo" resultMap="partTimeJobInfoMap" parameterType="map">
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION,CEMAIL
         from ks.parttimejob as p ,ks.company as c
         where p.CID=c.CID and SPFLAG!=-1
           <if test="cId!=null and cId!= '' ">
@@ -86,15 +88,61 @@
         values (#{pId},#{cId},#{pName},#{pPosition},#{pSalary},#{pNum},#{pEducationalDegree},#{pExperience},#{pAge},#{pPhoneNumber},#{pContactPerson},#{pSubmitTime})
     </insert>
 
+    <select id="fetchAllPartTimeJobs" resultType="PartTimeJob" parameterType="PartTimeJob">
+        select PID, CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM
+        from ks.parttimejob
+        <where>
+            SPFLAG!=-1
+            <if test="cId != null and cId != '' ">
+               and CID=#{cId}
+            </if>
+            <if test="pName != null and pName != '' ">
+                and PNAME=#{pName}
+            </if>
+            <if test="pPosition != null and pPosition != '' ">
+                and PPOSITION=#{pPosition}
+            </if>
+            <if test="pSalary != null and pSalary != '' ">
+                and PSALARY=#{pSalary}
+            </if>
+            <if test="pNum != null and pNum != '' ">
+                and PNUM=#{pNum}
+            </if>
+            <if test="pEducationalDegree != null and pEducationalDegree != '' ">
+                and  PEDUCATIONALDEGREE=#{pEducationalDegree}
+            </if>
+            <if test="pExperience != null and pExperience != '' ">
+                and PEXPERIENCE=#{pExperience}
+            </if>
+            <if test="pAge != null and pAge != '' ">
+                and PAGE=#{pAge}
+            </if>
+            <if test="pPhoneNumber != null and pPhoneNumber != '' ">
+                and PPHONENUMBER=#{pPhoneNumber}
+            </if>
+            <if test="pContactPerson != null and pContactPerson != '' ">
+                and PCONTACTPERSON=#{pContactPerson}
+            </if>
 
+            <if test="pSubmitTime != null and pSubmitTime != '' ">
+                and PSUBMITTIME=#{pSubmitTime}
+            </if>
+            <if test="spFlag!= null and spFlag!= ''">
+                and SPFLAG=#{spFlag}
+            </if>
+            <if test="pBrowseNum !=null and pBrowseNum != '' ">
+                and PBROWSENUM=#{pBrowseNum}
+            </if>
+            <if test="pAppointmentNum !=null and pAppointmentNum != '' ">
+                and  PAPPOINTMENTNUM=#{pAppointmentNum}
+            </if>
+        </where>
+    </select>
 
 
     <update id="updatePartTimeJob" parameterType="PartTimeJob">
         update ks.parttimejob
         <set>
-            <if test="cId != null and cId != '' ">
-                CID=#{cId}
-            </if>
             <if test="pName != null and pName != '' ">
                 PNAME=#{pName},
             </if>
@@ -140,7 +188,14 @@
 
         </set>
 
-        where PID=#{pId}
+        <where>
+            <if test="pId != null and pId != '' ">
+                PID=#{pId}
+            </if>
+            <if test="cId != null and cId != '' ">
+                and CID=#{cId}
+            </if>
+        </where>
     </update>
 
     <delete id="deletePartTimeJobByPid" parameterType="Long">
@@ -150,7 +205,7 @@
     </delete>
 
     <select id="getAllPageSpecialPartTimeJobs" resultMap="partTimeJobInfoMap" >
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION,CEMAIL
         from ks.parttimejob as p ,ks.company as c
         where p.CID=c.CID and p.SPFLAG=1
         limit 8
@@ -158,13 +213,13 @@
 
 
     <select id="fetchSpcPartTimeJobByPid" parameterType="Long" resultMap="partTimeJobInfoMap">
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION,CEMAIL
         from ks.parttimejob as p ,ks.company as c
         where p.CID=c.CID and p.PID=#{pId} and SPFLAG!=-1
     </select>
 
     <select id="fetchApproximatePartTimeJobByPid" parameterType="Long" resultMap="partTimeJobInfoMap">
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION,CEMAIL
         from ks.parttimejob as p ,ks.company as c
         where p.CID=c.CID and PID!=#{pId} and SPFLAG!=-1 and p.CID=(
             select CID from ks.parttimejob
@@ -175,7 +230,7 @@
 
 
     <select id="fetchLatestSpcPartTimeJob" resultMap="partTimeJobInfoMap">
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION,CEMAIL
         from ks.parttimejob as p, ks.company as c
         where p.CID=c.CID and p.SPFLAG=1
         order by p.PSUBMITTIME desc
@@ -184,7 +239,7 @@
 
 
     <select id="fetchImgParTimeJobs" resultMap="partTimeJobInfoWithImgMap">
-        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, c.CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, FFILEID, FFILENAME, FFILESTOREPATH, FFILECID
+        select PID, p.CID, PNAME, PPOSITION, PSALARY, PNUM, PEDUCATIONALDEGREE, PEXPERIENCE, PAGE, PPHONENUMBER, PCONTACTPERSON, PSUBMITTIME, SPFLAG, PBROWSENUM, PAPPOINTMENTNUM, c.CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CEMAIL, FFILEID, FFILENAME, FFILESTOREPATH, FFILECID
         from ks.parttimejob as p, ks.company as c, ks.filecompany as fc
         where p.CID=c.CID and p.SPFLAG=1 and c.CID=fc.FFILECID
         limit 4

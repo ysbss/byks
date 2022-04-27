@@ -225,12 +225,27 @@
 <!-- 帮交结束 -->
 
 
+<!--协议开始-->
+<div class="item_b" th:fragment="registryProtocol">
+    <div class="item_b_1">
+        <p th:if="${registerMsg}" th:text="${registerMsg}" style="color: red"></p>
+    </div>
+    <input type="checkbox"  name="checkProtocol" />&nbsp;<a target="_blank" th:href="@{/toWebServiceProtocolPage}">我已阅读并同意《网站服务协议》</a>
+</div>
 
+<!--协议结束-->
+
+<!--注册按钮开始-->
+<div class="item_b" th:fragment="registrySubmit">
+    <div class="item_b_1"></div>
+    <a onclick="document.getElementById('registryForm').submit();" href="#"><img th:src="@{/images/zc_pic.jpg}" /></a>
+</div>
+<!--注册按钮结束-->
 
 
 <!--友情连接部分-->
 <div class="link" th:fragment="friendLink">
-    <div class="link_a">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;友情链接</div>
+    <div class="link_a">&nbsp;&nbsp;友情链接</div>
     <div class="link_b">
         <ul>
             <li><a href="https://sh.ganji.com/"><img th:src="@{/images/link_pic.jpg}" /></a></li>

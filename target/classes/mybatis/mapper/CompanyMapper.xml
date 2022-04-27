@@ -11,21 +11,43 @@
         <result column="CDESCRIPTION" property="cDescription"/>
         <result column="CREGISTERTIME" property="cRegisterTime"/>
         <result column="CFLAG" property="cFlag"/>
+        <result column="CEMAIL" property="cEmail"/>
     </resultMap>
 
     <select id="fetchCompanyByName" resultMap="companyMap" parameterType="String">
-        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CREGISTERTIME, CFLAG, CEMAIL
         from ks.company
-        where CNAME=#{cName}
+        where CNAME=#{cName} and CFLAG=0
     </select>
-    <select id="fetchCompanyByCid" resultMap="companyMap" parameterType="Long">
-        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION
+
+
+    <select id="fetchExistCompany" parameterType="String" resultMap="companyMap">
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CREGISTERTIME, CFLAG, CEMAIL
         from ks.company
-        where CID=#{cId}
+        where CFLAG=0
+        <if test="usrIdOrNameOrEmailOrPhone != null and usrIdOrNameOrEmailOrPhone!= '' ">
+            and (
+            CID=#{usrIdOrNameOrEmailOrPhone} or
+            CNAME=#{usrIdOrNameOrEmailOrPhone} or
+            CEMAIL=#{usrIdOrNameOrEmailOrPhone}
+            )
+        </if>
+    </select>
+
+
+
+
+
+
+
+    <select id="fetchCompanyByCid" resultMap="companyMap" parameterType="Long">
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CREGISTERTIME, CFLAG, CEMAIL
+        from ks.company
+        where CID=#{cId} and CFLAG=0
     </select>
 
     <select id="fetchCompaniesList" parameterType="map" resultMap="companyMap">
-        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CREGISTERTIME, CFLAG
+        select CID, CNAME, CADDRESS, CPASSWORD, CDESCRIPTION, CREGISTERTIME, CFLAG, CEMAIL
         from ks.company
         <where>
             CFLAG=0
@@ -36,6 +58,8 @@
             <if test="cDescription != null and cDescription !=''">and CDESCRIPTION=#{cDescription}</if>
             <if test="cRegisterTime != null and cRegisterTime !=''">and CREGISTERTIME=#{cRegisterTime}</if>
             <if test="cFlag != null and cFlag !=''">and CFLAG=#{cFlag}</if>
+            <if test="cEmail != null and cEmail !=''">and CEMAIL=#{cEmail}</if>
+
             <if test="comSearchInfo != null and comSearchInfo != '' ">
                 and (
                 CNAME like concat('%',#{comSearchInfo},'%') or
@@ -46,7 +70,7 @@
         </where>
     </select>
 
-    <insert id="addCompany" parameterType="map">
+    <insert id="addCompany" parameterType="map" useGeneratedKeys="true" keyProperty="cId">
         insert into ks.company(
             CID
         <if test="cName != null and cName !=''">,CNAME</if>
@@ -55,6 +79,7 @@
         <if test="cDescription != null and cDescription !=''">, CDESCRIPTION</if>
         <if test="cRegisterTime != null and cRegisterTime !=''">, CREGISTERTIME</if>
         <if test="cFlag != null and cFlag !=''">, CFLAG</if>
+        <if test="cEmail != null and cEmail !=''">, CEMAIL</if>
         )
         values (
         #{cId}
@@ -64,6 +89,7 @@
         <if test="cDescription != null and cDescription !=''">,#{cDescription}</if>
         <if test="cRegisterTime != null and cRegisterTime !=''">,#{cRegisterTime}</if>
         <if test="cFlag != null and cFlag !=''">,#{cFlag}</if>
+        <if test="cEmail != null and cEmail !=''">, #{cEmail}</if>
         )
     </insert>
 
@@ -76,6 +102,7 @@
             <if test="cDescription != null and cDescription !=''"> CDESCRIPTION=#{cDescription},</if>
             <if test="cRegisterTime != null and cRegisterTime !=''"> CREGISTERTIME=#{cRegisterTime},</if>
             <if test="cFlag != null and cFlag !=''"> CFLAG=#{cFlag},</if>
+            <if test="cEmail != null and cEmail !=''"> CEMAIL=#{cEmail},</if>
         </set>
         where CID=#{cId}
     </update>

@@ -24,6 +24,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Student fetchExistStudent(String fetchExistStudent) {
+        return studentMapper.fetchExistStudent(fetchExistStudent);
+    }
+
+    @Override
     public Map<String, Object> fetchStuWithResumeById(Map<String,Object> sIdAndFpId) {
         return studentMapper.fetchStuWithResumeById(sIdAndFpId);
     }

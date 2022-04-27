@@ -23,4 +23,5 @@ public class Student {
     private String sMajor;
     private String sRegisterTime;
     private String sFlag;
+    private String sEmail;
 }

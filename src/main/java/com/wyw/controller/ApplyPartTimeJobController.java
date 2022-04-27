@@ -2,7 +2,10 @@ package com.wyw.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyw.pojo.ApplyPartTimeJob;
 import com.wyw.service.ApplyPartTimeJobService;
+import com.wyw.service.FileResumeService;
+import com.wyw.utils.FinalStaticValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +27,9 @@ import java.util.Map;
 public class ApplyPartTimeJobController {
     @Resource
     ApplyPartTimeJobService applyPartTimeJobService;
+
+    @Resource
+    FileResumeService fileResumeService;
 
     @RequestMapping("/fetchApplyPartTimeJobsBySidAndSearchInfo/{sId}/{pageNum}")
     public String fetchApplyPartTimeJobsBySidAndSearchInfo(@RequestParam(required = false) String pageApplyPartTimeJobStuSearchInfo,
@@ -87,8 +93,21 @@ public class ApplyPartTimeJobController {
                                           @PathVariable(value = "pageNum",required = false) Integer pageNum){
         Map<String, Object> comDealMap = new HashMap<String, Object>();
         comDealMap.put("apId",pageApId);
+        ApplyPartTimeJob toFindResumeFile = applyPartTimeJobService.isRepeatedInfoInApplyPartTimeJob(comDealMap);
+
         comDealMap.put("apStatus",pageDealStatus);
         applyPartTimeJobService.comDealApplyPartTimeJob(comDealMap);
+        if(FinalStaticValue.REFUSE_STATUS .equals(pageDealStatus) ){
+            Map<String,Object> updFileResume=new HashMap<String,Object> ();
+            /**
+             * 如果在这里面new一个map然后传入参数进行repeat得到apt。那么无法查询到正确结果
+             * */
+            updFileResume.put("fFileSid",toFindResumeFile.getApSid());
+            updFileResume.put("fFilePid",toFindResumeFile.getApPid());
+            updFileResume.put("fFileFlag",Integer.valueOf(FinalStaticValue.DELETED_FLAG).toString());
+            fileResumeService.updateFileResume(updFileResume);
+        }
+
         PageHelper.startPage(pageNum,3);
 
         List<Map<String, Object>> allApplyPartTimeJobs=new ArrayList<Map<String, Object>>();

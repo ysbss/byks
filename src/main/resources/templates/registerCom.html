@@ -42,38 +42,35 @@
                 <area shape="rect" coords="162,66,190,95" href="#" />
               </map>
        	  </div>
-            <div class="zc_right">
-            	<div class=""><img th:src="@{/images/bzz_2.jpg}" /></div>
-            	<div class="item" style="margin-left: 51px">
-    				<label>用户名：</label>
-   				  <input type="text" />
- 				</div>
-                <div class="item">
-    				<label>登录密码：</label>
-   				  <input type="text" />
- 				</div>
-                <div class="item">
-    				<label>确认密码：</label>
-   				  <input type="text" />
- 				</div>
-                <div class="item">
-    				<label>联系邮箱：</label>
-   				  <input type="text" />
- 				</div>
-<!--              <div class="item_a">-->
-<!--   				<div class="item_a_1"><label>验&nbsp;证&nbsp;码：</label></div>-->
-<!--   				<div class="item_a_2"><input type="text" /></div>-->
-<!--                <div class="item_a_2"><img src="images/yzm.jpg" /></div><a href="#">看不清？换一张</a></span>-->
-<!--              </div>-->
-              <div class="item_b">
-              	<div class="item_b_1"></div>
-              	<input type="checkbox" />&nbsp;<a href="#">我已阅读并同意《网站服务协议》</a>
-              </div>
-              <div class="item_b">
-              	<div class="item_b_1"></div>
-              	<a href="#"><img th:src="@{/images/zc_pic.jpg}" /></a>
-              </div>
-          </div>
+			<form th:action="@{/company/addCom}" id="registryForm">
+				<div class="zc_right">
+					<div class=""><img th:src="@{/images/bzz_2.jpg}" /></div>
+					<div class="item" style="margin-left: 51px">
+						<label>用户名：</label>
+						<input type="text" name="cName" />
+					</div>
+					<div class="item">
+						<label>登录密码：</label>
+						<input type="password" name="cPassword1" />
+					</div>
+					<div class="item">
+						<label>确认密码：</label>
+						<input type="password" name="cPassword2" />
+					</div>
+					<div class="item">
+						<label>联系邮箱：</label>
+						<input type="text" name="cEmail" />
+					</div>
+					<!--              <div class="item_a">-->
+					<!--   				<div class="item_a_1"><label>验&nbsp;证&nbsp;码：</label></div>-->
+					<!--   				<div class="item_a_2"><input type="text" /></div>-->
+					<!--                <div class="item_a_2"><img src="images/yzm.jpg" /></div><a href="#">看不清？换一张</a></span>-->
+					<!--              </div>-->
+					<div th:replace="~{commons/common::registryProtocol}"></div>
+					<div th:replace="~{commons/common::registrySubmit}"></div>
+				</div>
+			</form>
+
         </div>
     </div>
 

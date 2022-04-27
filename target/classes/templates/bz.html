@@ -39,7 +39,10 @@
 <!--                    <p>★ 新手导航 （在册帮众/雇主）</p>-->
                     <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyPartTimeJob/'+${session.currentComId}}">★ 查看岗位申请</a>/<a th:href="@{'/toComAddPartTimeJobList/'+${session.currentComId}}">发布岗位</a></p>
                     <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyServiceProvide/'+${session.currentComId}}">★ 查看服务预约</a>/<a th:href="@{'/toComAddServiceProvideList/'+${session.currentComId}}">发布服务</a></p>
-                    <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyLocalInformation/'+${session.currentComId}}">★ 查看便民信息预约</a>/<a th:href="@{'/toComAddLocalInformationList/'+${session.currentComId}}">发布便民信息</a></p><!--                    <p th:if="${session.loginKind eq '公司'}">-->
+                    <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyLocalInformation/'+${session.currentComId}}">★ 查看便民信息预约</a>/<a th:href="@{'/toComAddLocalInformationList/'+${session.currentComId}}">发布便民信息</a></p>
+                    <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComUpdate/'+${session.currentComId}}">★ 查看/编辑企业信息</a></p>
+
+                    <!--                    <p th:if="${session.loginKind eq '公司'}">-->
 <!--                    <a href="javascript:void (0)" onclick="document.getElementById('uploadImg').style.display='block';alert('请上传图片')">★ 上传公司经典图</a></p>-->
 <!--                    <form style="width: 330px;height: 0px;" enctype="multipart/form-data" method="post" th:action="@{'/company/downloadCompanyClassicImg/'+${session.currentComId}}">-->
 <!--                        <div id="uploadImg" style="margin-left: 250px; height: 0px;; display: none">-->
@@ -57,7 +60,7 @@
 
                     <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toWebAdvicesList}">★ 查看网站建议</a></p>
                     <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toAllStusList}">★ 查看所有学生</a></p>
-                    <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toWebAdvicesList}">★ 查看所有公司</a></p>
+                    <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toAllCompaniesList}">★ 查看所有公司</a></p>
                     <p><a>★ 登录/</a><a>注册</a></p>
                 </div>
                 <div class="bzz_c">

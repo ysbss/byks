@@ -21,6 +21,13 @@ public interface StudentService {
     Student fetchStuById(Long sId);
 
     /**
+     * 适用获取密码判断
+     * @param fetchExistStudent
+     * @return student
+     * */
+    Student fetchExistStudent(String fetchExistStudent);
+
+    /**
      * 获取某个学生的某个文件
      * @param sIdAndFpId
      * @return map

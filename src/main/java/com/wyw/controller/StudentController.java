@@ -1,5 +1,6 @@
 package com.wyw.controller;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wyw.pojo.FileResume;
@@ -7,8 +8,10 @@ import com.wyw.pojo.Student;
 import com.wyw.service.*;
 import com.wyw.utils.FinalStaticValue;
 import com.wyw.utils.Util;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,13 +64,19 @@ public class StudentController {
     @Resource
     FileResumeService fileResumeService;
 
+    @Autowired
+    JavaMailSenderImpl javaMailSender;
+
+    @Resource
+    Util util;
+
     @RequestMapping("/studentLogin")
     public String stuLogin(@RequestParam(value = "sId",required = false) Long sId,
                            @RequestParam( value = "sPassword",required = false) String sPassword,
                            HttpSession session,
                            Model model) throws ParseException {
         Student student = studentService.fetchStuById(sId);
-        Util util = new Util();
+
         int legalInputLoginFlag = util.isLegalInputLogin(sId,sPassword,student,model);
         List<Map<String, Object>> allSpecialPartTimeJobs = partTimeJobService.getAllPageSpecialPartTimeJobs();
         List<Map<String, Object>> latestSpcPartTimeJobs = partTimeJobService.fetchLatestSpcPartTimeJob();
@@ -141,6 +150,7 @@ public class StudentController {
                 session.setAttribute("currentName",student.getSName());
                 session.setAttribute("currentStuId",student.getSId());
                 System.out.println("我进来了学生");
+                System.out.println("现在sessionId："+session.getAttribute("currentStuId"));
                 model.addAttribute("spcPartTimeJobs",allSpecialPartTimeJobs);
                 model.addAttribute("latestSpcPartTimeJobs",latestSpcPartTimeJobs);
                 model.addAttribute("serviceProvideKinds",serviceProvideKinds);
@@ -198,12 +208,15 @@ public class StudentController {
     public String deleteStu(@RequestParam(required = false) String pageStuSearchInfo,
                             Model model,
                             HttpSession session,
-                            @RequestParam(required = false)String pageSid,
-                            @PathVariable(value = "pageNum",required = false) Integer pageNum){
+                            @RequestParam(required = false)Long pageSid,
+                            @PathVariable(value = "pageNum",required = false) Integer pageNum) throws IOException {
+
+        String sName =studentService.fetchStuById(pageSid).getSName();
+        FileUtils.deleteDirectory(new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentService.fetchStuById(pageSid).getSName()+File.separator));
 
         Map<String,Object> updateStudent=new HashMap<String,Object>();
         updateStudent.put("sId",pageSid);
-        updateStudent.put("sFlag",FinalStaticValue.DELETED_FLAG);
+        updateStudent.put("sFlag",Integer.valueOf(FinalStaticValue.DELETED_FLAG).toString());
         studentService.updateStudent(updateStudent);
 
         Map<String, Object> comApplyLocalInformationDealMap = new HashMap<String, Object>();
@@ -228,12 +241,12 @@ public class StudentController {
          * 这里可以写将文件给删除的方法
          * */
         Map<String, Object> fileResume = new HashMap<String, Object>();
-        fileResume.put("fFileFlag",DELETED_FLAG);
+        fileResume.put("fFileFlag",Integer.valueOf(FinalStaticValue.DELETED_FLAG).toString());
         fileResume.put("fFileSid",pageSid);
         fileResumeService.updateFileResume(fileResume);
 
         /**
-         * 去companycontroller抄 不过删的话直接把文件夹删除即可
+         * 去companycontroller抄 不过删的话直接把文件夹删除即可(在第一行)
          * */
 
 
@@ -260,7 +273,7 @@ public class StudentController {
             @RequestParam Map<String ,Object> pageUpdateStu,
             @PathVariable(value = "sId") Long sId,
             Model model){
-        switch (new Util().isLegalInputStudentMap(pageUpdateStu)) {
+        switch (util.isLegalInputStudentMap(pageUpdateStu,sId)) {
             case EMPTY_POJO:{Student studentInfo = studentService.fetchStuById(sId);
                 Map<String,Object> fileResume=new HashMap<String,Object>();
                 fileResume.put("fFileSid",sId);
@@ -276,29 +289,72 @@ public class StudentController {
                 fileResume.put("fFileSid",sId);
                 model.addAttribute("stuInfo",studentService.fetchStuById(sId));
                 model.addAttribute("fileResumes",fileResumeService.fetchFileResumesList(fileResume));model.addAttribute("updateMsg","错误的身份证号码");return "stuUpdate";}
-            default:
+            case ERROR_EMAIL:{
+                Student studentInfo = studentService.fetchStuById(sId);
+                Map<String,Object> fileResume=new HashMap<String,Object>();
+                fileResume.put("fFileSid",sId);
+                model.addAttribute("stuInfo",studentService.fetchStuById(sId));
+                model.addAttribute("fileResumes",fileResumeService.fetchFileResumesList(fileResume));model.addAttribute("updateMsg","错误的邮箱");return "stuUpdate";
+
+            }
+            case REPEATED_PHONE:{Student studentInfo = studentService.fetchStuById(sId);
+                Map<String,Object> fileResume=new HashMap<String,Object>();
+                fileResume.put("fFileSid",sId);
+                model.addAttribute("stuInfo",studentService.fetchStuById(sId));
+                model.addAttribute("fileResumes",fileResumeService.fetchFileResumesList(fileResume));model.addAttribute("updateMsg","该电话已被注册");return "stuUpdate";}
+            case REPEATED_EMAIL:{Student studentInfo = studentService.fetchStuById(sId);
+                Map<String,Object> fileResume=new HashMap<String,Object>();
+                fileResume.put("fFileSid",sId);
+                model.addAttribute("stuInfo",studentService.fetchStuById(sId));
+                model.addAttribute("fileResumes",fileResumeService.fetchFileResumesList(fileResume));model.addAttribute("updateMsg","该邮箱已被注册");return "stuUpdate";}
+            case REPEATED_IDENTITY:{Student studentInfo = studentService.fetchStuById(sId);
+                Map<String,Object> fileResume=new HashMap<String,Object>();
+                fileResume.put("fFileSid",sId);
+                model.addAttribute("stuInfo",studentService.fetchStuById(sId));
+                model.addAttribute("fileResumes",fileResumeService.fetchFileResumesList(fileResume));model.addAttribute("updateMsg","该身份证已被注册");return "stuUpdate";}
+            case SUCCESS:break;
+
+                default:
         }
+        Student studentInfo = studentService.fetchStuById(sId);
+        //获取未更新前的学生信息获得其原本名字，为之后修改做准备
         pageUpdateStu.put("sId",sId);
         studentService.updateStudent(pageUpdateStu);
 
-        Map<String,Object> updFileStorePath=new HashMap<String,Object>();
-        Map<String,Object> updFileResume=new HashMap<String,Object>();
-        updFileResume.put("fFileSid",sId);
-        List<FileResume> updateFileResumes = fileResumeService.fetchFileResumesList(updFileResume);
 
-        updFileStorePath.put("fFileSid",sId);
+//        File of=new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentInfo.getSName()+File.separator);
+
+        Map<String,Object> updFileStorePath=new HashMap<String,Object>();
+
+        Map<String,Object> oldFileResume=new HashMap<String,Object>();
+        oldFileResume.put("fFileSid",sId);
+        List<FileResume> updateFileResumes = fileResumeService.fetchFileResumesList(oldFileResume);
+
+
+//查出了所有要更新的文件
+
         if (pageUpdateStu.get("sName") != null) {
+            //说明修改了名字
+            //下面把文件夹名字也换成更改后的
+//            System.out.println(RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentInfo.getSName()+File.separator);
+//            System.out.println(RESUME_FILE_STORE_PATH_PREFIX+File.separator+(pageUpdateStu.get("sName").toString())+File.separator);
+//            if (!of.exists()){
+//                of.mkdirs();
+//            }
+
+            new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentInfo.getSName()+File.separator).renameTo(new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+(pageUpdateStu.get("sName").toString())+File.separator));
             for (FileResume fr: updateFileResumes
                  ) {
                 updFileStorePath.put("fFileStorePath",RESUME_FILE_STORE_PATH_PREFIX+File.separator+(pageUpdateStu.get("sName").toString())+File.separator+(fr.getFFileStorePath().substring(fr.getFFileStorePath().lastIndexOf(File.separator)+1,fr.getFFileStorePath().length())));
+                updFileStorePath.put("fFileSid",sId);
+                updFileStorePath.put("fFileID",fr.getFFileID());
+                fileResumeService.updateFileResume(updFileStorePath);
             }
         }
 //        RESUME_FILE_STORE_PATH_PREFIX+File.separator+(pageUpdateStu.get("sName").toString())+File.separator
 
-        fileResumeService.updateFileResume(updFileStorePath);
 
 
-        Student studentInfo = studentService.fetchStuById(sId);
         Map<String,Object> fileResume=new HashMap<String,Object>();
         fileResume.put("fFileSid",sId);
         model.addAttribute("stuInfo",studentService.fetchStuById(sId));
@@ -343,6 +399,8 @@ public class StudentController {
                                    Model model) throws IOException {
 
         FileResume repeatedFileResume = fileResumeService.fetchFileResumeByfId(fFileID);
+        System.out.println(repeatedFileResume.getFFileName());
+        System.out.println(pageFileResume.getOriginalFilename());
         Student studentInfo = studentService.fetchStuById(sId);
 
             Map<String,Object> updFileResume=new HashMap<String,Object> ();
@@ -365,12 +423,18 @@ public class StudentController {
             if (!storeNewFile.exists()){
                 storeNewFile.mkdirs();
             }
-            pageFileResume.transferTo(new File(storeNewFile.getAbsoluteFile()+File.separator+pageFileResume.getOriginalFilename()));
+        System.out.println("storeNewFile:"+storeNewFile.getAbsoluteFile());
+        System.out.println(pageFileResume.getOriginalFilename());
+        System.out.println(storeNewFile.getAbsoluteFile()+File.separator+pageFileResume.getOriginalFilename());
+            pageFileResume.transferTo(
+                    new File(storeNewFile.getAbsoluteFile()+File.separator+pageFileResume.getOriginalFilename()));
 
-
+            updFileResume.put("fFileID",fFileID);
             updFileResume.put("fFileName",pageFileResume.getOriginalFilename());
             updFileResume.put("fFileStorePath",RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentInfo.getSName()+File.separator+pageFileResume.getOriginalFilename());
-
+        System.out.println("fFileID:"+fFileID);
+        System.out.println("fFileName:"+pageFileResume.getOriginalFilename());
+        System.out.println("fFileStorePath:"+RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentInfo.getSName()+File.separator+pageFileResume.getOriginalFilename());
 
             fileResumeService.updateFileResume(updFileResume);
 
@@ -393,24 +457,94 @@ public class StudentController {
     public String addStu(@RequestParam Map<String ,Object> pageRegisterStu,
                          Model model) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-        switch (new Util().isLegalInputStudentMap(pageRegisterStu)) {
+
+
+        switch (util.isLegalInputStudentMap(pageRegisterStu,LONG_NULL)) {
             case EMPTY_POJO:{ model.addAttribute("registerMsg","请填写完整信息");return "registerStu"; }
             case INCONSISTENT_PASSWORD:{model.addAttribute("registerMsg","密码输入不一致");return "registerStu";}
             case ERROR_PHONE_NUMBER:{model.addAttribute("registerMsg","错误的手机号");return "registerStu";}
-            case ERROR_IDENTITY_NUMBER:{model.addAttribute("registerMsg","错误的身份证号码");return "registerStu";}
+            case ERROR_EMAIL:{model.addAttribute("registerMsg","错误的邮箱");return "registerStu";}
+            case REPEATED_PHONE:{model.addAttribute("registerMsg","该电话已被注册");return "registerStu";}
+            case REPEATED_EMAIL:{model.addAttribute("registerMsg","该邮箱已被注册");return "registerStu";}
+            case SUCCESS:break;
             default:
         }
+
+        if (pageRegisterStu.get("checkProtocol")==null){
+            System.out.println("你没有勾选协议");
+            model.addAttribute("registerMsg","你没有勾选协议");
+            return "registerStu";
+        }
+
+
         pageRegisterStu.put("sId",FinalStaticValue.INTEGER_NULL);
-        pageRegisterStu.put("sRegisterTime",new Util().CSTDateFormatFromPageTransferToString(sdf.parse(sdf.format(System.currentTimeMillis())),sdf));
+        pageRegisterStu.put("sRegisterTime",util.CSTDateFormatFromPageTransferToString(sdf.parse(sdf.format(System.currentTimeMillis())),sdf));
         pageRegisterStu.put("sPassword",pageRegisterStu.get("sPassword1").toString());
 
-        studentService.addStudent(pageRegisterStu);
+
+         studentService.addStudent(pageRegisterStu);
+        System.out.println(Long.valueOf(pageRegisterStu.get("sId").toString()));
+
+        util.sendMail(ID_SUBJECT,ID_TEXT+pageRegisterStu.get("sId").toString(),DEFAULT_MAIL_SENDER,studentService.fetchStuById(Long.valueOf(pageRegisterStu.get("sId").toString())).getSEmail());
+
 
 
         model.addAttribute("registerMsg","注册成功，点击左侧按钮或者上方按钮前往登录");
         return "registerStu";
     }
 
+    @RequestMapping("/stuFetchPasswordByEmail")
+    public String stuFetchPasswordByEmail(@RequestParam String usrIdOrNameOrEmailOrPhone,
+                                       Model model){
+
+
+        System.out.println(usrIdOrNameOrEmailOrPhone);
+        if (usrIdOrNameOrEmailOrPhone==null || "".equals(usrIdOrNameOrEmailOrPhone)){
+            model.addAttribute("fpMsg",INTEGER_NULL);
+            return "stuForgetPassword";
+        }
+        Student existStudent = studentService.fetchExistStudent(usrIdOrNameOrEmailOrPhone);
+        if (existStudent==null){
+            model.addAttribute("fpMsg",INTEGER_NULL);
+            return "stuForgetPassword";
+        }
+        if (existStudent.getSEmail()==null){
+            model.addAttribute("fpMsg",INTEGER_NULL);
+            return "stuForgetPassword";
+        }
+        if (existStudent.getSPhoneNumber()==null){
+            model.addAttribute("fpMsg",INTEGER_NULL);
+            return "stuForgetPassword";
+        }
+
+
+        util.sendMail(PASSWORD_SUBJECT,PASSWORD_TEXT+existStudent.getSPassword(),DEFAULT_MAIL_SENDER,existStudent.getSEmail());
+
+
+        model.addAttribute("fpMsg",INTEGER_NULL+1);
+        return "stuForgetPassword";
+    }
+
+    @RequestMapping("/stuRevisePassword/{sId}")
+    public String stuRevisePassword(@RequestParam Map<String ,Object> pageUpdateStu,
+                                 @PathVariable(value = "sId") Long sId,
+                                 Model model){
+        Map<String,Object> updateStudent=new HashMap<String,Object>();
+        switch (util.isLegalInputStudentMap(pageUpdateStu,sId)){
+            case EMPTY_POJO:{model.addAttribute("oldPassword",studentService.fetchStuById(sId).getSPassword());model.addAttribute("updateMsg","请填写完整信息");return "stuRevisePassword";}
+            case INCONSISTENT_PASSWORD:{model.addAttribute("oldPassword",studentService.fetchStuById(sId).getSPassword());model.addAttribute("updateMsg","两次密码不一致");return "stuRevisePassword";}
+            case SUCCESS:break;
+            default:
+        }
+        updateStudent.put("sId",sId);
+        updateStudent.put("sPassword",pageUpdateStu.get("sPassword2").toString());
+        studentService.updateStudent(updateStudent);
+
+        model.addAttribute("updateMsg","更新成功");
+        model.addAttribute("oldPassword",studentService.fetchStuById(sId).getSPassword());
+        return "stuRevisePassword";
+
+    }
 
 
 }

@@ -31,6 +31,9 @@ import java.util.*;
 
 import static com.wyw.utils.FinalStaticValue.*;
 
+/**
+ * @author 鱼酥不是叔
+ */
 @Controller
 @RequestMapping("/PartTimeJob")
 public class PartTimeJobController {
@@ -49,6 +52,9 @@ public class PartTimeJobController {
 
     @Resource
     StudentService studentService;
+
+
+
 
 //    @RequestMapping("/fetchAllSpecialPartTimeJob")
 //    public String fetchAllSpecialPartTimeJob(Model model){
@@ -169,6 +175,8 @@ public class PartTimeJobController {
         if(repeatedInfoInApplyPartTimeJob!=null){
             System.out.println("i came in repeated situation");
             model.addAttribute("apMsg","请勿重复申请同一个职位");
+            List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
+            model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
             System.out.println(model.getAttribute("apMsg"));
             return "zzy";
 //            return "redirect:/PartTimeJob/fetchSpcPartTimeJob/"+pId;
@@ -214,7 +222,10 @@ public class PartTimeJobController {
 
         partTimeJob.put("pSubmitTime",util.computePageDays(partTimeJob.get("pSubmitTime").toString(),sdf));
         partTimeJobService.updatePartTimeJob(updatePartTimeJob);
+        List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
+        model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
         model.addAttribute("apMsg","申请成功");
+
 //        return "redirect:/PartTimeJob/fetchSpcPartTimeJob/"+pId;
         return "zzy";
     }
@@ -344,6 +355,8 @@ public class PartTimeJobController {
         PartTimeJob updatePartTimeJob =util.getPartTimeJobByPageParam(pagePartTimeJob);
         System.out.println("要更新的pid："+updatePartTimeJob.getPId());
         partTimeJobService.updatePartTimeJob(updatePartTimeJob);
+
+
 
 
         Map<String, Object> PartTimeJob = partTimeJobService.fetchSpcPartTimeJobByPid(pId);

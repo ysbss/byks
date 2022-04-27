@@ -37,6 +37,11 @@ public class PartTimeJobServiceImpl implements PartTimeJobService{
     }
 
     @Override
+    public List<PartTimeJob> fetchAllPartTimeJobs(PartTimeJob partTimeJob) {
+        return partTimeJobMapper.fetchAllPartTimeJobs(partTimeJob);
+    }
+
+    @Override
     public List<Map<String, Object>> fetchApproximatePartTimeJobByPid(Long pId) {
         return partTimeJobMapper.fetchApproximatePartTimeJobByPid(pId);
     }

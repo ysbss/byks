@@ -28,6 +28,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Company fetchExistCompany(String fetchExistCompany) {
+        return companyMapper.fetchExistCompany(fetchExistCompany);
+    }
+
+    @Override
     public List<Company> fetchCompaniesList(Map<String, Object> company) {
         return companyMapper.fetchCompaniesList(company);
     }

@@ -35,6 +35,13 @@ public interface PartTimeJobMapper {
     int deletePartTimeJobByPid(Long pId);
 
     /**
+     * 查询所有兼职
+     * @param partTimeJob
+     * @return list
+     * */
+    List<PartTimeJob> fetchAllPartTimeJobs(PartTimeJob partTimeJob);
+
+    /**
      * 获得近似兼职
      * @param pId
      * @return list

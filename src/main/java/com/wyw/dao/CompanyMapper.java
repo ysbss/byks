@@ -1,6 +1,7 @@
 package com.wyw.dao;
 
 import com.wyw.pojo.Company;
+import com.wyw.pojo.Student;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,6 +26,16 @@ public interface CompanyMapper {
      * @return company
      * */
     Company fetchCompanyByCid(Long cId);
+
+    /**
+     * 适用获取密码判断
+     * @param fetchExistCompany
+     * @return company
+     * */
+    Company fetchExistCompany(String fetchExistCompany);
+
+
+
 
     /**
      * 获得所有公司

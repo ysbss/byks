@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>帮帮网 — 学生信息</title>
+    <link th:href="@{/css/select2.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-1.7.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/area.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/location.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/search/select2_locale_zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+    <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+
+
+</head>
+
+<body class="bft_bg">
+<!-- top内容开始 -->
+<div th:replace="~{commons/common::top}" ></div>
+<!-- top内容结束 -->
+
+<div class="center_blank"></div>
+<!-- 内容开始 -->
+<div class="nr">
+    <div class="zzy_nr">
+        <form th:action="@{'/company/updateCom/'+${comInfo.getCId()}}">
+            <div class="zzy"><p style="float: left" ><span>企业名：</span><input type="text" style="border-radius: 18px;border: 1px solid gray;outline: none" name="cName" th:value="${comInfo.getCName()}" th:placeholder="${comInfo.getCName()}"/></p></div>
+            <div class="zzy_2">
+
+                <table width="600" border="1" cellspacing="1" cellpadding="1">
+                    <tr>
+                        <td><span>公司地址：</span><input  style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="cAddress" th:placeholder="${comInfo.getCAddress()}" th:value="${comInfo.getCAddress()}"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><span>公司邮箱：</span><input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="cEmail" th:placeholder="${comInfo.getCEmail()}"  th:value="${comInfo.getCEmail()}"/></td>
+                    </tr>
+                    <tr>
+                        <td><span>公司简介：</span><textarea  style="width:360px; height:100px; border:1px solid #c9c9c9; color:#666; padding:5px;" name="cDescription" th:text="${comInfo.getCDescription()}"  th:value="${comInfo.getCDescription()}"/></td>
+                    </tr>
+                    <tr>
+                        <td><button style="color: #0066cc;width: 100px;height: 50px;border-radius: 18px" type="submit">编辑</button></td>
+
+                    </tr>
+
+                </table>
+
+
+            </div>
+        </form>
+        <!--        <form enctype="multipart/form-data" method="post" th:action="@{'/PartTimeJob/applyPartTimeJob/'+${partTimeJob.get('pId')}+'/'+${partTimeJob.get('cId')}}">-->
+        <!--            <div id="uploadResume" style="margin-left: 345px;height: 380px; display: none">-->
+        <!--                <div >-->
+        <!--                    <input type="file" class="form-control" id="resumeFile" name="resumeFile">-->
+        <!--                </div>-->
+        <!--                <input type="submit" value="申请"/>-->
+        <!--            </div>-->
+
+        <!--        </form>-->
+        <!--        <p th:if="${apMsg}" th:text="${apMsg}" style="color: red"></p>-->
+        <!--        <div style="background: #0066cc;margin-left: 25%;margin-right: 25%; width: 35%; height: 0%; float: right"><p>123</p></div>-->
+        <div style="margin-left: 30px;font-size: 15px" >
+            <p th:if="${updateMsg}" th:text="${updateMsg}" style="color: red"></p>
+        </div>
+        <div class="zzy_5">
+            <!--            <p style="width:680px; height:40px; line-height:40px; background:#f7f7f7; color:#333; font-weight:bold; text-indent:10px; border:1px solid #ddd; margin-bottom:30px; "><span>公司介绍</span></p>-->
+            <!--            <p th:text="${partTimeJob.get('cDescription')}"></p>-->
+            <!--                    <p>由上海地纬(集团)股份有限公司重磅打造的复合型商业旗舰广场『地纬生活广场』项目招商现场火爆，客户持币踊跃待租，万众期待的财富核爆席卷川沙。地纬生活广场集餐饮、娱乐、休闲、购物、健身、早教六大高端功能于一体。铂金地标、便捷交通、一流配置、超强人气，全力构筑浦东高端商业带，引领川沙商业区崛起。　　</p>-->
+            <!--					<p>立足“两镇一区”打造中环新地标川沙新城正进行高打造中环新地标川沙新城正进行高起点规划建设打造中环新打造中环新地标川沙新城正进行高起点规划建设地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设打造中环新地标川沙新城正进行高起点规划建设起点规划建设，强势崛起的上海国际空港城以及迪士尼落户川沙为区域积攒强大人气。拔地而起的『地纬生活广场』，地处川沙镇、唐镇、张江科技园区“两镇一区”合围处，川沙新城核心位置。“两镇一区”拥有深厚的商业沉淀与积累，目前区域常住人口60多万，区域内有3000多家核心企业和近万家注册企业，政府部门、研发机构以及各类高校300多所。由于川沙改革发展的滞后，周边一直没有成型的商业配套，地纬生活广场的启航，填补了川沙集中性商业的空白，迎合了更多有实力人群对生活、居住品质的更高追求。显著的区位优势使『地纬生活广场』在东部商业区熠熠生辉，打造中环新地标。</p>-->
+        </div>
+
+    </div>
+    <!-- 内容结束 -->
+    <!-- 友情链接开始 -->
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::friendLink}">
+    </div>
+    <!-- 友情链接结束 -->
+
+    <!-- 底部内容开始 -->
+    <div class="blank"></div>
+    <div class="blank"></div>
+    <div th:replace="~{commons/common::bottom}">
+        <!-- 底部内容结束 -->
+    </div>
+    <div class="submenu"></div>
+    <!-- 搜索内容结束 -->
+
+</div>
+<!-- 帮众结束 -->
+
+
+<!-- alpha div -->
+<div id="maskLayer" style="display:none;">
+    <iframe id="maskLayer_iframe" frameBorder=0 scrolling=no style="filter:alpha(opacity=50)"></iframe>
+    <div id="alphadiv" style="filter:alpha(opacity=50);-moz-opacity:0.5;opacity:0.5"></div>
+    <div id="drag">
+        <h3 id="drag_h"></h3>
+        <div id="drag_con"></div><!-- drag_con end -->
+    </div>
+</div><!-- maskLayer end -->
+</div>
+<!-- alpha div end -->
+
+</body>
+</html>

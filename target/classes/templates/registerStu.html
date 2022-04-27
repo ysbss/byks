@@ -41,43 +41,39 @@
                 <area shape="rect" coords="162,66,190,95" href="#" />
               </map>
        	  </div>
-			<form th:action="@{/student/addStu}">
-
-			</form>
-            <div class="zc_right">
-            	<div class=""><img th:src="@{/images/bzz_2.jpg}" /></div>
-            	<div class="item" style="margin-left: 51px">
-    				<label>用户名：</label>
-   				  <input type="text" name="sName" />
- 				</div>
-                <div class="item">
-    				<label>登录密码：</label>
-   				  <input type="text" name="sPassword1" />
- 				</div>
-                <div class="item">
-    				<label>确认密码：</label>
-   				  <input type="text" name="sPassword2" />
- 				</div>
-                <div class="item">
-    				<label>联系电话：</label>
-   				  <input type="text" name="sPhoneNumber" />
- 				</div>
-<!--              <div class="item_a">-->
-<!--   				<div class="item_a_1"><label>验&nbsp;证&nbsp;码：</label></div>-->
-<!--   				<div class="item_a_2"><input type="text" /></div>-->
-<!--                <div class="item_a_2"><img th:src="@{/images/yzm.jpg}" /></div><a href="#">看不清？换一张</a></span>-->
-<!--              </div>-->
-              <div class="item_b">
-              	<div class="item_b_1">
-					<p th:if="${registerMsg}" th:text="${registerMsg}" style="color: red"></p>
+			<form id="registryForm" th:action="@{/student/addStu}">
+				<div class="zc_right">
+					<div class=""><img th:src="@{/images/bzz_2.jpg}" /></div>
+					<div class="item" style="margin-left: 51px">
+						<label>用户名：</label>
+						<input type="text" name="sName" />
+					</div>
+					<div class="item">
+						<label>登录密码：</label>
+						<input type="password" name="sPassword1" />
+					</div>
+					<div class="item">
+						<label>确认密码：</label>
+						<input type="password" name="sPassword2" />
+					</div>
+					<div class="item">
+						<label>联系电话：</label>
+						<input type="text" name="sPhoneNumber" />
+					</div>
+					<div class="item" style="margin-left: 67px;">
+						<label>邮箱：</label>
+						<input type="text" name="sEmail" />
+					</div>
+					<!--              <div class="item_a">-->
+					<!--   				<div class="item_a_1"><label>验&nbsp;证&nbsp;码：</label></div>-->
+					<!--   				<div class="item_a_2"><input type="text" /></div>-->
+					<!--                <div class="item_a_2"><img th:src="@{/images/yzm.jpg}" /></div><a href="#">看不清？换一张</a></span>-->
+					<!--              </div>-->
+					<div th:replace="~{commons/common::registryProtocol}"></div>
+					<div th:replace="~{commons/common::registrySubmit}"></div>
 				</div>
-              	<input type="checkbox" />&nbsp;<a href="#">我已阅读并同意《网站服务协议》</a>
-              </div>
-              <div class="item_b">
-              	<div class="item_b_1"></div>
-              	<a href="#"><img th:src="@{/images/zc_pic.jpg}" /></a>
-              </div>
-          </div>
+			</form>
+
         </div>
     </div>
 

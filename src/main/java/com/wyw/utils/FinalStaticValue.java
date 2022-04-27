@@ -7,6 +7,27 @@ public class FinalStaticValue {
 
     public static final int DELETED_FLAG=-1;
 
+    public static String PHONE_REGEX="^\\d{11}$";
+    public static String IDENTITY_REGEX="^[1-9]([0-9]{16}|[0-9]{13})[xX0-9]$";
+    public static String EMAIL_REGEX="^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+
+
+    public static String DEFAULT_MAIL_SENDER="1260518606@qq.com";
+    public static String ID_SUBJECT="获取您注册的账号id";
+    public static String ID_TEXT="您的帮帮网登录id为：";
+    public static String PASSWORD_SUBJECT="获取您注册的账号密码";
+    public static String PASSWORD_TEXT="您的帮帮网登录密码为:";
+    public static String ADMIN_REGISTER_SUBJECT ="获得新管理员的账号密码";
+    public static String ADMIN_REGISTER_TEXT_ACCOUNT="系统生成的管理员账号为：           ";
+    public static String ADMIN_REGISTER_TEXT_PASSWORD="系统生成的管理员密码为：";
+    public static String ADMIN_PASSWORD_SUBJECT="获得管理员的密码：";
+    public static String ADMIN_PASSWORD_TEXT ="管理员密码为：";
+
+    public static final String LOW_STR = "abcdefghijklmnopqrstuvwxyz";
+    public static final String SPECIAL_STR = "~!@#$%^&*()_+/-=[]{};:'<>?.";
+    public static final String NUM_STR = "0123456789";
+
+
     public static final int INT_FEMALE=1;
     public static final int INT_MALE=0;
     public static final String STR_FEMALE="男";
@@ -18,6 +39,7 @@ public class FinalStaticValue {
     public static final int INT_COMPANY=1;
     public static final String STR_ADMIN="管理员";
     public static final int INT_ADMIN=2;
+
 
 
 
@@ -37,7 +59,11 @@ public class FinalStaticValue {
     public static final int INCONSISTENT_PASSWORD=10;
     public static final int ERROR_PHONE_NUMBER=11;
     public static final int ERROR_IDENTITY_NUMBER=12;
-
+    public static final int ERROR_EMAIL=13;
+    public static final int REPEATED_PHONE=14;
+    public static final int REPEATED_EMAIL=15;
+    public static final int REPEATED_IDENTITY=16;
+    public static final int ERROR_CHECK_CODE=17;
 
     public static final int TODAY =0;
     public static final int YESTERDAY =1;
@@ -54,6 +80,7 @@ public class FinalStaticValue {
 
     public static final String STRING_NULL ="";
     public static final Integer INTEGER_NULL=0;
+    public static final Long LONG_NULL=0L;
 
 
     public static final int EAT=1;

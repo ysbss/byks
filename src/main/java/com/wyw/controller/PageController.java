@@ -2,6 +2,7 @@ package com.wyw.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.wyw.pojo.Company;
 import com.wyw.pojo.PartTimeJob;
 import com.wyw.pojo.Student;
 import com.wyw.pojo.WebAdvice;
@@ -60,6 +61,18 @@ public class PageController {
 
     @Resource
     FileResumeService fileResumeService;
+
+    @Resource
+    CompanyService companyService;
+
+
+    @RequestMapping("/toWebServiceProtocolPage")
+    public String toWebServiceProtocolPage(){
+
+        return "webServiceProtocol";
+    }
+
+
 
     @RequestMapping("/toBzPage")
     public String toBzPage(HttpSession session){
@@ -307,7 +320,7 @@ public class PageController {
         sIdAndFpId.put("fFilePid",pId);
         Map<String, Object> studentInfo = studentService.fetchStuWithResumeById(sIdAndFpId);
         System.out.println(studentInfo.get("sName"));
-
+        System.out.println(studentInfo.get("sEmail"));
 
         model.addAttribute("stuInfo",studentInfo);
         model.addAttribute("tmpPid",pId);
@@ -681,6 +694,13 @@ public class PageController {
         return "stuUpdate";
     }
 
+    @RequestMapping("/toStuRevisePassword/{sId}")
+    public String toStuRevisePassword( @PathVariable(value = "sId") Long sId,
+                                       Model model){
+
+        model.addAttribute("oldPassword",studentService.fetchStuById(sId).getSPassword());
+        return "stuRevisePassword";
+    }
 
 
     @RequestMapping("/toComAdd")
@@ -692,6 +712,38 @@ public class PageController {
 
         return "comForgetPassword";
     }
+
+    @RequestMapping("/toAllCompaniesList")
+    public String toAllCompaniesList(Model model,
+                                     HttpSession session){
+        session.setAttribute("curComSearchInfo",STRING_NULL);
+        PageHelper.startPage(1,3);
+        List<Company> allCompaniesList = companyService.fetchCompaniesList(new HashMap<String, Object>());
+        PageInfo<Company> allCompaniesListPageInfo=new  PageInfo<Company>(allCompaniesList);
+        model.addAttribute("allCompaniesList",allCompaniesList);
+        model.addAttribute("allCompaniesListPageInfo",allCompaniesListPageInfo);
+
+        return "allCompaniesList";
+    }
+
+    @RequestMapping("/toComUpdate/{cId}")
+    public String toComUpdate(@PathVariable(value = "cId") Long cId,
+                              Model model){
+
+        model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));
+        return "comUpdate";
+    }
+
+
+    @RequestMapping("/toComRevisePassword/{cId}")
+    public String toComRevisePassword( @PathVariable(value = "cId") Long cId,
+                                       Model model){
+
+        model.addAttribute("oldPassword",companyService.fetchCompanyByCid(cId).getCPassword());
+        return "comRevisePassword";
+    }
+
+
     @RequestMapping("/toAdminAdd")
     public String toAdminAdd(){
         return "registerAdmin";

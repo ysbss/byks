@@ -28,6 +28,13 @@ public interface CompanyService  {
     Company fetchCompanyByCid(Long cId);
 
     /**
+     * 适用获取密码判断
+     * @param fetchExistCompany
+     * @return company
+     * */
+    Company fetchExistCompany(String fetchExistCompany);
+
+    /**
      * 获得所有公司
      * @param company
      * @return list

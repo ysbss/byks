@@ -16,6 +16,7 @@
         <result column="SMAJOR" property="sMajor"/>
         <result column="SREGISTERTIME" property="sRegisterTime"/>
         <result column="SFLAG" property="sFlag"/>
+        <result column="SEMAIL" property="sEmail"/>
     </resultMap>
 
     <resultMap id="studentWithFile" type="java.util.Map">
@@ -29,6 +30,7 @@
         <result column="SEDUCATIONALDEGREE" property="sEducationalDegree"/>
         <result column="SPHONENUMBER" property="sPhoneNumber"/>
         <result column="SMAJOR" property="sMajor"/>
+        <result column="SEMAIL" property="sEmail"/>
         <result column="FFILEID" property="fFileID"/>
         <result column="FFILENAME" property="fFileName"/>
         <result column="FFILESTOREPATH" property="fFileStorePath"/>
@@ -36,13 +38,27 @@
         <result column="FFILEPID" property="fFilePid"/>
     </resultMap>
 <select id="fetchStuById" parameterType="Long" resultMap="studentMap">
-    select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG
+    select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG, SEMAIL
     from ks.student
     where SID=#{sId} and SFLAG=0
 </select>
 
+    <select id="fetchExistStudent" parameterType="String" resultMap="studentMap">
+        select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG, SEMAIL
+        from ks.student
+        where SFLAG=0
+        <if test="usrIdOrNameOrEmailOrPhone != null and usrIdOrNameOrEmailOrPhone!= '' ">
+        and (
+            SID=#{usrIdOrNameOrEmailOrPhone} or
+            SNAME=#{usrIdOrNameOrEmailOrPhone} or
+            SEMAIL=#{usrIdOrNameOrEmailOrPhone} or
+            SPHONENUMBER=#{usrIdOrNameOrEmailOrPhone}
+            )
+        </if>
+    </select>
+
     <select id="fetchStusList" parameterType="map" resultMap="studentMap">
-        select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG
+        select SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG, SEMAIL
         from ks.student
         <where>
             SFLAG=0
@@ -58,6 +74,7 @@
             <if test="sMajor != null and sMajor != '' ">and SMAJOR=#{sMajor}</if>
             <if test="sRegisterTime != null and sRegisterTime != '' ">and SREGISTERTIME=#{sRegisterTime}</if>
             <if test="sFlag != null and sFlag != '' ">and SFLAG=#{sFlag}</if>
+            <if test="sEmail != null and sEmail != '' ">and SEMAIL=#{sEmail}</if>
             <if test="stuSearchInfo != null and stuSearchInfo != '' ">
             and (
                 SNAME like concat('%',#{stuSearchInfo},'%') or
@@ -71,7 +88,7 @@
         </where>
     </select>
 
-    <insert id="addStudent" parameterType="map">
+    <insert id="addStudent" parameterType="map" useGeneratedKeys="true" keyProperty="sId">
         insert into ks.student(
         SID
         <if test="sName !=null and sName!= ''  "> ,SNAME</if>
@@ -85,7 +102,7 @@
         <if test="sMajor != null and sMajor != '' "> ,SMAJOR</if>
         <if test="sRegisterTime != null and sRegisterTime != '' "> ,SREGISTERTIME</if>
         <if test="sFlag != null and sFlag != '' "> ,SFLAG</if>
-
+        <if test="sEmail != null and sEmail != '' ">, SEMAIL</if>
         )
         values (
         #{sId}
@@ -100,6 +117,7 @@
         <if test="sMajor != null and sMajor != '' ">, #{sMajor}</if>
         <if test="sRegisterTime != null and sRegisterTime != '' ">, #{sRegisterTime}</if>
         <if test="sFlag != null and sFlag != '' ">, #{sFlag}</if>
+        <if test="sEmail != null and sEmail != '' ">,#{sEmail}</if>
         )
     </insert>
     
@@ -117,15 +135,16 @@
             <if test="sMajor != null and sMajor != '' "> SMAJOR=#{sMajor},</if>
             <if test="sRegisterTime != null and sRegisterTime != '' "> SREGISTERTIME=#{sRegisterTime},</if>
             <if test="sFlag != null and sFlag != '' "> SFLAG=#{sFlag},</if>
+            <if test="sEmail != null and sEmail != '' "> SEMAIL=#{sEmail},</if>
         </set>
         where SID=#{sId}
     </update>
 
 
 <select id="fetchStuWithResumeById" parameterType="map" resultMap="studentWithFile">
-    select  SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID
+    select  SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG, SEMAIL, FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID
     from ks.student as s,ks.fileresume as fr
-    where s.SID=fr.FFILESID
+    where s.SID=fr.FFILESID and s.SFLAG = 0
     <if test="sId != null and sId !='' ">
         and s.SID=#{sId}
     </if>
@@ -137,9 +156,9 @@
 </select>
 
     <select id="fetchStuWithResumesList" parameterType="Long" resultMap="studentWithFile">
-        select  SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID
+        select  SID, SNAME, SSCHOOL, SAGE, SSEX, SPASSWORD, SIDENTITYNUM, SEDUCATIONALDEGREE, SPHONENUMBER, SMAJOR, SREGISTERTIME, SFLAG, SEMAIL, FFILEID, FFILENAME, FFILESTOREPATH, FFILESID, FFILEPID
         from ks.student as s,ks.fileresume as fr
-        where s.SID=fr.FFILESID and s.SID=#{sId}
+        where s.SID=fr.FFILESID and s.SID=#{sId} and s.SFLAG=0
     </select>
 
 

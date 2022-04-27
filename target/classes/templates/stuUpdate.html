@@ -71,6 +71,10 @@
                         <td><span>身份证：</span><input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="sIdentityNum" th:placeholder="${stuInfo.getSIdentityNum()}"  th:value="${stuInfo.getSIdentityNum()}"/></td>
                     </tr>
                     <tr>
+                        <td><span>邮箱：</span><input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="sEmail" th:placeholder="${stuInfo.getSEmail()}"  th:value="${stuInfo.getSEmail()}"/></td>
+                    </tr>
+
+                    <tr>
                         <td><button style="color: #0066cc;width: 100px;height: 50px;border-radius: 18px" type="submit">编辑</button></td>
 
                     </tr>
@@ -93,20 +97,18 @@
         <!--        <div style="background: #0066cc;margin-left: 25%;margin-right: 25%; width: 35%; height: 0%; float: right"><p>123</p></div>-->
         <div style="margin-left: 30px;font-size: 15px" >
             <ul>
-                <li th:each="fileResume:${fileResumes}">
+                <li style="margin-bottom: 20px" th:each="fileResume:${fileResumes}">
                     <a style=" font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC; "  th:href="@{'/student/downLoadFileResume/'+${stuInfo.getSId()}+'/'+${fileResume.getFFileID()}}" th:text="${fileResume.getFFileName()}"></a>
 <!--                    <a style=" font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC; "  th:href="@{'/student/uploadFileResume/'+${stuInfo.getSId()}+'/'+${fileResume.getFFileID()}}" th:text="更新">-->
-
-                        <form enctype="multipart/form-data" method="post" th:action="@{'/student/uploadFileResume/'+${stuInfo.getSId()}+'/'+${fileResume.getFFileID()}}">
-                            <div id="uploadResume" style="margin-left: 345px;height: 380px; display: none">
-                                <div >
-                                    <input type="file" class="form-control" id="pageFileResume" name="pageFileResume">
-                                </div>
-                                <input type="submit" value="申请"/>
+                    <form enctype="multipart/form-data" method="post" th:action="@{'/student/uploadFileResume/'+${stuInfo.getSId()}+'/'+${fileResume.getFFileID()}}">
+                        <div  style="margin-top: 10px;height: 50px;">
+                            <div >
+                                <input type="file" id="pageFileResume" name="pageFileResume">
                             </div>
-                        </form>
+                            <input type="submit" value="更新"/>
+                        </div>
+                </form>
 
-                    </a>
                 </li>
             </ul>
             <p th:if="${uploadMsg}" th:text="${uploadMsg}" style="color: red"></p>

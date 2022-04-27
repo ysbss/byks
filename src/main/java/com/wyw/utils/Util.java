@@ -2,10 +2,14 @@ package com.wyw.utils;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.wyw.pojo.*;
-import com.wyw.service.LocalInformationService;
-import com.wyw.service.LocalInformationServiceImpl;
+import com.wyw.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -15,8 +19,20 @@ import static com.wyw.utils.FinalStaticValue.*;
 /**
  * @author WYW
  */
+@Component
 public class Util {
 
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
+    private CompanyService companyService;
+
+    @Resource
+    private AdminService adminService;
 
     public int isLegalInputLogin(Long Account, String Password, Student student, Model model) {
 
@@ -84,6 +100,11 @@ public class Util {
                 return EMPTY_POJO;
             }
         }
+//        if (!(pagePartTimeJob.get("cEmail").toString().matches(EMAIL_REGEX))){
+//            return ERROR_EMAIL;
+//        }
+
+
         for (Object o :
                 pagePartTimeJob.keySet()) {
             if ("pSalary1".equals(o)){
@@ -124,6 +145,9 @@ public class Util {
                 return EMPTY_POJO;
             }
         }
+//        if (!(pageLocalInformation.get("cEmail").toString().matches(EMAIL_REGEX))){
+//            return ERROR_EMAIL;
+//        }
         return SUCCESS;
     }
 
@@ -137,6 +161,9 @@ public class Util {
                 return EMPTY_POJO;
             }
         }
+//        if (!(pageServiceProvide.get("cEmail").toString().matches(EMAIL_REGEX))){
+//            return ERROR_EMAIL;
+//        }
         for (Object o: pageServiceProvide.keySet()
              ) {
             if ("spExpense1".equals(o)){
@@ -161,10 +188,12 @@ public class Util {
         }
         return SUCCESS;
     }
-    public int isLegalInputStudentMap(Map<String,Object> pageStudent){
+
+    public int isLegalInputStudentMap(Map<String,Object> pageStudent,Long sId){
 
         String sPassword1 ="";
         String sPassword2 ="";
+
 
         for (Object o:pageStudent.values()
         ) {
@@ -184,17 +213,123 @@ public class Util {
         if (!(sPassword1.equals(sPassword2))){
             return INCONSISTENT_PASSWORD;
         }
-        if (!(pageStudent.get("sPhoneNumber").toString().matches("^\\d{11}$"))){
-            return ERROR_PHONE_NUMBER;
+        if (pageStudent.get("sPhoneNumber")!=null){
+            if (!(pageStudent.get("sPhoneNumber").toString().matches(PHONE_REGEX))){
+                return ERROR_PHONE_NUMBER;
+            }
         }
-        if (!(pageStudent.get("sIdentityNum").toString().matches("^[1-9]([0-9]{16}|[0-9]{13})[xX0-9]$"))){
-            return ERROR_IDENTITY_NUMBER;
+        if (pageStudent.get("sIdentityNum") != null) {
+            if (!(pageStudent.get("sIdentityNum").toString().matches(IDENTITY_REGEX))){
+                return ERROR_IDENTITY_NUMBER;
+            }
+        }
+
+        if (pageStudent.get("sEmail")!=null){
+            if (!(pageStudent.get("sEmail").toString().matches(EMAIL_REGEX))){
+                return ERROR_EMAIL;
+            }
+        }
+        if (pageStudent.get("sPhoneNumber")!=null){
+            Map<String, Object> repeatedMap1 = new HashMap<>();
+            repeatedMap1.put("sPhoneNumber",pageStudent.get("sPhoneNumber").toString());
+            List<Student> judgeStudentList = studentService.fetchStusList(repeatedMap1);
+            if (!(judgeStudentList.isEmpty())&&!(judgeStudentList.get(INTEGER_NULL).getSId().equals(sId))){
+                return REPEATED_PHONE;
+            }
+        }
+        if (pageStudent.get("sEmail")!=null) {
+            Map<String, Object> repeatedMap2 = new HashMap<>();
+            repeatedMap2.put("sEmail",pageStudent.get("sEmail").toString());
+            List<Student> judgeStudentList = studentService.fetchStusList(repeatedMap2);
+
+            if (!(judgeStudentList.isEmpty())&&!(judgeStudentList.get(INTEGER_NULL).getSId().equals(sId))){
+                return REPEATED_EMAIL;
+            }
+        }
+
+        if (pageStudent.get("sIdentityNum")!=null) {
+            Map<String, Object> repeatedMap3 = new HashMap<>();
+            repeatedMap3.put("sIdentityNum",pageStudent.get("sIdentityNum").toString());
+            List<Student> judgeStudentList = studentService.fetchStusList(repeatedMap3);
+
+            if (!(judgeStudentList.isEmpty())&&!(judgeStudentList.get(INTEGER_NULL).getSId().equals(sId))){
+                return REPEATED_IDENTITY;
+            }
         }
 
 
         return SUCCESS;
     }
 
+    public int isLegalInputCompanyMap(Map<String,Object> pageCompany,Long cId){
+        String cPassword1 ="";
+        String cPassword2 ="";
+
+
+        for (Object o:pageCompany.values()
+        ) {
+            if ("".equals(o)||o==null){
+                return EMPTY_POJO;
+            }
+        }
+        for (Object o: pageCompany.keySet()
+        ) {
+            if ("cPassword1".equals(o)){
+                cPassword1=pageCompany.get("cPassword1").toString();
+            }
+            if ("cPassword2".equals(o)){
+                cPassword2=pageCompany.get("cPassword2").toString();
+            }
+        }
+        if (!(cPassword1.equals(cPassword2))){
+            return INCONSISTENT_PASSWORD;
+        }
+
+        if (pageCompany.get("cEmail")!=null){
+            if (!(pageCompany.get("cEmail").toString().matches(EMAIL_REGEX))){
+                return ERROR_EMAIL;
+            }
+        }
+        if (pageCompany.get("cEmail")!=null) {
+            Map<String, Object> repeatedMap2 = new HashMap<>();
+            repeatedMap2.put("cEmail",pageCompany.get("cEmail").toString());
+            List<Company> judgeCompaniesList = companyService.fetchCompaniesList(repeatedMap2);
+            if (!(judgeCompaniesList.isEmpty())&&!(judgeCompaniesList.get(INTEGER_NULL).getCId().equals(cId))){
+                return REPEATED_EMAIL;
+            }
+        }
+
+        return SUCCESS;
+    }
+
+    public int isLegalInputAdminMap(Map<String,Object> pageAdmin,String checkCode,Long aId){
+        for (Object o:pageAdmin.values()
+        ) {
+            if ("".equals(o)||o==null){
+                return EMPTY_POJO;
+            }
+        }
+        if (pageAdmin.get("aEmail")!=null){
+            if (!(pageAdmin.get("aEmail").toString().matches(EMAIL_REGEX))){
+                return ERROR_EMAIL;
+            }
+        }
+        if (pageAdmin.get("aEmail")!=null) {
+            Map<String, Object> repeatedMap2 = new HashMap<>();
+            repeatedMap2.put("aEmail",pageAdmin.get("aEmail").toString());
+            List<Admin> judgeCompaniesList = adminService.fetchAdminsList(repeatedMap2);
+            if (!(judgeCompaniesList.isEmpty())&&!(judgeCompaniesList.get(INTEGER_NULL).getAId().equals(aId))){
+                return REPEATED_EMAIL;
+            }
+        }
+        if(pageAdmin.get("aCheckCode")!=null){
+            if (!checkCode.equals(pageAdmin.get("aCheckCode").toString())){
+                return ERROR_CHECK_CODE;
+            }
+        }
+
+        return SUCCESS;
+    }
 
 
     public Date StringFromDataBaseTransferToDate(String DataBaseDate,SimpleDateFormat simpleDateFormat) throws ParseException {
@@ -208,6 +343,7 @@ public class Util {
         return date;
     }
 
+
     public List<Map<String,Object>> addToFourElement(List<Map<String,Object>> mapList){
         int staticLength=HOMEPAGE_IMG_CAPACITY-mapList.size();
         for (int i = 0; i < staticLength; i++) {
@@ -216,6 +352,7 @@ public class Util {
         }
         return mapList;
     }
+
     public String computePageDays(String dataBaseDate,SimpleDateFormat simpleDateFormat) throws ParseException {
         Date dataDate=simpleDateFormat.parse(dataBaseDate);
         Date curDate = simpleDateFormat.parse(simpleDateFormat.format(System.currentTimeMillis()));
@@ -255,6 +392,7 @@ public class Util {
         return pageDays;
 
     }
+
 
     public PartTimeJob getPartTimeJobByPageParam(Map<String,Object> pagePartTimeJob) throws ParseException {
         Util util = new Util();
@@ -418,6 +556,14 @@ public class Util {
         return serviceProvide;
     }
 
+    public void sendMail(String subject,String text,String from,String to){
+        SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(text);
+        simpleMailMessage.setTo(to);
+        simpleMailMessage.setFrom(from);
+        javaMailSender.send(simpleMailMessage);
 
+    }
 
 }

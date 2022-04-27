@@ -8,15 +8,91 @@
         <id column="AID" property="aId"/>
         <result column="ANAME" property="aName"/>
         <result column="APASSWORD" property="aPassword"/>
+        <result column="AEMAIL" property="aEmail"/>
     </resultMap>
 
 
 
     <select id="fetchAdminById" resultMap="adminMap" parameterType="Long">
-        select AID, ANAME, APASSWORD
+        select AID, ANAME, APASSWORD,AEMAIL
         from ks.admin
         where AID=#{aId}
     </select>
 
+    <select id="fetchAdminsList" resultMap="adminMap" parameterType="map">
+        select AID, ANAME, APASSWORD, AEMAIL
+        from ks.admin
+        <where>
+            <if test="aId !=null and aId != '' ">
+            and AID=#{aId}
+            </if>
+            <if test="aName !=null and aName!= ''  ">
+                and ANAME=#{aName}
+            </if>
+            <if test="aPassword !=null and aPassword!= ''  ">
+                and APASSWORD=#{aPassword}
+            </if>
+            <if test="aEmail !=null and aEmail!= '' ">
+                and AEMAIL=#{aEmail}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addAdmin" parameterType="map" useGeneratedKeys="true" keyProperty="aId">
+        insert into ks.admin(
+          AID
+          <if test="aName !=null and aName!= ''  ">
+              ,ANAME
+          </if>
+        <if test="aPassword !=null and aPassword!= ''  ">
+            ,APASSWORD
+        </if>
+        <if test="aEmail !=null and aEmail!= '' ">
+            ,AEMAIL
+        </if>
+        )
+        values (
+                #{aId}
+        <if test="aName !=null and aName!= ''  ">
+            ,#{aName}
+        </if>
+        <if test="aPassword !=null and aPassword!= ''  ">
+            ,#{aPassword}
+        </if>
+        <if test="aEmail !=null and aEmail!= '' ">
+            ,#{aEmail}
+        </if>
+                )
+    </insert>
+
+    <update id="updateAdmin" parameterType="map">
+        update ks.admin
+        <set>
+            <if test="aName !=null and aName!= ''  ">
+                ANAME=#{aName},
+            </if>
+            <if test="aPassword !=null and aPassword!= ''  ">
+                APASSWORD=#{aPassword},
+            </if>
+            <if test="aEmail !=null and aEmail!= '' ">
+                AEMAIL=#{aEmail},
+            </if>
+        </set>
+        where AID=#{aId}
+    </update>
+
+    <select id="findExistAdmin" parameterType="String" resultMap="adminMap">
+        select AID, ANAME, APASSWORD,AEMAIL
+        from ks.admin
+        <where>
+            <if test="usrIdOrNameOrEmailOrPhone != null and usrIdOrNameOrEmailOrPhone!= '' ">
+                and (
+                AID=#{usrIdOrNameOrEmailOrPhone} or
+                ANAME=#{usrIdOrNameOrEmailOrPhone} or
+                AEMAIL=#{usrIdOrNameOrEmailOrPhone}
+                )
+            </if>
+        </where>
+    </select>
 
 </mapper>

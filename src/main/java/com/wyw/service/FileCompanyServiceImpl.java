@@ -5,6 +5,9 @@ import com.wyw.pojo.FileCompany;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 鱼酥不是叔
  * */
@@ -27,5 +30,10 @@ public class FileCompanyServiceImpl implements FileCompanyService{
     @Override
     public FileCompany isRepeatedCompanyFile(Long fFileCid) {
         return fileCompanyMapper.isRepeatedCompanyFile(fFileCid);
+    }
+
+    @Override
+    public List<FileCompany> fetchFileCompanyList(Map<String, Object> fileCompany) {
+        return fileCompanyMapper.fetchFileCompanyList(fileCompany);
     }
 }

@@ -18,5 +18,5 @@ public class FileCompany {
     private String fFileName;
     private String fFileStorePath;
     private Long fFileCid;
-
+    private String fFileFlag;
 }

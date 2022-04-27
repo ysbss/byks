@@ -41,8 +41,10 @@ public class MyMVCConfig implements WebMvcConfigurer {
                 //网上说这样就可以在拦截器中注册mapper
                 .addPathPatterns("/**")
                 .excludePathPatterns("/index.html","/","/toIndexPage",
-                        "/toBzPage","/toBjPage","/toBftPage","/toZzyPage","/toLocalInformationPage/{lId}","/loginOut","/toBftMorePage","/toServiceProvidePage/{spId}","/toStuAdd","/toStuForgetPassword","/toComAdd","/toComForgetPassword","/toAdminAdd","/toAdminForgetPassword",
-                        "/admin/adminLogin", "/company/companyLogin","/student/studentLogin",
+                        "/toBzPage","/toBjPage","/toBftPage","/toZzyPage","/toLocalInformationPage/{lId}","/loginOut","/toBftMorePage","/toServiceProvidePage/{spId}","/toStuAdd","/toStuForgetPassword","/toComAdd","/toComForgetPassword","/toAdminAdd","/toAdminForgetPassword","/toWebServiceProtocolPage",
+                        "/admin/adminLogin","/admin/addAdmin","/admin/adminFetchPasswordByEmail","/admin/getAdminRandomRegisterCheckCode","/admin/getAdminForgerPasswordRandomCheckCode",
+                        "/company/companyLogin","/company/addCom","/company/comFetchPasswordByEmail","/company/comRevisePassword/{cId}",
+                        "/student/studentLogin","/student/addStu","/student/stuFetchPasswordByEmail","/student/stuRevisePassword/{sId}",
                         "/ServiceProvide/**",
                         "/ApplyPartTimeJob/**",
                         "/LocalInformation/**",

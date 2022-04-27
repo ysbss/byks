@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wyw.dao.ApplyPartTimeJobMapper">
     <resultMap id="applyPartTimeJobMap" type="com.wyw.pojo.ApplyPartTimeJob">
-        <result column="APID" property="apId"/>
+        <id column="APID" property="apId"/>
         <result column="APPID" property="apPid"/>
         <result column="APSID" property="apSid"/>
         <result column="APCID" property="apCid"/>
@@ -50,7 +50,10 @@
     <select id="isRepeatedInfoInApplyPartTimeJob" parameterType="map" resultMap="applyPartTimeJobMap">
         select APID, APPID, APSID, APCID, APSUBMITTIME, APSTATUS
         from ks.applyparttimejob
-        where 1=1
+        where  APSTATUS =10 or APSTATUS =30
+        <if test="apId != null and apId != '' ">
+           and APID=#{apId}
+        </if>
         <if test="apPid != null and apPid !='' ">
         and APPID=#{apPid}
         </if>

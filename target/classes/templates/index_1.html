@@ -39,9 +39,12 @@
                             <div class="zhuce_balnk1">
 <!--                                <p th:text="${lMsg}" style="color: red"></p>-->
                             </div>
-                            <div class="dengluh_1">欢迎回来！<span><a th:href="@{/toBzPage}">[[${session.currentName}]]</a></span></div>
+                            <div class="dengluh_1">欢迎回来！<span><a style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" th:href="@{/toBzPage}">[[${session.currentName}]]</a></span></div>
                             <div class="zhuce_balnk2"></div>
-                            <div class="zhuce_nam"><a th:href="@{/loginOut}">退出</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="zc_xg.html">修改密码</a></div>
+                            <div class="zhuce_nam"><a style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" th:href="@{/loginOut}">退出</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" th:if="${session.loginKind eq '公司'}" th:href="@{'/toComRevisePassword/'+${session.currentComId}}">修改密码</a>
+                                <a style="font: bold 11px Arial;text-decoration: none;background-color: #EEEEEE;color: #333333;padding: 2px 6px 2px 6px;border-top: 1px solid #CCCCCC;border-right: 1px solid #333333;border-bottom: 1px solid #333333;border-left: 1px solid #CCCCCC;" th:if="${session.loginKind eq '学生'}" th:href="@{'/toStuRevisePassword/'+${session.currentStuId}}">修改密码</a>
+                            </div>
                         </div>
                     </div>
         <!-- 标签切换结束 -->

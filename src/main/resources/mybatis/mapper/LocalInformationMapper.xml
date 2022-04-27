@@ -18,6 +18,7 @@
         <result column="CNAME" property="cName"/>
         <result column="CADDRESS" property="cAddress"/>
         <result column="CDESCRIPTION" property="cDescription"/>
+        <result column="CEMAIL" property="cEmail"/>
     </resultMap>
 
     <resultMap id="localInformationKindMap" type="java.util.Map">
@@ -45,7 +46,7 @@
     </select>
 
     <select id="fetchAllLocalInformation" resultMap="localInformationMap" parameterType="map">
-        select  LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG, LBROWSENUM, LAPPOINTMENTNUM, CNAME,CADDRESS,CDESCRIPTION
+        select  LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG, LBROWSENUM, LAPPOINTMENTNUM, CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.localinformation as l, ks.company as c
         where l.LCID=c.CID and LSPCFLAG!=-1
           <if test="localInformationSearchInfo != null and localInformationSearchInfo != '' ">
@@ -83,9 +84,6 @@
             <if test="lSpecificKind != null and lSpecificKind != '' ">
                 LSPECIFICKIND=#{lSpecificKind},
             </if>
-            <if test="lCid != null and lCid != '' ">
-                LCID=#{lCid}
-            </if>
             <if test="lPhoneNumber != null and lPhoneNumber != '' ">
                 LPHONENUMBER=#{lPhoneNumber},
             </if>
@@ -105,25 +103,32 @@
                 LAPPOINTMENTNUM=#{lAppointmentNum},
             </if>
         </set>
-        where LID=#{lId}
+        <where>
+            <if test="lId != null and lId != '' ">
+                LID=#{lId}
+            </if>
+            <if test="lCid != null and lCid != '' ">
+                and LCID=#{lCid}
+            </if>
+        </where>
     </update>
 
 
     <select id="fetchHomePageLocalInformation" resultMap="localInformationMap">
-        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.localinformation as l,ks.company as c
         where l.LSPCFLAG=1 and  l.LCID=c.CID
         limit 11
     </select>
     
     <select id="fetchLocalInformationBylId" resultMap="localInformationMap" parameterType="Long">
-        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.localinformation as l, ks.company as c
         where l.LID=#{lId} and l.LCID=c.CID and LSPCFLAG!=-1
     </select>
 
     <select id="fetchApproximateLocalInformationBylKindAndLid" resultMap="localInformationMap" parameterType="map">
-        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        select LID, LNAME, LKIND, LSPECIFICKIND, LCID, LPHONENUMBER, LCONTACTPERSON, LSUBMITTIME, LSPCFLAG,LBROWSENUM, LAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.localinformation as l, ks.company as c
         where l.LKIND=#{lKind} and l.LCID=c.CID and l.LID!=#{lId} and LSPCFLAG!=-1
         limit 9

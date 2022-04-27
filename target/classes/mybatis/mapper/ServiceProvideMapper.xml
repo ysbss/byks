@@ -19,6 +19,7 @@
     <result column="CNAME" property="cName"/>
     <result column="CADDRESS" property="cAddress"/>
     <result column="CDESCRIPTION" property="cDescription"/>
+    <result column="CEMAIL" property="cEmail"/>
 </resultMap>
 
     <resultMap id="serviceProvideKindMap" type="java.util.Map">
@@ -40,7 +41,7 @@
 
     
     <select id="fetchAllServiceProvides" parameterType="map" resultMap="serviceProvideMap">
-        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.serviceprovide as s,ks.company as c
         where s.SPCID=c.CID and SPSPCFLAG!=-1
     <if test="serviceProvideSearchInfo != null and serviceProvideSearchInfo != '' ">
@@ -80,9 +81,6 @@
             <if test="spSpecificKind != null and spSpecificKind != '' ">
                 SPSPECIFICKIND=#{spSpecificKind},
             </if>
-            <if test="spCid != null and spCid != '' ">
-                SPCID=#{spCid},
-            </if>
             <if test="spExpense != null and spExpense != '' ">
                 SPEXPENSE=#{spExpense},
             </if>
@@ -105,13 +103,20 @@
                 SPAPPOINTMENTNUM=#{spAppointmentNum},
             </if>
         </set>
-        where SPID=#{spId}
+        <where>
+            <if test="spId != null and spId != '' ">
+                SPID=#{spId}
+            </if>
+            <if test="spCid != null and spCid != '' ">
+                and SPCID=#{spCid}
+            </if>
+        </where>
     </update>
     
     
     
     <select id="fetchHomePageServiceProvides" resultMap="serviceProvideMap">
-        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.serviceprovide as s,ks.company as c
         where s.SPSPCFLAG=1 and s.SPCID=c.CID
         limit 11
@@ -119,13 +124,13 @@
 
 
     <select id="fetchServiceProvideBySpId" resultMap="serviceProvideMap" parameterType="Long">
-        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.serviceprovide as s,ks.company as c
         where SPID=#{spId} and s.SPCID=c.CID and SPSPCFLAG!=-1
     </select>
 
     <select id="fetchApproximateServiceProvidesBySpKindAndSpId" parameterType="map" resultMap="serviceProvideMap">
-        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG, SPBROWSENUM, SPAPPOINTMENTNUM, CNAME, CADDRESS, CDESCRIPTION
+        select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG, SPBROWSENUM, SPAPPOINTMENTNUM, CNAME, CADDRESS, CDESCRIPTION,CEMAIL
         from ks.serviceprovide as s,ks.company as c
         where s.SPKIND=#{spKind} and s.SPCID=c.CID and s.SPID!=#{spId} and SPSPCFLAG!=-1
         limit 9
