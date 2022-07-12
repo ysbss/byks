@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/byks.iml" filepath="$PROJECT_DIR$/byks.iml" />
+      <module fileurl="file://D:/tem project/redis-java/redis-java.iml" filepath="D:/tem project/redis-java/redis-java.iml" />
     </modules>
   </component>
 </project>

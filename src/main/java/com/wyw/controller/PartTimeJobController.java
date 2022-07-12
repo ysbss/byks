@@ -155,11 +155,11 @@ public class PartTimeJobController {
         /**
          * 1.将简历文件存入文件库，同时上传到指定路径(文件路径应该是当前路径下/stuResume/学生名)
          * 2.生成申请表的相关信息（要获取岗位id（在url链接上），学生id（在session里），公司id（通过岗位获取），申请时间现在生成）
-         *3.生成文件表相应信息
+         * 3.生成文件表相应信息
          * */
-/**
- * 判断这个学生是否已经申请过该职位
- * */
+
+ //判断这个学生是否已经申请过该职位
+
         Map<String, Object> detectRepeatMap = new HashMap<String, Object>();
         detectRepeatMap.put("apPid",pId);
         detectRepeatMap.put("apSid",Long.valueOf(session.getAttribute("currentStuId").toString()));

@@ -32,6 +32,8 @@
         from ks.serviceprovide
         group by SPKIND
     </select>
+    
+
 
     <select id="fetchServiceProvideSpecificKinds" resultMap="serviceProvideKindMap">
         select distinct   SPKIND, SPSPECIFICKIND
@@ -39,7 +41,12 @@
         order by SPKIND
     </select>
 
-    
+    <select id="fetchServiceProvideSpecificKindsByServiceProvideKind" parameterType="Integer" resultType="String">
+        select distinct   SPSPECIFICKIND
+        from ks.serviceprovide
+        where SPKIND=#{spKind}
+    </select>
+
     <select id="fetchAllServiceProvides" parameterType="map" resultMap="serviceProvideMap">
         select SPID, SPNAME, SPKIND, SPSPECIFICKIND, SPCID, SPEXPENSE, SPPHONENUMBER, SPCONTACTPERSON, SPSUBMITTIME, SPSPCFLAG,SPBROWSENUM,SPAPPOINTMENTNUM,CNAME,CADDRESS,CDESCRIPTION,CEMAIL
         from ks.serviceprovide as s,ks.company as c

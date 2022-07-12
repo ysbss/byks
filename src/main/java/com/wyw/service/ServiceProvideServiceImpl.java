@@ -38,6 +38,11 @@ public class ServiceProvideServiceImpl implements ServiceProvideService{
     }
 
     @Override
+    public List<String> fetchServiceProvideSpecificKindsByServiceProvideKind(Integer spKind) {
+        return serviceProvideMapper.fetchServiceProvideSpecificKindsByServiceProvideKind(spKind);
+    }
+
+    @Override
     public List<Map<String, Object>> fetchHomePageServiceProvides() {
         return serviceProvideMapper.fetchHomePageServiceProvides();
     }

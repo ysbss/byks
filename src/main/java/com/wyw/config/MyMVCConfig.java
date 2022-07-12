@@ -48,7 +48,7 @@ public class MyMVCConfig implements WebMvcConfigurer {
                         "/ServiceProvide/**",
                         "/ApplyPartTimeJob/**",
                         "/LocalInformation/**",
-                        "/PartTimeJob/fetchSpcPartTimeJob","/PartTimeJob/fetchAllPartTimeJob/{pageNum}",
+                        "/PartTimeJob/fetchSpcPartTimeJob/{pId}","/PartTimeJob/fetchAllPartTimeJob/{pageNum}",
 //                        "file:/"+comImgPath,
                         "/toBftPage","/toZzyPage/{pId}",
                         "/css/*","/js/**","/images/**");

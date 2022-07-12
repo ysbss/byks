@@ -36,6 +36,12 @@ public interface ServiceProvideService {
     List<Map<String,Object>> fetchServiceProvideSpecificKinds();
 
     /**
+     * 根据选择的服务显示具体服务
+     * @return string
+     * */
+    List<String> fetchServiceProvideSpecificKindsByServiceProvideKind(Integer spKind);
+
+    /**
      *将精品服务查询出来
      * @return list
      * */

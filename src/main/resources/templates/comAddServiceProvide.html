@@ -13,8 +13,29 @@
     <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
     <script type="text/javascript" th:src="@{/js/js.js}"></script>
     <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
 
+    <script type="text/javascript" th:inline="javascript">
+  function fetchSpKind () {
+      $.post(
+          {
+              // url:"[[@{//}]]",
+              url: '/ServiceProvide/comSelectServiceProvideKind',
 
+              data: {"spKind": $("#spKind").val()},
+              success: function (data) {
+                  let html = "";
+                  console.log(data)
+                  for (let i = 0; i < data.length; i++) {
+                      html += "<option value=" +"'" +data[i]+"'" + ">" + data[i] + "</option>"
+                  }
+                  $("#spSpecificKind").html(html);
+              }
+          }
+      )
+  }
+
+</script>
 </head>
 
 <body class="bft_bg">
@@ -41,35 +62,44 @@
                     <tr>
                         <td><span>服务名：</span> <input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="spName"/> </td>
                     </tr>
-                    <!--                    <tr>-->
-                    <!--                        <td><span>信息种类：</span>-->
-                    <!--                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind">-->
-                    <!--                            <option value="1">吃</option>-->
-                    <!--                            <option value="2">穿</option>-->
-                    <!--                            <option value="3">住</option>-->
-                    <!--                            <option value="4">行</option>-->
-                    <!--                            <option value="5">娱乐</option>-->
-                    <!--                        </select></td>-->
-                    <!--                    </tr>-->
+                                        <tr>
+                                            <td><span>信息种类：</span>
+                                                <select id="spKind" style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spKind" onchange="fetchSpKind()">
+                                                    <option value="0" selected>请选择</option>
+                                                    <option value="1">杂工类</option>
+                                                <option value="2">管道类</option>
+                                                <option value="3">电工类</option>
+                                                <option value="4">木工类</option>
+                                                <option value="5">清洁、零工类</option>
+                                            </select></td>
+                                        </tr>
+<!--                    <tr>-->
+<!--                        <td><span>服务具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spSpecificKind">-->
+<!--                            <option value="'地板、面砖的铺设'">地板、面砖的铺设</option>-->
+<!--                            <option value="'粉刷工'">粉刷工</option>-->
+<!--                            <option value="'油漆工'">油漆工</option>-->
+<!--                            <option value="'地暖的铺设'">地暖的铺设</option>-->
+<!--                            <option value="'给、排水路的设计安装'">给、排水路的设计安装</option>-->
+<!--                            <option value="'城市供暖入户安装'">城市供暖入户安装</option>-->
+<!--                            <option value="'线路设计安装'">线路设计安装</option>-->
+<!--                            <option value="'开关、插座的安装'">开关、插座的安装</option>-->
+<!--                            <option value="'灯具的安装'">灯具的安装</option>-->
+<!--                            <option value="'电器的运送、安装'">电器的运送、安装</option>-->
+<!--                            <option value="'装修设计施工'">装修设计施工</option>-->
+<!--                            <option value="'附属装饰安装'">附属装饰安装</option>-->
+<!--                            <option value="'各种门类安装'">各种门类安装</option>-->
+<!--                            <option value="'家具的运送、安装'">家具的运送、安装</option>-->
+<!--                            <option value="'家居室内清洁'">家居室内清洁</option>-->
+<!--                            <option value="'零工'">零工</option>-->
+<!--                        </select></td>-->
+<!--                    </tr>-->
                     <tr>
-                        <td><span>服务具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spSpecificKind">
-                            <option value="'地板、面砖的铺设'">地板、面砖的铺设</option>
-                            <option value="'粉刷工'">粉刷工</option>
-                            <option value="'油漆工'">油漆工</option>
-                            <option value="'地暖的铺设'">地暖的铺设</option>
-                            <option value="'给、排水路的设计安装'">给、排水路的设计安装</option>
-                            <option value="'城市供暖入户安装'">城市供暖入户安装</option>
-                            <option value="'线路设计安装'">线路设计安装</option>
-                            <option value="'开关、插座的安装'">开关、插座的安装</option>
-                            <option value="'灯具的安装'">灯具的安装</option>
-                            <option value="'电器的运送、安装'">电器的运送、安装</option>
-                            <option value="'装修设计施工'">装修设计施工</option>
-                            <option value="'附属装饰安装'">附属装饰安装</option>
-                            <option value="'各种门类安装'">各种门类安装</option>
-                            <option value="'家具的运送、安装'">家具的运送、安装</option>
-                            <option value="'家居室内清洁'">家居室内清洁</option>
-                            <option value="'零工'">零工</option>
-                        </select></td>
+                        <td><span>服务具体种类：</span>
+                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" id="spSpecificKind" name="spSpecificKind">
+<!--                            <option value="'地板、面砖的铺设'">地板、面砖的铺设</option>-->
+
+                        </select>
+                        </td>
                     </tr>
                     <tr>
                         <td><span>服务价格：</span><input min="0" max="999999999" style="border-radius: 18px;border: 1px solid gray;outline: none" type="number"  name="spExpense1"/>—<input min="0" max="999999999" style="border-radius: 18px;border: 1px solid gray;outline: none" type="number" name="spExpense2"/></td>

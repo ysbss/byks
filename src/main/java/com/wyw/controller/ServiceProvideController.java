@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -337,5 +338,14 @@ public class ServiceProvideController {
         model.addAttribute("updateMsg","更新成功");
         return "comUpdateServiceProvide";
     }
+
+    @ResponseBody
+    @RequestMapping("/comSelectServiceProvideKind")
+    public List<String> comSelectServiceProvideKind(Integer spKind){
+        List<String> specificKinds = serviceProvideService.fetchServiceProvideSpecificKindsByServiceProvideKind(spKind);
+        System.out.println(specificKinds);
+        return specificKinds;
+    }
+
 
 }
