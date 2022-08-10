@@ -13,8 +13,29 @@
     <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
     <script type="text/javascript" th:src="@{/js/js.js}"></script>
     <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
 
+    <script type="text/javascript" th:inline="javascript">
+        function fetchLSpecificKind () {
+            $.post(
+                {
+                    // url:"[[@{//}]]",
+                    url: '/LocalInformation/comSelectLocalInformationKind',
 
+                    data: {"lKind": $("#lKind").val()},
+                    success: function (data) {
+                        let html = "";
+                        console.log(data)
+                        for (let i = 0; i < data.length; i++) {
+                            html += "<option value=" +"'" +data[i]+"'" + ">" + data[i] + "</option>"
+                        }
+                        $("#lSpecificKind").html(html);
+                    }
+                }
+            )
+        }
+
+    </script>
 </head>
 
 <body class="bft_bg">
@@ -41,33 +62,34 @@
                     <tr>
                         <td><span>信息名：</span> <input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="lName" th:placeholder="${localInformation.get('lName')}" th:value="${localInformation.get('lName')}"/> </td>
                     </tr>
-                    <!--                    <tr>-->
-                    <!--                        <td><span>信息种类：</span>-->
-                    <!--                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind">-->
-                    <!--                            <option value="1">吃</option>-->
-                    <!--                            <option value="2">穿</option>-->
-                    <!--                            <option value="3">住</option>-->
-                    <!--                            <option value="4">行</option>-->
-                    <!--                            <option value="5">娱乐</option>-->
-                    <!--                        </select></td>-->
-                    <!--                    </tr>-->
+                                        <tr>
+                                            <td><span>信息种类：</span>
+                                                <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind" id="lKind" onchange="fetchLSpecificKind()">
+                                                <option th:selected="${localInformation.get('lKind') eq 1}" value="1">吃</option>
+                                                <option th:selected="${localInformation.get('lKind') eq 2}" value="2">穿</option>
+                                                <option th:selected="${localInformation.get('lKind') eq 3}" value="3">住</option>
+                                                <option th:selected="${localInformation.get('lKind') eq 4}" value="4">行</option>
+                                                <option th:selected="${localInformation.get('lKind') eq 5}" value="5">娱乐</option>
+                                            </select></td>
+                                        </tr>
                     <tr>
-                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lSpecificKind">
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '火锅类' }" value="'火锅类'">火锅类</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '特色菜系' }" value="'特色菜系'">特色菜系</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '大众美食' }" value="'大众美食'">大众美食</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '风味小吃' }" value="'风味小吃'">风味小吃</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '春装' }" value="'春装'">春装</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '夏装' }" value="'夏装'">夏装</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '秋装' }" value="'秋装'">秋装</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '冬装' }" value="'冬装'">冬装</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '房屋' }" value="'房屋'">房屋</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '建材' }" value="'建材'">建材</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '骑行' }" value="'骑行'">骑行</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '自驾' }" value="'自驾'">自驾</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '景点' }" value="'景点'">景点</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '嗨歌' }" value="'嗨歌'">嗨歌</option>
-                            <option th:selected="${localInformation.get('lSpecificKind') eq '运动' }" value="'运动'">运动</option>
+                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lSpecificKind" id="lSpecificKind" >
+                            <option th:selected="${defaultSpecificKind } eq ${localInformation.get('lSpecificKind')}" th:each="defaultSpecificKind:${defaultSpecificKinds}" th:value="${defaultSpecificKind}" th:text="${defaultSpecificKind}"></option>
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '火锅类' }" value="'火锅类'">火锅类</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '特色菜系' }" value="'特色菜系'">特色菜系</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '大众美食' }" value="'大众美食'">大众美食</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '风味小吃' }" value="'风味小吃'">风味小吃</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '春装' }" value="'春装'">春装</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '夏装' }" value="'夏装'">夏装</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '秋装' }" value="'秋装'">秋装</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '冬装' }" value="'冬装'">冬装</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '房屋' }" value="'房屋'">房屋</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '建材' }" value="'建材'">建材</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '骑行' }" value="'骑行'">骑行</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '自驾' }" value="'自驾'">自驾</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '景点' }" value="'景点'">景点</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '嗨歌' }" value="'嗨歌'">嗨歌</option>-->
+<!--                            <option th:selected="${localInformation.get('lSpecificKind') eq '运动' }" value="'运动'">运动</option>-->
                         </select></td>
                     </tr>
                     <tr>

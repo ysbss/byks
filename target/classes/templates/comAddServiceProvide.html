@@ -16,7 +16,7 @@
     <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
 
     <script type="text/javascript" th:inline="javascript">
-  function fetchSpKind () {
+  function fetchSpSpecificKind () {
       $.post(
           {
               // url:"[[@{//}]]",
@@ -64,7 +64,7 @@
                     </tr>
                                         <tr>
                                             <td><span>信息种类：</span>
-                                                <select id="spKind" style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spKind" onchange="fetchSpKind()">
+                                                <select id="spKind" style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spKind" onchange="fetchSpSpecificKind()">
                                                     <option value="0" selected>请选择</option>
                                                     <option value="1">杂工类</option>
                                                 <option value="2">管道类</option>

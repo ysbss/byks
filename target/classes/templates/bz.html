@@ -41,6 +41,7 @@
                     <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyServiceProvide/'+${session.currentComId}}">★ 查看服务预约</a>/<a th:href="@{'/toComAddServiceProvideList/'+${session.currentComId}}">发布服务</a></p>
                     <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComApplyLocalInformation/'+${session.currentComId}}">★ 查看便民信息预约</a>/<a th:href="@{'/toComAddLocalInformationList/'+${session.currentComId}}">发布便民信息</a></p>
                     <p th:if="${session.loginKind eq '公司'}"><a th:href="@{'/toComUpdate/'+${session.currentComId}}">★ 查看/编辑企业信息</a></p>
+                    <p th:if="${session.loginKind eq '公司'}" ><a th:href="@{'/toChatNews/'+${session.currentComId}}">★  查看消息</a></p>
 
                     <!--                    <p th:if="${session.loginKind eq '公司'}">-->
 <!--                    <a href="javascript:void (0)" onclick="document.getElementById('uploadImg').style.display='block';alert('请上传图片')">★ 上传公司经典图</a></p>-->
@@ -57,11 +58,13 @@
                     <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuApplyServiceProvide/'+${session.currentStuId}}">★ 查看服务预约情况</a></p>
                     <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuApplyLocalInformation/'+${session.currentStuId}}">★ 查看便民信息预约情况</a></p>
                     <p th:if="${session.loginKind eq '学生'}"><a th:href="@{'/toStuUpdate/'+${session.currentStuId}}">★ 查看/编辑个人信息</a></p>
+                    <p th:if="${session.loginKind eq '学生'}" ><a th:href="@{'/toChatNews/'+${session.currentStuId}}">★  查看消息</a></p>
+
 
                     <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toWebAdvicesList}">★ 查看网站建议</a></p>
                     <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toAllStusList}">★ 查看所有学生</a></p>
                     <p th:if="${session.loginKind eq '管理员'}"><a th:href="@{/toAllCompaniesList}">★ 查看所有公司</a></p>
-                    <p><a>★ 登录/</a><a>注册</a></p>
+
                 </div>
                 <div class="bzz_c">
                 	<br />

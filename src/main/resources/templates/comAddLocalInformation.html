@@ -13,7 +13,29 @@
     <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
     <script type="text/javascript" th:src="@{/js/js.js}"></script>
     <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
 
+    <script type="text/javascript" th:inline="javascript">
+        function fetchLSpecificKind () {
+            $.post(
+                {
+                    // url:"[[@{//}]]",
+                    url: '/LocalInformation/comSelectLocalInformationKind',
+
+                    data: {"lKind": $("#lKind").val()},
+                    success: function (data) {
+                        let html = "";
+                        console.log(data)
+                        for (let i = 0; i < data.length; i++) {
+                            html += "<option value=" +"'" +data[i]+"'" + ">" + data[i] + "</option>"
+                        }
+                        $("#lSpecificKind").html(html);
+                    }
+                }
+            )
+        }
+
+    </script>
 
 </head>
 
@@ -41,33 +63,40 @@
                     <tr>
                         <td><span>信息名：</span> <input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="lName"/> </td>
                     </tr>
+                    <tr>
+                        <td><span>信息种类：</span>
+                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" id="lKind" name="lKind" onchange="fetchLSpecificKind()">
+                                <option value="0" selected>请选择</option>
+                                <option value="1">吃</option>
+                            <option value="2">穿</option>
+                            <option value="3">住</option>
+                            <option value="4">行</option>
+                            <option value="5">娱乐</option>
+                        </select></td>
+                    </tr>
 <!--                    <tr>-->
-<!--                        <td><span>信息种类：</span>-->
-<!--                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind">-->
-<!--                            <option value="1">吃</option>-->
-<!--                            <option value="2">穿</option>-->
-<!--                            <option value="3">住</option>-->
-<!--                            <option value="4">行</option>-->
-<!--                            <option value="5">娱乐</option>-->
+<!--                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lSpecificKind">-->
+<!--                            <option value="'火锅类'">火锅类</option>-->
+<!--                            <option value="'特色菜系'">特色菜系</option>-->
+<!--                            <option value="'大众美食'">大众美食</option>-->
+<!--                            <option value="'风味小吃'">风味小吃</option>-->
+<!--                            <option value="'春装'">春装</option>-->
+<!--                            <option value="'夏装'">夏装</option>-->
+<!--                            <option value="'秋装'">秋装</option>-->
+<!--                            <option value="'冬装'">冬装</option>-->
+<!--                            <option value="'房屋'">房屋</option>-->
+<!--                            <option value="'建材'">建材</option>-->
+<!--                            <option value="'骑行'">骑行</option>-->
+<!--                            <option value="'自驾'">自驾</option>-->
+<!--                            <option value="'景点'">景点</option>-->
+<!--                            <option value="'嗨歌'">嗨歌</option>-->
+<!--                            <option value="'运动'">运动</option>-->
 <!--                        </select></td>-->
 <!--                    </tr>-->
                     <tr>
-                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lSpecificKind">
-                            <option value="'火锅类'">火锅类</option>
-                            <option value="'特色菜系'">特色菜系</option>
-                            <option value="'大众美食'">大众美食</option>
-                            <option value="'风味小吃'">风味小吃</option>
-                            <option value="'春装'">春装</option>
-                            <option value="'夏装'">夏装</option>
-                            <option value="'秋装'">秋装</option>
-                            <option value="'冬装'">冬装</option>
-                            <option value="'房屋'">房屋</option>
-                            <option value="'建材'">建材</option>
-                            <option value="'骑行'">骑行</option>
-                            <option value="'自驾'">自驾</option>
-                            <option value="'景点'">景点</option>
-                            <option value="'嗨歌'">嗨歌</option>
-                            <option value="'运动'">运动</option>
+                        <td><span>信息具体种类：</span>
+                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" id="lSpecificKind" name="lSpecificKind">
+
                         </select></td>
                     </tr>
                     <tr>

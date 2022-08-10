@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -255,6 +256,8 @@ public class LocalInformationController {
         if (flag==EMPTY_POJO){
             model.addAttribute("updateMsg","请输入所有信息");
             model.addAttribute("localInformation",localInformationService.fetchLocalInformationBylId(lId));
+            model.addAttribute("defaultSpecificKinds",localInformationService.fetchLocalInformationSpecificKindsByLocalInformationKind(Integer.valueOf(localInformationService.fetchLocalInformationBylId(lId).get("lKind").toString())));
+
             return "comUpdateLocalInformation";
         }
 
@@ -263,9 +266,18 @@ public class LocalInformationController {
 
         model.addAttribute("localInformation",localInformationService.fetchLocalInformationBylId(lId));
         model.addAttribute("updateMsg","更新成功");
+        model.addAttribute("defaultSpecificKinds",localInformationService.fetchLocalInformationSpecificKindsByLocalInformationKind(Integer.valueOf(localInformationService.fetchLocalInformationBylId(lId).get("lKind").toString())));
+
         return "comUpdateLocalInformation";
     }
 
+
+    @ResponseBody
+    @RequestMapping("/comSelectLocalInformationKind")
+    public List<String> comSelectLocalInformationKind(Integer lKind){
+        System.out.println(localInformationService.fetchLocalInformationSpecificKindsByLocalInformationKind(lKind));
+        return localInformationService.fetchLocalInformationSpecificKindsByLocalInformationKind(lKind);
+    }
 
 
 }

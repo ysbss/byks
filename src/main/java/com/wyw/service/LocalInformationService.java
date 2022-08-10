@@ -33,6 +33,12 @@ public interface LocalInformationService {
     Integer fetchLocalInformationKindBySpecificKind(String specificKind);
 
     /**
+     * 根据选择的本地信息显示具体本地信息
+     * @return string
+     * */
+    List<String> fetchLocalInformationSpecificKindsByLocalInformationKind(Integer lKind);
+
+    /**
      *将有多少种服务类型查询出来
      * @return list
      * */

@@ -170,6 +170,7 @@ public class PartTimeJobController {
         updatePartTimeJob.setPId(Long.valueOf(partTimeJob.get("pId").toString()));
         updatePartTimeJob.setPAppointmentNum(Integer.valueOf(partTimeJob.get("pAppointmentNum").toString())+1);
 
+        Util util = new Util();
 
         model.addAttribute("partTimeJob",partTimeJob);
         if(repeatedInfoInApplyPartTimeJob!=null){
@@ -177,12 +178,15 @@ public class PartTimeJobController {
             model.addAttribute("apMsg","请勿重复申请同一个职位");
             List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
             model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+
+            partTimeJob.put("pSubmitTime",util.computePageDays(partTimeJob.get("pSubmitTime").toString(),sdf));
             System.out.println(model.getAttribute("apMsg"));
             return "zzy";
 //            return "redirect:/PartTimeJob/fetchSpcPartTimeJob/"+pId;
         }
 
-        Util util = new Util();
+
         Student curStudent = studentService.fetchStuById(Long.valueOf(session.getAttribute("currentStuId").toString()));
 
         File resumeStoreFilePath = new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+curStudent.getSName()+File.separator);

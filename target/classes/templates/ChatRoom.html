@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ctr between company and student</title>
+    <style>
+        #message{
+            margin-top:40px;
+            border:1px solid gray;
+            padding:20px;
+        }
+        .left_chat{
+            width: 200px; overflow: hidden;word-wrap:break-word;word-break:break-all;
+        }
+        .right_chat{
+            width: 200px; margin-left: 1200px;overflow: hidden;word-wrap:break-word;word-break:break-all;
+        }
+        #chatDiv{
+            /*width: 800px;*/
+            height: 250px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            position:absolute
+        }
+        /*#chatDiv::-webkit-scrollbar{*/
+        /*    display: none;*/
+        /*}*/
+    /*    加上这个可以让纵轴的滚动条消失*/
+    </style>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
+
+</head>
+<body onload="connectWebSocket();onGetMessage()">
+
+<!--<button onclick="connectWebSocket()">连接WebSocket</button>-->
+<!--<button onclick="closeWebSocket()">断开连接</button>-->
+<!--鼠标点击提交信息后就触发一次ajax查询数据库里的信息-->
+<div id="message"></div>
+<p th:text="${receiveId}"></p>
+<div id="chatDiv">
+    <ul id="showUl">
+        <li th:each="resultChat:${resultChatList}" th:class="${resultChat.getScReceiveId()==receiveId ? 'left_chat' :'right_chat' }" th:text=" ${resultChat.getScReceiveId()==receiveId} ? ${resultChat.getScSendId()}+':'+${resultChat.getScChatMsg()}:${resultChat.getScChatMsg()}+':'+${resultChat.getScSendId()}" ></li>
+    </ul>
+</div>
+<div id="chatDivEnd" style="height: 0; overflow: hidden"></div>
+消息：<label for="text"></label><textarea id="text" style="margin-top: 265px;" cols="75" rows="5" oninput="ResizeTextarea('text')"></textarea>
+<!--消息：<label for="text"></label><textarea id="text" style="margin-top: 265px;" cols="75" rows="5" autoHeight="true" ></textarea>-->
+<!--ta不能设置的太窄而且太高 不然会出现bug-->
+频道:<label for="receiveId"></label><input id="receiveId" th:value="${receiveId}"/>
+<button id="sendButton" onclick="send()">发送消息</button>
+</body>
+
+
+<script type="text/javascript">
+
+
+    function onGetMessage()
+    {
+        //将滚轮保持在最底部
+        let now=new Date();
+        let chatDiv=document.getElementById("chatDiv");
+        // chatDiv.innerHTML=chatDiv.innerHTML + 'time_' + now.getTime() + '<br />';
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    setInterval(onGetMessage,100);
+
+    function ResizeTextarea(id){
+        //实现textArea输入时会自动变长且超过一定行数就出现滚轮
+        //最小高度
+        let minRows = 5;
+        // 最大高度，超过则出现滚动条
+        let maxRows = 10;
+        let t = document.getElementById(id);
+        //if (t.scrollTop === 0) t.scrollTop=1;
+        if (t.scrollTop === 0) t.scrollTop=minRows;
+        while (t.scrollTop === 0){
+            if (t.rows > minRows)
+                t.rows--;
+            else
+                break;
+            //t.scrollTop = 1
+            t.scrollTop = minRows;
+            if (t.rows < maxRows)
+                t.style.overflowY = "hidden";
+            if (t.scrollTop > 0){
+                t.rows++;
+                break;
+            }
+        }
+        while(t.scrollTop > 0){
+            if (t.rows < maxRows){
+                t.rows++;
+                //if (t.scrollTop === 0) t.scrollTop=1;
+                if (t.scrollTop === 0) t.scrollTop=minRows;
+            }
+            else{
+                t.style.overflowY = "auto";
+                break;
+            }
+        }
+    }
+    // document.getElementById("text").addEventListener("input", ResizeTextarea, false);
+    // $(function(){
+    //     $.fn.autoHeight = function(){
+    //         function autoHeight(elem){
+    //             elem.style.height = 'auto';
+    //             elem.scrollTop = 0; //防抖动
+    //             elem.style.height = elem.scrollHeight + 'px';
+    //         }
+    //         this.each(function(){
+    //             autoHeight(this);
+    //             $(this).on('input', function(){
+    //                 autoHeight(this);
+    //             });
+    //         });
+    //     }
+    //     $('textarea[autoHeight]').autoHeight();
+    // })
+//第一种实现textArea自适应高度，但是没有设置最大高度导致会一直变长
+    let websocket = null;
+    let scSendId='[[${session.currentChatId}]]';
+    let host=window.location.host;
+    function connectWebSocket(){
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket'in window) {
+            // let host=window.location.host;
+            let receiveId=document.getElementById("receiveId").value;
+            websocket = new WebSocket("ws://"+host+"/webSocket/"+receiveId);
+        } else {
+            alert('Not support websocket')
+        }
+        //连接发生错误的回调方法
+        websocket.onerror = function() {
+            setMessageInnerHTML("error");
+        };
+        //连接成功建立的回调方法
+        websocket.onopen = function() {
+            // setMessageInnerHTML("Loc MSG: 成功建立连接");
+        }
+        //接收到消息的回调方法
+        websocket.onmessage = function(event) {
+            setMessageInnerHTML(event.data);
+        }
+        //连接关闭的回调方法
+        websocket.onclose = function() {
+            // setMessageInnerHTML("Loc MSG:关闭连接");
+        }
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function() {
+            websocket.close();
+        }
+    }
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+
+        // document.getElementById('message').innerHTML += innerHTML + '<br/>';
+        document.getElementById('showUl').innerHTML +='<li class="left_chat">'+scSendId+':'+ innerHTML + '</li>';
+    }
+    //关闭连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+    //发送消息
+    function send() {
+        let sessionKind='[[${session.loginKind}]]';
+        let receiveId= document.getElementById("receiveId").value;
+
+
+        let sendId='[[${session.currentChatId}]]';
+        let scMsgSendTime=new Date();
+        let scId=crypto.randomUUID();
+        // let scId="";
+        let scFlag=0;
+
+        // if (sessionKind.toString()==='学生'){
+        //     sendId='[[${session.currentStuId}]]';
+        // }
+        // if(sessionKind.toString()==='公司'){
+        //     sendId='[[${session.currentComId}]]';
+        // }
+        let message = document.getElementById('text').value;
+        console.log(new Date());
+        console.log(scId);
+        console.log(receiveId);
+        console.log(sendId);
+        console.log(scMsgSendTime);
+        console.log(message);
+        if (message.length===0){
+            alert("请不要输入空值");
+            return;
+        }
+
+       let str=document.getElementById('text').value.trim();
+        let textSel=$("#text");
+        if (str.length<=0){
+            //如果全为空格就将光标移到最前
+            textSel.val("");
+            return;
+        }
+        let socketMsg={scId:scId,scSendId:sendId,scReceiveId:receiveId,scChatMsg:message,scMsgSendTime:scMsgSendTime,scFlag:scFlag};
+
+
+        websocket.send(JSON.stringify(socketMsg));
+        textSel.val("");
+    }
+
+    // setInterval(getNewChat,8000);
+    setInterval(getNewChat,3000);
+    function getNewChat(){
+        // let scSendId='[[${session.currentChatId}]]';
+        let host=window.location.host;
+        let scReceiveId=$("#receiveId").val();
+        $.post(
+            {
+                // url:'http://localhost:8080/WebSocket/queryChatListByAjax',
+                url:'http://'+host+'/WebSocket/queryChatListByAjax',
+                data:{"scSendId":scSendId,"scReceiveId":scReceiveId},
+                crossDomain:true,
+                success:function (data){
+                    let html="";
+                    for (let i=0;i<data.length;i++){
+                        console.log("我进来来咯")
+                        if (data[i].scReceiveId===parseInt(scReceiveId)){
+                            html+="<li class='left_chat'>"+data[i].scSendId+":"+data[i].scChatMsg+"</li>"
+                        }else {
+                            html+="<li class='right_chat'>"+data[i].scChatMsg+":"+data[i].scSendId+"</li>"
+                        }
+                        // html+="<li>"+data[i].scChatMsg+"</li>"
+                    }
+                    $("#showUl").html(html);
+                }
+            }
+        )
+    }
+    // $("#sendButton").mouseover(function (){
+    //     // let scSendId='[[${session.currentChatId}]]';
+    //     let host=window.location.host;
+    //     let scReceiveId=$("#receiveId").val();
+    //     $.post(
+    //         {
+    //             // url:'http://localhost:8080/WebSocket/queryChatListByAjax',
+    //             url:'http://'+host+'/WebSocket/queryChatListByAjax',
+    //             data:{"scSendId":scSendId,"scReceiveId":scReceiveId},
+    //             success:function (data){
+    //                 let html="";
+    //                 for (let i=0;i<data.length;i++){
+    //                     console.log("我进来来咯")
+    //                     if (data[i].scReceiveId===parseInt(scReceiveId)){
+    //                         html+="<li class='left_chat'>"+data[i].scSendId+":"+data[i].scChatMsg+"</li>"
+    //                     }else {
+    //                         html+="<li class='right_chat'>"+data[i].scChatMsg+":"+data[i].scSendId+"</li>"
+    //                     }
+    //                     // html+="<li>"+data[i].scChatMsg+"</li>"
+    //                 }
+    //                 $("#showUl").html(html);
+    //             }
+    //         }
+    //     )
+    // })
+
+</script>
+</html>

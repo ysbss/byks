@@ -674,519 +674,557 @@
     <table id="214" parent="3" name="localinformation"/>
     <table id="215" parent="3" name="parttimejob"/>
     <table id="216" parent="3" name="serviceprovide"/>
-    <table id="217" parent="3" name="student"/>
-    <table id="218" parent="3" name="webadvice"/>
-    <column id="219" parent="207" name="AID">
+    <table id="217" parent="3" name="socketchat"/>
+    <table id="218" parent="3" name="student"/>
+    <table id="219" parent="3" name="webadvice"/>
+    <column id="220" parent="207" name="AID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="220" parent="207" name="ANAME">
+    <column id="221" parent="207" name="ANAME">
       <Position>2</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="221" parent="207" name="APASSWORD">
+    <column id="222" parent="207" name="APASSWORD">
       <Position>3</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="222" parent="207" name="AEMAIL">
+    <column id="223" parent="207" name="AEMAIL">
       <Position>4</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <key id="223" parent="207" name="PRIMARY">
+    <key id="224" parent="207" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>AID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="224" parent="208" name="ALIID">
+    <column id="225" parent="208" name="ALIID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="225" parent="208" name="ALILIID">
+    <column id="226" parent="208" name="ALILIID">
       <Position>2</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="226" parent="208" name="ALISID">
+    <column id="227" parent="208" name="ALISID">
       <Position>3</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="227" parent="208" name="ALICID">
+    <column id="228" parent="208" name="ALICID">
       <Position>4</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="228" parent="208" name="ALISUBMITTIME">
+    <column id="229" parent="208" name="ALISUBMITTIME">
       <Position>5</Position>
       <DataType>varchar(150)|0s</DataType>
       <Collation>latin1_swedish_ci</Collation>
     </column>
-    <column id="229" parent="208" name="ALISTATUS">
+    <column id="230" parent="208" name="ALISTATUS">
       <Position>6</Position>
       <DataType>int(10)|0s</DataType>
     </column>
-    <key id="230" parent="208" name="PRIMARY">
+    <key id="231" parent="208" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>ALIID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="231" parent="209" name="APID">
+    <column id="232" parent="209" name="APID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="232" parent="209" name="APPID">
+    <column id="233" parent="209" name="APPID">
       <Position>2</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="233" parent="209" name="APSID">
+    <column id="234" parent="209" name="APSID">
       <Position>3</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="234" parent="209" name="APCID">
+    <column id="235" parent="209" name="APCID">
       <Position>4</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="235" parent="209" name="APSUBMITTIME">
+    <column id="236" parent="209" name="APSUBMITTIME">
       <Position>5</Position>
       <DataType>varchar(150)|0s</DataType>
       <Collation>latin1_swedish_ci</Collation>
     </column>
-    <column id="236" parent="209" name="APSTATUS">
+    <column id="237" parent="209" name="APSTATUS">
       <Position>6</Position>
       <DataType>int(10)|0s</DataType>
     </column>
-    <key id="237" parent="209" name="PRIMARY">
+    <key id="238" parent="209" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>APID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="238" parent="210" name="ASPID">
+    <column id="239" parent="210" name="ASPID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="239" parent="210" name="ASPSPID">
+    <column id="240" parent="210" name="ASPSPID">
       <Position>2</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="240" parent="210" name="ASPSID">
+    <column id="241" parent="210" name="ASPSID">
       <Position>3</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="241" parent="210" name="ASPCID">
+    <column id="242" parent="210" name="ASPCID">
       <Position>4</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="242" parent="210" name="ASPSUBMITTIME">
+    <column id="243" parent="210" name="ASPSUBMITTIME">
       <Position>5</Position>
       <DataType>varchar(150)|0s</DataType>
       <Collation>latin1_swedish_ci</Collation>
     </column>
-    <column id="243" parent="210" name="ASPSTATUS">
+    <column id="244" parent="210" name="ASPSTATUS">
       <Position>6</Position>
       <DataType>int(10)|0s</DataType>
     </column>
-    <key id="244" parent="210" name="PRIMARY">
+    <key id="245" parent="210" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>ASPID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="245" parent="211" name="CID">
+    <column id="246" parent="211" name="CID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="246" parent="211" name="CNAME">
+    <column id="247" parent="211" name="CNAME">
       <Position>2</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="247" parent="211" name="CADDRESS">
+    <column id="248" parent="211" name="CADDRESS">
       <Position>3</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="248" parent="211" name="CPASSWORD">
+    <column id="249" parent="211" name="CPASSWORD">
       <Position>4</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="249" parent="211" name="CDESCRIPTION">
+    <column id="250" parent="211" name="CDESCRIPTION">
       <Position>5</Position>
       <DataType>mediumtext|0s</DataType>
     </column>
-    <column id="250" parent="211" name="CREGISTERTIME">
+    <column id="251" parent="211" name="CREGISTERTIME">
       <Position>6</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <column id="251" parent="211" name="CFLAG">
+    <column id="252" parent="211" name="CFLAG">
       <Position>7</Position>
       <DataType>varchar(15)|0s</DataType>
       <DefaultExpression>&apos;&apos;&apos;0&apos;&apos;&apos;</DefaultExpression>
     </column>
-    <column id="252" parent="211" name="CEMAIL">
+    <column id="253" parent="211" name="CEMAIL">
       <Position>8</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <key id="253" parent="211" name="PRIMARY">
+    <key id="254" parent="211" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>CID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="254" parent="212" name="FFILEID">
+    <column id="255" parent="212" name="FFILEID">
       <Position>1</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="255" parent="212" name="FFILENAME">
+    <column id="256" parent="212" name="FFILENAME">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="256" parent="212" name="FFILESTOREPATH">
+    <column id="257" parent="212" name="FFILESTOREPATH">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="257" parent="212" name="FFILECID">
+    <column id="258" parent="212" name="FFILECID">
       <Position>4</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="258" parent="212" name="FFILEFLAG">
+    <column id="259" parent="212" name="FFILEFLAG">
       <Position>5</Position>
       <DataType>varchar(15)|0s</DataType>
       <DefaultExpression>&apos;&apos;&apos;0&apos;&apos;&apos;</DefaultExpression>
     </column>
-    <key id="259" parent="212" name="PRIMARY">
+    <key id="260" parent="212" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>FFILEID</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="260" parent="212" name="COMPANYIMGUUID">
+    <trigger id="261" parent="212" name="COMPANYIMGUUID">
       <SourceTextLength>41</SourceTextLength>
       <Definer>root@localhost</Definer>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <column id="261" parent="213" name="FFILEID">
+    <column id="262" parent="213" name="FFILEID">
       <Position>1</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="262" parent="213" name="FFILENAME">
+    <column id="263" parent="213" name="FFILENAME">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="263" parent="213" name="FFILESTOREPATH">
+    <column id="264" parent="213" name="FFILESTOREPATH">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="264" parent="213" name="FFILESID">
+    <column id="265" parent="213" name="FFILESID">
       <Position>4</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="265" parent="213" name="FFILEPID">
+    <column id="266" parent="213" name="FFILEPID">
       <Position>5</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="266" parent="213" name="FFILEFLAG">
+    <column id="267" parent="213" name="FFILEFLAG">
       <Position>6</Position>
       <DataType>varchar(15)|0s</DataType>
       <DefaultExpression>&apos;&apos;&apos;0&apos;&apos;&apos;</DefaultExpression>
     </column>
-    <key id="267" parent="213" name="PRIMARY">
+    <key id="268" parent="213" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>FFILEID</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="268" parent="213" name="RESUMEUUID">
+    <trigger id="269" parent="213" name="RESUMEUUID">
       <SourceTextLength>41</SourceTextLength>
       <Definer>root@localhost</Definer>
       <Turn>before-row</Turn>
       <Events>I</Events>
     </trigger>
-    <column id="269" parent="214" name="LID">
+    <column id="270" parent="214" name="LID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="270" parent="214" name="LNAME">
+    <column id="271" parent="214" name="LNAME">
       <Position>2</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="271" parent="214" name="LKIND">
+    <column id="272" parent="214" name="LKIND">
       <Position>3</Position>
       <DataType>int(10)|0s</DataType>
     </column>
-    <column id="272" parent="214" name="LSPECIFICKIND">
+    <column id="273" parent="214" name="LSPECIFICKIND">
       <Position>4</Position>
       <DataType>varchar(150)|0s</DataType>
     </column>
-    <column id="273" parent="214" name="LCID">
+    <column id="274" parent="214" name="LCID">
       <Position>5</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="274" parent="214" name="LPHONENUMBER">
+    <column id="275" parent="214" name="LPHONENUMBER">
       <Position>6</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="275" parent="214" name="LCONTACTPERSON">
+    <column id="276" parent="214" name="LCONTACTPERSON">
       <Position>7</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="276" parent="214" name="LSUBMITTIME">
+    <column id="277" parent="214" name="LSUBMITTIME">
       <Position>8</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <column id="277" parent="214" name="LSPCFLAG">
+    <column id="278" parent="214" name="LSPCFLAG">
       <Position>9</Position>
       <DataType>int(5)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="278" parent="214" name="LBROWSENUM">
+    <column id="279" parent="214" name="LBROWSENUM">
       <Position>10</Position>
       <DataType>int(10)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="279" parent="214" name="LAPPOINTMENTNUM">
+    <column id="280" parent="214" name="LAPPOINTMENTNUM">
       <Position>11</Position>
       <DataType>int(10)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <key id="280" parent="214" name="PRIMARY">
+    <key id="281" parent="214" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>LID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="281" parent="215" name="PID">
+    <column id="282" parent="215" name="PID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="282" parent="215" name="CID">
+    <column id="283" parent="215" name="CID">
       <Position>2</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="283" parent="215" name="PNAME">
+    <column id="284" parent="215" name="PNAME">
       <Position>3</Position>
       <DataType>varchar(150)|0s</DataType>
     </column>
-    <column id="284" parent="215" name="PPOSITION">
+    <column id="285" parent="215" name="PPOSITION">
       <Position>4</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="285" parent="215" name="PSALARY">
+    <column id="286" parent="215" name="PSALARY">
       <Position>5</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="286" parent="215" name="PNUM">
+    <column id="287" parent="215" name="PNUM">
       <Position>6</Position>
       <DataType>int(5)|0s</DataType>
     </column>
-    <column id="287" parent="215" name="PEDUCATIONALDEGREE">
+    <column id="288" parent="215" name="PEDUCATIONALDEGREE">
       <Position>7</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="288" parent="215" name="PEXPERIENCE">
+    <column id="289" parent="215" name="PEXPERIENCE">
       <Position>8</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="289" parent="215" name="PAGE">
+    <column id="290" parent="215" name="PAGE">
       <Position>9</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="290" parent="215" name="PPHONENUMBER">
+    <column id="291" parent="215" name="PPHONENUMBER">
       <Position>10</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="291" parent="215" name="PCONTACTPERSON">
+    <column id="292" parent="215" name="PCONTACTPERSON">
       <Position>11</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="292" parent="215" name="PSUBMITTIME">
+    <column id="293" parent="215" name="PSUBMITTIME">
       <Position>12</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <column id="293" parent="215" name="SPFLAG">
+    <column id="294" parent="215" name="SPFLAG">
       <Position>13</Position>
       <DataType>int(5)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="294" parent="215" name="PBROWSENUM">
+    <column id="295" parent="215" name="PBROWSENUM">
       <Position>14</Position>
       <DataType>int(10)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="295" parent="215" name="PAPPOINTMENTNUM">
+    <column id="296" parent="215" name="PAPPOINTMENTNUM">
       <Position>15</Position>
       <DataType>int(10)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <key id="296" parent="215" name="PRIMARY">
+    <key id="297" parent="215" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>PID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="297" parent="216" name="SPID">
+    <column id="298" parent="216" name="SPID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="298" parent="216" name="SPNAME">
+    <column id="299" parent="216" name="SPNAME">
       <Position>2</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="299" parent="216" name="SPKIND">
+    <column id="300" parent="216" name="SPKIND">
       <Position>3</Position>
       <DataType>int(10)|0s</DataType>
     </column>
-    <column id="300" parent="216" name="SPSPECIFICKIND">
+    <column id="301" parent="216" name="SPSPECIFICKIND">
       <Position>4</Position>
       <DataType>varchar(150)|0s</DataType>
     </column>
-    <column id="301" parent="216" name="SPCID">
+    <column id="302" parent="216" name="SPCID">
       <Position>5</Position>
       <DataType>bigint(20)|0s</DataType>
     </column>
-    <column id="302" parent="216" name="SPEXPENSE">
+    <column id="303" parent="216" name="SPEXPENSE">
       <Position>6</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="303" parent="216" name="SPPHONENUMBER">
+    <column id="304" parent="216" name="SPPHONENUMBER">
       <Position>7</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="304" parent="216" name="SPCONTACTPERSON">
+    <column id="305" parent="216" name="SPCONTACTPERSON">
       <Position>8</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="305" parent="216" name="SPSUBMITTIME">
+    <column id="306" parent="216" name="SPSUBMITTIME">
       <Position>9</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <column id="306" parent="216" name="SPSPCFLAG">
+    <column id="307" parent="216" name="SPSPCFLAG">
       <Position>10</Position>
       <DataType>int(5)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="307" parent="216" name="SPBROWSENUM">
+    <column id="308" parent="216" name="SPBROWSENUM">
       <Position>11</Position>
       <DataType>int(10)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <column id="308" parent="216" name="SPAPPOINTMENTNUM">
+    <column id="309" parent="216" name="SPAPPOINTMENTNUM">
       <Position>12</Position>
       <DataType>int(10)|0s</DataType>
       <DefaultExpression>0</DefaultExpression>
     </column>
-    <key id="309" parent="216" name="PRIMARY">
+    <key id="310" parent="216" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>SPID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="310" parent="217" name="SID">
+    <column id="311" parent="217" name="SCID">
+      <Position>1</Position>
+      <Comment>聊天记录主键ID</Comment>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="312" parent="217" name="SCSENDID">
+      <Position>2</Position>
+      <Comment>聊天记录发送人ID</Comment>
+      <DataType>bigint(20)|0s</DataType>
+    </column>
+    <column id="313" parent="217" name="SCRECEIVEID">
+      <Position>3</Position>
+      <Comment>聊天记录接收人ID</Comment>
+      <DataType>bigint(20)|0s</DataType>
+    </column>
+    <column id="314" parent="217" name="SCCHATMSG">
+      <Position>4</Position>
+      <Comment>聊天记录内容</Comment>
+      <DataType>mediumtext|0s</DataType>
+    </column>
+    <column id="315" parent="217" name="SCMSGSENDTIME">
+      <Position>5</Position>
+      <Comment>聊天记录发送时间</Comment>
+      <DataType>varchar(90)|0s</DataType>
+    </column>
+    <column id="316" parent="217" name="SCFLAG">
+      <Position>6</Position>
+      <Comment>聊天记录过期标志（1过期，0未过期）</Comment>
+      <DataType>int(5)|0s</DataType>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <key id="317" parent="217" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>SCID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="318" parent="218" name="SID">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="311" parent="217" name="SNAME">
+    <column id="319" parent="218" name="SNAME">
       <Position>2</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="312" parent="217" name="SSCHOOL">
+    <column id="320" parent="218" name="SSCHOOL">
       <Position>3</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="313" parent="217" name="SAGE">
+    <column id="321" parent="218" name="SAGE">
       <Position>4</Position>
       <DataType>int(20)|0s</DataType>
     </column>
-    <column id="314" parent="217" name="SSEX">
+    <column id="322" parent="218" name="SSEX">
       <Position>5</Position>
       <DataType>int(5)|0s</DataType>
     </column>
-    <column id="315" parent="217" name="SPASSWORD">
+    <column id="323" parent="218" name="SPASSWORD">
       <Position>6</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="316" parent="217" name="SIDENTITYNUM">
+    <column id="324" parent="218" name="SIDENTITYNUM">
       <Position>7</Position>
       <DataType>varchar(60)|0s</DataType>
     </column>
-    <column id="317" parent="217" name="SEDUCATIONALDEGREE">
+    <column id="325" parent="218" name="SEDUCATIONALDEGREE">
       <Position>8</Position>
       <DataType>int(20)|0s</DataType>
     </column>
-    <column id="318" parent="217" name="SPHONENUMBER">
+    <column id="326" parent="218" name="SPHONENUMBER">
       <Position>9</Position>
       <DataType>varchar(45)|0s</DataType>
     </column>
-    <column id="319" parent="217" name="SMAJOR">
+    <column id="327" parent="218" name="SMAJOR">
       <Position>10</Position>
       <DataType>varchar(150)|0s</DataType>
     </column>
-    <column id="320" parent="217" name="SREGISTERTIME">
+    <column id="328" parent="218" name="SREGISTERTIME">
       <Position>11</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <column id="321" parent="217" name="SFLAG">
+    <column id="329" parent="218" name="SFLAG">
       <Position>12</Position>
       <DataType>varchar(15)|0s</DataType>
       <DefaultExpression>&apos;&apos;&apos;0&apos;&apos;&apos;</DefaultExpression>
     </column>
-    <column id="322" parent="217" name="SEMAIL">
+    <column id="330" parent="218" name="SEMAIL">
       <Position>13</Position>
       <DataType>varchar(90)|0s</DataType>
     </column>
-    <key id="323" parent="217" name="PRIMARY">
+    <key id="331" parent="218" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>SID</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="324" parent="218" name="WAID">
+    <column id="332" parent="219" name="WAID">
       <Position>1</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="325" parent="218" name="WAKIND">
+    <column id="333" parent="219" name="WAKIND">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="326" parent="218" name="WASOURCE">
+    <column id="334" parent="219" name="WASOURCE">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="327" parent="218" name="WASOURCEID">
+    <column id="335" parent="219" name="WASOURCEID">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="328" parent="218" name="WASOURCENAME">
+    <column id="336" parent="219" name="WASOURCENAME">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="329" parent="218" name="WASUBMITTME">
+    <column id="337" parent="219" name="WASUBMITTME">
       <Position>6</Position>
       <DataType>varchar(255)|0s</DataType>
     </column>
-    <column id="330" parent="218" name="WAADVICE">
+    <column id="338" parent="219" name="WAADVICE">
       <Position>7</Position>
       <DataType>mediumtext|0s</DataType>
     </column>
-    <column id="331" parent="218" name="WAFLAG">
+    <column id="339" parent="219" name="WAFLAG">
       <Position>8</Position>
       <DataType>varchar(15)|0s</DataType>
       <DefaultExpression>&apos;&apos;&apos;0&apos;&apos;&apos;</DefaultExpression>
     </column>
-    <key id="332" parent="218" name="PRIMARY">
+    <key id="340" parent="219" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>WAID</ColNames>
       <Primary>1</Primary>
     </key>
-    <trigger id="333" parent="218" name="WEBADVICEUUID">
+    <trigger id="341" parent="219" name="WEBADVICEUUID">
       <SourceTextLength>40</SourceTextLength>
       <Definer>root@localhost</Definer>
       <Turn>before-row</Turn>

@@ -322,12 +322,14 @@ public class ServiceProvideController {
             Map<String, Object> serviceProvide = serviceProvideService.fetchServiceProvideBySpId(spId);
             model.addAttribute("serviceProvide",new Util().getPageServiceProvideJobFromMap(serviceProvide));
             model.addAttribute("updateMsg","请输入所有信息");
+            model.addAttribute("defaultSpecificKinds",serviceProvideService.fetchServiceProvideSpecificKindsByServiceProvideKind(Integer.valueOf(serviceProvideService.fetchServiceProvideBySpId(spId).get("spKind").toString())));
             return "comUpdateServiceProvide";
         }
         if (flag==ILLEGAL_INPUT_EXPENSE){
             Map<String, Object> serviceProvide = serviceProvideService.fetchServiceProvideBySpId(spId);
             model.addAttribute("serviceProvide",new Util().getPageServiceProvideJobFromMap(serviceProvide));
             model.addAttribute("updateMsg","费用设置错误");
+            model.addAttribute("defaultSpecificKinds",serviceProvideService.fetchServiceProvideSpecificKindsByServiceProvideKind(Integer.valueOf(serviceProvideService.fetchServiceProvideBySpId(spId).get("spKind").toString())));
             return "comUpdateServiceProvide";
         }
         pageServiceProvide.put("spId",spId);
@@ -336,6 +338,7 @@ public class ServiceProvideController {
         Map<String, Object> serviceProvide = serviceProvideService.fetchServiceProvideBySpId(spId);
         model.addAttribute("serviceProvide",new Util().getPageServiceProvideJobFromMap(serviceProvide));
         model.addAttribute("updateMsg","更新成功");
+        model.addAttribute("defaultSpecificKinds",serviceProvideService.fetchServiceProvideSpecificKindsByServiceProvideKind(Integer.valueOf(serviceProvideService.fetchServiceProvideBySpId(spId).get("spKind").toString())));
         return "comUpdateServiceProvide";
     }
 

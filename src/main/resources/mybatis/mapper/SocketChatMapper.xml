@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyw.dao.SocketChatMapper">
+<resultMap id="chatMap" type="com.wyw.pojo.SocketChat">
+    <id column="SCID" property="scId"/>
+    <result column="SCSENDID" property="scSendId"/>
+    <result column="SCRECEIVEID" property="scReceiveId" />
+    <result column="SCCHATMSG" property="scChatMsg" />
+    <result column="SCMSGSENDTIME" property="scMsgSendTime" />
+    <result column="SCFLAG" property="scFlag" />
+</resultMap>
+
+    <select id="querySocketChatList" parameterType="map" resultMap="chatMap">
+        select SCID, SCSENDID, SCRECEIVEID, SCCHATMSG, SCMSGSENDTIME, SCFLAG
+        from ks.socketchat
+        <where>
+            SCFLAG=0
+            <if test="scSendId != null and scSendId != ''">and (SCSENDID=#{scSendId} or SCSENDID=#{scReceiveId})</if>
+            <if test="scReceiveId != null and scReceiveId != ''">and (SCRECEIVEID=#{scSendId} or SCRECEIVEID= #{scReceiveId})</if>
+            <if test="scChatMsg != null and scChatMsg != ''">and SCCHATMSG=#{scChatMsg}</if>
+            <if test="scMsgSendTime != null and scMsgSendTime != ''">and SCMSGSENDTIME=#{scMsgSendTime}</if>
+        </where>
+        order by SCMSGSENDTIME
+    </select>
+
+    <select id="queryChatNews" parameterType="Long" resultMap="chatMap">
+        select SCID, SCSENDID, SCRECEIVEID, SCCHATMSG, SCMSGSENDTIME, SCFLAG
+        from ks.socketchat
+        <where>
+            SCFLAG=0
+        <if test="scReceiveId != null and scReceiveId != ''">
+        and SCRECEIVEID=#{scReceiveId}
+        </if>
+        </where>
+        group by SCSENDID
+    </select>
+
+
+    <insert id="saveSocketChat" parameterType="map">
+        insert into ks.socketchat(SCID, SCSENDID, SCRECEIVEID, SCCHATMSG, SCMSGSENDTIME, SCFLAG)
+        values(
+               #{scId},#{scSendId},#{scReceiveId},#{scChatMsg},#{scChatMsg},#{scFlag}
+              )
+    </insert>
+
+
+    <insert  id="saveGroupSocketChat" parameterType="List">
+        insert into ks.socketchat(SCID, SCSENDID, SCRECEIVEID, SCCHATMSG, SCMSGSENDTIME, SCFLAG) values
+        <foreach collection="list" item="chat" index="index" separator=",">
+          (
+           #{chat.scId},
+           #{chat.scSendId},
+           #{chat.scReceiveId},
+           #{chat.scChatMsg},
+           #{chat.scMsgSendTime},
+           #{chat.scFlag}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateSocketChat" parameterType="map">
+        update ks.socketchat
+        <set>
+            <if test="scSendId != null and scSendId != ''">SCSENDID=#{scSendId},</if>
+            <if test="scReceiveId != null and scReceiveId != ''">SCRECEIVEID=#{scReceiveId},</if>
+            <if test="scChatMsg != null and scChatMsg != ''">SCCHATMSG=#{scChatMsg},</if>
+            <if test="scMsgSendTime != null and scMsgSendTime != ''">SCMSGSENDTIME=#{scMsgSendTime},</if>
+            <if test="scFlag != null and scFlag != ''">SCFLAG=#{scFlag},</if>
+        </set>
+        where SCID=#{scId}
+    </update>
+
+    <delete id="deleteSocketChat" parameterType="map">
+        delete
+        from ks.socketchat
+            <where>
+                <if test="scId != null and scId != ''">and SCID=#{scId}</if>
+                <if test="scSendId != null and scSendId != ''">and SCSENDID=#{scSendId}</if>
+                <if test="scReceiveId != null and scReceiveId != ''">and SCRECEIVEID=#{scReceiveId}</if>
+                <if test="scChatMsg != null and scChatMsg != ''">and SCCHATMSG=#{scChatMsg}</if>
+                <if test="scMsgSendTime != null and scMsgSendTime != ''">and SCMSGSENDTIME=#{scMsgSendTime}</if>
+    </where>
+    </delete>
+</mapper>

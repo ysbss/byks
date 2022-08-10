@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -564,6 +565,37 @@ public class Util {
         simpleMailMessage.setFrom(from);
         javaMailSender.send(simpleMailMessage);
 
+    }
+
+    public Map<String,Object> pojoToMap(Object object) throws IllegalAccessException {
+        Map<String,Object> resMap=new HashMap<String, Object>();
+        for (Field field:object.getClass().getDeclaredFields()
+             ) {
+            boolean flag = field.isAccessible();//字段是否私有记录
+            field.setAccessible(true);//为了获取值先设为公有
+            Object o = field.get(object);//获取值
+            resMap.put(field.getName(), o);//放入map
+            field.setAccessible(flag);//还原
+        }
+        return resMap;
+    }
+
+    public <T> T mapToPojo(Map<String,Object> map,Class<T> pojo) throws IllegalAccessException, InstantiationException {
+        T t=null;
+        t=pojo.newInstance();//把字段赋给了t，下面是赋值
+        for (Field field:pojo.getDeclaredFields()
+             ) {
+            if (map.containsKey(field.getName())){
+                boolean flag = field.isAccessible();
+                field.setAccessible(true);
+                Object o = map.get(field.getName());
+                if (o != null && field.getType().isAssignableFrom(o.getClass())) {
+                    field.set(t, o);
+                }
+                field.setAccessible(flag);
+            }
+        }
+        return t;
     }
 
 }

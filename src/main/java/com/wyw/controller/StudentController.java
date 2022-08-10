@@ -149,6 +149,7 @@ public class StudentController {
             default:{
                 session.setAttribute("currentName",student.getSName());
                 session.setAttribute("currentStuId",student.getSId());
+                session.setAttribute("currentChatId",student.getSId());
                 System.out.println("我进来了学生");
                 System.out.println("现在sessionId："+session.getAttribute("currentStuId"));
                 model.addAttribute("spcPartTimeJobs",allSpecialPartTimeJobs);

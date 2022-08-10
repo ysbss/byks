@@ -11,10 +11,12 @@
     <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/LocalInformationMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/PartTimeJobMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/ServiceProvideMapper.xml" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/SocketChatMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/StudentMapper.xml" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/WebAdviceMapper.xml" dialect="MySQL" />
   </component>
   <component name="SqlResolveMappings">
+    <file url="file://$PROJECT_DIR$/src/main/resources/mybatis/mapper/SocketChatMapper.xml" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;name&quot;:{     &quot;@qname&quot;:&quot;15bf15c1-a5a0-454f-a66b-a2f73a43c2b7&quot;    }   }  } }}" />
     <file url="PROJECT" scope="{&quot;node&quot;:{  &quot;@negative&quot;:&quot;1&quot;,  &quot;group&quot;:{   &quot;@kind&quot;:&quot;root&quot;,   &quot;node&quot;:{    &quot;name&quot;:{     &quot;@qname&quot;:&quot;b67bc56b-e2bd-4c73-8df4-05f5d9c3cbb1&quot;    }   }  } }}" />
   </component>
 </project>

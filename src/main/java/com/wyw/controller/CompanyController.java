@@ -155,6 +155,7 @@ public class CompanyController {
             default:{
                 session.setAttribute("currentName",company.getCName());
                 session.setAttribute("currentComId",company.getCId());
+                session.setAttribute("currentChatId",company.getCId());
                 System.out.println("我进来了公司");
 //                for (Map m:allSpecialPartTimeJob
 //                     ) {

@@ -2,10 +2,7 @@ package com.wyw.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wyw.pojo.Company;
-import com.wyw.pojo.PartTimeJob;
-import com.wyw.pojo.Student;
-import com.wyw.pojo.WebAdvice;
+import com.wyw.pojo.*;
 import com.wyw.service.*;
 import com.wyw.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -64,6 +62,9 @@ public class PageController {
 
     @Resource
     CompanyService companyService;
+
+    @Resource
+    SocketChatService socketChatService;
 
 
     @RequestMapping("/toWebServiceProtocolPage")
@@ -294,7 +295,7 @@ public class PageController {
         Map<String, Object> partTimeJob = partTimeJobService.fetchSpcPartTimeJobByPid(pId);
         PartTimeJob updatePartTimeJob = new PartTimeJob();
         updatePartTimeJob.setPId(Long.valueOf(partTimeJob.get("pId").toString()));
-        updatePartTimeJob.setPBrowseNum(Integer.valueOf(partTimeJob.get("pBrowseNum").toString())+1);
+        updatePartTimeJob.setPBrowseNum(Integer.parseInt(partTimeJob.get("pBrowseNum").toString()) + 1);
         partTimeJobService.updatePartTimeJob(updatePartTimeJob);
         partTimeJob= partTimeJobService.fetchSpcPartTimeJobByPid(pId);
         List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
@@ -612,6 +613,7 @@ public class PageController {
 
 
         model.addAttribute("localInformation",localInformationService.fetchLocalInformationBylId(lId));
+        model.addAttribute("defaultSpecificKinds",localInformationService.fetchLocalInformationSpecificKindsByLocalInformationKind(Integer.valueOf(localInformationService.fetchLocalInformationBylId(lId).get("lKind").toString())));
         return "comUpdateLocalInformation";
     }
 
@@ -640,6 +642,7 @@ public class PageController {
                                             Model model){
 
         model.addAttribute("serviceProvide",new Util().getPageServiceProvideJobFromMap(serviceProvideService.fetchServiceProvideBySpId(spId)));
+        model.addAttribute("defaultSpecificKinds",serviceProvideService.fetchServiceProvideSpecificKindsByServiceProvideKind(Integer.valueOf(serviceProvideService.fetchServiceProvideBySpId(spId).get("spKind").toString())));
         return "comUpdateServiceProvide";
     }
 
@@ -800,5 +803,35 @@ public class PageController {
     public String toLoginPage(){
 
         return "dl";
+    }
+
+
+    @RequestMapping("/stuToZzyChatRoom/{cId}")
+    public String stuToZzyChatRoom(@PathVariable(value = "cId") Long cId,Model model, HttpSession session){
+        Map<String,Object> queryMap=new HashMap<String,Object>();
+//        if (session.getAttribute("currentStuId")!=null){
+//            queryMap.put("scSendId",session.getAttribute("currentStuId").toString());
+//        }
+//        if (session.getAttribute("currentComId")!=null){
+//            queryMap.put("scSendId",session.getAttribute("currentComId").toString());
+//        }
+        queryMap.put("scSendId",Long.valueOf(session.getAttribute("currentChatId").toString()));
+        queryMap.put("scReceiveId",cId);
+        model.addAttribute("receiveId",cId);
+        model.addAttribute("resultChatList",socketChatService.querySocketChatList(queryMap));
+
+        return "ChatRoom";
+    }
+
+    @RequestMapping("/toChatNews/{scReceiveId}")
+    public String toChatNews (@PathVariable(value = "scReceiveId") Long scReceiveId,Model model,
+                              HttpSession session){
+        PageHelper.startPage(1,3);
+
+        List<SocketChat> queryChatNews = socketChatService.queryChatNews(scReceiveId);
+        PageInfo<SocketChat> pageQueryChatNews=new PageInfo<SocketChat>(queryChatNews);
+        model.addAttribute("queryChatNews",queryChatNews);
+        model.addAttribute("pageQueryChatNews",pageQueryChatNews);
+        return "chatNews";
     }
 }

@@ -38,6 +38,12 @@
      order by LKIND
     </select>
 
+    <select id="fetchLocalInformationSpecificKindsByLocalInformationKind" parameterType="Integer" resultType="String">
+        select distinct   LSPECIFICKIND
+        from ks.localinformation
+        where LKIND=#{lKind}
+    </select>
+
     <select id="fetchLocalInformationKindBySpecificKind" resultType="Integer" parameterType="String">
         select  LKIND
         from ks.localinformation

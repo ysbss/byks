@@ -34,6 +34,11 @@ public class LocalInformationServiceImpl implements LocalInformationService {
     }
 
     @Override
+    public List<String> fetchLocalInformationSpecificKindsByLocalInformationKind(Integer lKind) {
+        return localInformationMapper.fetchLocalInformationSpecificKindsByLocalInformationKind(lKind);
+    }
+
+    @Override
     public List<Integer> fetchLocalInformationKinds() {
         return localInformationMapper.fetchLocalInformationKinds();
     }

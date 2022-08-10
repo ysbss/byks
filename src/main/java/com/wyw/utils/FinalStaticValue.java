@@ -5,6 +5,8 @@ package com.wyw.utils;
  */
 public class FinalStaticValue {
 
+
+
     public static final int DELETED_FLAG=-1;
 
     public static String PHONE_REGEX="^\\d{11}$";
@@ -12,16 +14,16 @@ public class FinalStaticValue {
     public static String EMAIL_REGEX="^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
 
 
-    public static String DEFAULT_MAIL_SENDER="1260518606@qq.com";
-    public static String ID_SUBJECT="获取您注册的账号id";
-    public static String ID_TEXT="您的帮帮网登录id为：";
-    public static String PASSWORD_SUBJECT="获取您注册的账号密码";
-    public static String PASSWORD_TEXT="您的帮帮网登录密码为:";
-    public static String ADMIN_REGISTER_SUBJECT ="获得新管理员的账号密码";
-    public static String ADMIN_REGISTER_TEXT_ACCOUNT="系统生成的管理员账号为：           ";
-    public static String ADMIN_REGISTER_TEXT_PASSWORD="系统生成的管理员密码为：";
-    public static String ADMIN_PASSWORD_SUBJECT="获得管理员的密码：";
-    public static String ADMIN_PASSWORD_TEXT ="管理员密码为：";
+    public static final String DEFAULT_MAIL_SENDER="1260518606@qq.com";
+    public static final String ID_SUBJECT="获取您注册的账号id";
+    public static final String ID_TEXT="您的帮帮网登录id为：";
+    public static final String PASSWORD_SUBJECT="获取您注册的账号密码";
+    public static final String PASSWORD_TEXT="您的帮帮网登录密码为:";
+    public static final String ADMIN_REGISTER_SUBJECT ="获得新管理员的账号密码";
+    public static final String ADMIN_REGISTER_TEXT_ACCOUNT="系统生成的管理员账号为：           ";
+    public static final String ADMIN_REGISTER_TEXT_PASSWORD="系统生成的管理员密码为：";
+    public static final String ADMIN_PASSWORD_SUBJECT="获得管理员的密码：";
+    public static final String ADMIN_PASSWORD_TEXT ="管理员密码为：";
 
     public static final String LOW_STR = "abcdefghijklmnopqrstuvwxyz";
     public static final String SPECIAL_STR = "~!@#$%^&*()_+/-=[]{};:'<>?.";
@@ -150,6 +152,7 @@ public class FinalStaticValue {
     public static final String S_MASTER_DEGREE ="硕士";
     public static final String S_DOCTOR_DEGREE ="博士";
 
-
+    public static final int saveCount=5;
+    public static final long saveBetweenTime=1000L;
 
 }

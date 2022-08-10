@@ -14,6 +14,44 @@
     <script type="text/javascript" th:src="@{/js/js.js}"></script>
     <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
 
+<style type="text/css">
+    .myButton {
+        background: #44c767 linear-gradient(to bottom, #44c767 5%, #5cbf2a 100%);
+        border-radius:25px;
+        border:3px solid #18ab29;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:17px;
+        padding:10px 20px;
+        text-decoration:none;
+        text-shadow:0px 0px 3px #2f6627;
+    }
+    .myButton:hover {
+        background: #5cbf2a linear-gradient(to bottom, #5cbf2a 5%, #44c767 100%);
+    }
+    .myButton:active {
+        position:relative;
+        top:1px;
+    }
+</style>
+
+    <script type="text/javascript">
+        function noSession(){
+            let sessionKind='[[${session.loginKind}]]'
+            console.log(sessionKind)
+            if (sessionKind.toString()==='' || sessionKind.toString().length===0){
+                console.log("21414")
+                alert("请登录");
+                window.location.replace("/toIndexPage");
+            }
+            else {
+                window.open("/stuToZzyChatRoom/"+'[[${partTimeJob.get("cId")}]]')
+            }
+        }
+
+    </script>
 
 </head>
 
@@ -72,7 +110,10 @@
                 <input type="submit" value="申请"/>
             </div>
 
+
         </form>
+        <a onclick="noSession()" th:unless="${session.loginKind eq '公司' ||session.loginKind eq  '管理员'}"  class="myButton" style="margin-left: 300px;">联系公司</a>
+<!--        <a onclick="noSession()" th:unless="${session.loginKind eq  '管理员'}"  class="myButton" style="margin-left: 300px;">联系公司</a>-->
         <p th:if="${apMsg}" th:text="${apMsg}" style="color: red"></p>
 <!--        <div style="background: #0066cc;margin-left: 25%;margin-right: 25%; width: 35%; height: 0%; float: right"><p>123</p></div>-->
         <div class="zzy_4">

@@ -50,6 +50,12 @@ public interface LocalInformationMapper {
     List<Map<String,Object>> fetchLocalInformationSpecificKinds();
 
     /**
+     * 根据选择的本地信息显示具体本地信息
+     * @return string
+     * */
+    List<String> fetchLocalInformationSpecificKindsByLocalInformationKind(Integer lKind);
+
+    /**
      *将有多少精品查询出来
      * @return list
      * */

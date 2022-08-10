@@ -5,6 +5,9 @@ import com.wyw.pojo.ServiceProvide;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author 鱼酥不是叔
+ */
 public interface ServiceProvideService {
 
 

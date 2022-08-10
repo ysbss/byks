@@ -13,7 +13,34 @@
     <script type="text/javascript" th:src="@{/js/jquery.touchSlider.js}"></script>
     <script type="text/javascript" th:src="@{/js/js.js}"></script>
     <script type="text/javascript" th:src="@{/js/ks-switch.pack.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
 
+    <script type="text/javascript" th:inline="javascript">
+        $.open(
+
+        )
+
+
+        function fetchSpSpecificKind () {
+            $.post(
+                {
+
+                    // url:"[[@{//}]]",
+                    url: '/ServiceProvide/comSelectServiceProvideKind',
+
+                    data: {"spKind": $("#spKind").val()},
+                    success: function (data) {
+                        let html = "";
+                        console.log(data)
+                        for (let i = 0; i < data.length; i++) {
+                            html += "<option value=" +"'" +data[i]+"'" + ">" + data[i] + "</option>"
+                        }
+                        $("#spSpecificKind").html(html);
+                    }
+                }
+            )
+        }
+    </script>
 
 </head>
 
@@ -35,40 +62,43 @@
                 <!--                <li><span th:text="'♥'+${partTimeJob.get('pAppointmentNum')}+'人预约'"></span>&nbsp;</li>-->
             </ul>
         </div>
-        <div class="zzy_2">
+        <div class="zzy_2" >
             <form th:action="@{'/ServiceProvide/comUpdateServiceProvide/'+${serviceProvide.get('spId')}}">
                 <table width="600" border="1" cellspacing="1" cellpadding="1">
                     <tr>
                         <td><span>信息名：</span> <input style="border-radius: 18px;border: 1px solid gray;outline: none" type="text" name="spName" th:placeholder="${serviceProvide.get('spName')}" th:value="${serviceProvide.get('spName')}"/> </td>
                     </tr>
-                    <!--                    <tr>-->
-                    <!--                        <td><span>信息种类：</span>-->
-                    <!--                            <select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="lKind">-->
-                    <!--                            <option value="1">吃</option>-->
-                    <!--                            <option value="2">穿</option>-->
-                    <!--                            <option value="3">住</option>-->
-                    <!--                            <option value="4">行</option>-->
-                    <!--                            <option value="5">娱乐</option>-->
-                    <!--                        </select></td>-->
-                    <!--                    </tr>-->
+                                        <tr>
+                                            <td><span>信息种类：</span>
+                                                <select id="spKind" style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spKind" onchange="fetchSpSpecificKind()">
+                                                <option th:selected="${serviceProvide.get('spKind') eq 1}" value="1">杂工类</option>
+                                                <option th:selected="${serviceProvide.get('spKind') eq 2}" value="2">管道类</option>
+                                                <option th:selected="${serviceProvide.get('spKind') eq 3}" value="3">电工类</option>
+                                                <option th:selected="${serviceProvide.get('spKind') eq 4}" value="4">木工类</option>
+                                                <option th:selected="${serviceProvide.get('spKind') eq 5}" value="5">清洁、零工类</option>
+                                            </select></td>
+                                        </tr>
                     <tr>
-                        <td><span>信息具体种类：</span><select style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spSpecificKind">
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '地板、面砖的铺设' }" value="'地板、面砖的铺设'">地板、面砖的铺设</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '粉刷工' }" value="'粉刷工'">粉刷工</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '油漆工' }" value="'油漆工'">油漆工</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '地暖的铺设' }" value="'地暖的铺设'">地暖的铺设</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '给、排水路的设计安装' }" value="'给、排水路的设计安装'">给、排水路的设计安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '城市供暖入户安装' }" value="'城市供暖入户安装'">城市供暖入户安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '线路设计安装' }" value="'线路设计安装'">线路设计安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '开关、插座的安装' }" value="'开关、插座的安装'">开关、插座的安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '灯具的安装' }" value="'灯具的安装'">灯具的安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '电器的运送、安装' }" value="'电器的运送、安装'">电器的运送、安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '装修设计施工' }" value="'装修设计施工'">装修设计施工</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '附属装饰安装' }" value="'附属装饰安装'">附属装饰安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '各种门类安装' }" value="'各种门类安装'">各种门类安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '家具的运送、安装' }" value="'家具的运送、安装'">家具的运送、安装</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '家居室内清洁' }" value="'家居室内清洁'">家居室内清洁</option>
-                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '零工' }" value="'零工'">零工</option>
+                        <td><span>信息具体种类：</span>
+                            <select id="spSpecificKind" style="border-radius: 18px;border: 1px solid gray;outline: none" class="form-control" name="spSpecificKind" >
+                            <option th:selected="${defaultSpecificKind } eq ${serviceProvide.get('spSpecificKind')}" th:each="defaultSpecificKind:${defaultSpecificKinds}" th:value="${defaultSpecificKind}" th:text="${defaultSpecificKind}"></option>
+
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '地板、面砖的铺设' }" value="'地板、面砖的铺设'">地板、面砖的铺设</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '粉刷工' }" value="'粉刷工'">粉刷工</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '油漆工' }" value="'油漆工'">油漆工</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '地暖的铺设' }" value="'地暖的铺设'">地暖的铺设</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '给、排水路的设计安装' }" value="'给、排水路的设计安装'">给、排水路的设计安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '城市供暖入户安装' }" value="'城市供暖入户安装'">城市供暖入户安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '线路设计安装' }" value="'线路设计安装'">线路设计安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '开关、插座的安装' }" value="'开关、插座的安装'">开关、插座的安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '灯具的安装' }" value="'灯具的安装'">灯具的安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '电器的运送、安装' }" value="'电器的运送、安装'">电器的运送、安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '装修设计施工' }" value="'装修设计施工'">装修设计施工</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '附属装饰安装' }" value="'附属装饰安装'">附属装饰安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '各种门类安装' }" value="'各种门类安装'">各种门类安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '家具的运送、安装' }" value="'家具的运送、安装'">家具的运送、安装</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '家居室内清洁' }" value="'家居室内清洁'">家居室内清洁</option>-->
+<!--                            <option th:selected="${serviceProvide.get('spSpecificKind') eq '零工' }" value="'零工'">零工</option>-->
                         </select></td>
                     </tr>
                     <tr>
