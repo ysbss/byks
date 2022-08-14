@@ -3,6 +3,7 @@ package com.wyw;
 import com.wyw.pojo.SocketChat;
 import com.wyw.utils.FinalStaticValue;
 import com.wyw.utils.RandomStr;
+import com.wyw.utils.SendSms;
 import com.wyw.utils.Util;
 import lombok.SneakyThrows;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -20,11 +21,15 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -44,21 +49,39 @@ class WywByksApplicationTests {
     @Resource
     RandomStr randomStr;
 
-    @Test
-    void mapTextLoad(){
-//        Map<String,Object> tm=new HashMap<String, Object>();
-//        tm.put("a",123);
-//        tm.put("a",456);
-//        System.out.println(tm.get("a"));
-//        System.out.println(tm.size());
-        System.out.println(System.currentTimeMillis());
-        int a=0;
-        while(a<1000000){
-            a++;
-        }
-        System.out.println(System.currentTimeMillis());
+    @Resource
+    DataSource dataSource;
 
+    @Test
+    void sendMessageByZhenZi(){
+        SendSms.send("13767484001","1234");
     }
+
+    @Test
+    void dataSource() throws SQLException {
+        System.out.println(dataSource.getClass());
+
+        System.out.println(dataSource.getConnection());
+
+        dataSource.getConnection().close();
+    }//在测试类里面不能用awt
+
+
+//    @Test
+//    void mapTextLoad(){
+////        Map<String,Object> tm=new HashMap<String, Object>();
+////        tm.put("a",123);
+////        tm.put("a",456);
+////        System.out.println(tm.get("a"));
+////        System.out.println(tm.size());
+//        System.out.println(System.currentTimeMillis());
+//        int a=0;
+//        while(a<1000000){
+//            a++;
+//        }
+//        System.out.println(System.currentTimeMillis());
+//
+//    }
 
 
     @Test

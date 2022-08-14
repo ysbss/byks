@@ -35,7 +35,7 @@ import static com.wyw.utils.FinalStaticValue.*;
  * @author 鱼酥不是叔
  */
 @Controller
-@RequestMapping("/PartTimeJob")
+    @RequestMapping("/PartTimeJob")
 public class PartTimeJobController {
 
     @Autowired

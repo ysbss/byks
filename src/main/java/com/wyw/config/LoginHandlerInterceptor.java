@@ -7,6 +7,8 @@ import com.wyw.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
@@ -34,6 +36,18 @@ public class LoginHandlerInterceptor  implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+//        response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        //该字段可选，是个布尔值，表示是否可以携带cookie
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT,OPTIONS");
+        response.setHeader("Access-Control-Allow-Methods", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        if (request.getMethod().equals(HttpMethod.OPTIONS.name())){
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+        }
+        //加上了上面就可以保证跨域~~
         Object currentName = request.getSession().getAttribute("currentName");
 
         Util util = new Util();
@@ -61,9 +75,15 @@ public class LoginHandlerInterceptor  implements HandlerInterceptor {
         ) {
             m.put("pSubmitTime", util.StringFromDataBaseTransferToDate(m.get("pSubmitTime").toString(),sdf));
         }
-
-
-
+//return true;
+//        如果要进行测试跨域ajax请求，必须注释掉下面的代码直接return true，不然由于进行了网页跳转，会将网页源代码作为响应体返回，导致前端呈现网页源代码
+        //在前端设置了x-requested-with，并且在上面设置了允许setHeader，在这里判断是否为ajax请求就可以正常判断了。
+       System.out.println("X-Requested-With:"+request.getHeader("X-Requested-With"));
+//不判断是否为ajax请求的话，会直接跳到下面的if判断，又因为进行了网页跳转，最后会将页面源代码呈现回去
+        if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))){
+            System.out.println("我来判断X-Requested-With");
+            return true;
+        }
         if (currentName==null){
             request.setAttribute("lMsg","无权限访问");
             request.setAttribute("spcPartTimeJobs",allSpecialPartTimeJobs);
@@ -72,12 +92,10 @@ public class LoginHandlerInterceptor  implements HandlerInterceptor {
             request.setAttribute("serviceProvideKinds",serviceProvideKinds);
             request.setAttribute("serviceProvideSpecificKinds",serviceProvideSpecificKinds);
             request.setAttribute("localInformationKinds",localInformationKinds);
-            System.out.println(localInformationKinds.size());
-            System.out.println(localInformationSpecificKinds.size());
+//            System.out.println(localInformationKinds.size());
+//            System.out.println(localInformationSpecificKinds.size());
             request.setAttribute("localInformationSpecificKinds",localInformationSpecificKinds);
-
             request.getRequestDispatcher("/index.html").forward(request,response);
-
 
             return false;
             //如果因为时间过长session自动注销，那么跳转的首页不能正常显示数据，因为这里没给首页数据，网上说对拦截器配置进行修改

@@ -3,6 +3,7 @@ package com.wyw.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.deploy.net.HttpResponse;
 import com.wyw.pojo.*;
 import com.wyw.service.*;
 import com.wyw.utils.FinalStaticValue;
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -501,4 +500,13 @@ public class CompanyController {
         return "comRevisePassword";
     }
 
+    @RequestMapping("/test")
+    @ResponseBody
+//    @CrossOrigin
+//    在preHandle里设置了，这里就可以不用crossOrigin了
+    public String testImg(HttpServletResponse response){
+        String res="你好 我是idea发送的ajax，区别于vscode";
+        System.out.println("我进来了idea的ajax跨域实验");
+        return res;
+    }
 }
