@@ -227,7 +227,7 @@ public class CompanyController {
                                           Model model) throws IOException {
 
         System.out.println("我进来了");
-        if (!IMG_PATTERN.matcher(new Tika().detect(comImgFile.getInputStream())).matches()){
+        if (!IMG_PATTERN.matcher(new Tika().detect(comImgFile.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, comImgFile.getOriginalFilename());}})).matches()){
 //            说明上传的不是图片类型
             return "Not an Img";
         }

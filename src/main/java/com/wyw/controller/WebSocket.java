@@ -343,7 +343,7 @@ public class WebSocket<L>
 
 
             }
-        if (unStorageSocketChatList.size()>= FinalStaticValue.saveCount||sendChatCount>=FinalStaticValue.saveCount||(saveTime-startTime)>FinalStaticValue.saveBetweenTime){
+        if (unStorageSocketChatList.size()>= FinalStaticValue.SAVE_COUNT||sendChatCount>=FinalStaticValue.SAVE_COUNT||(saveTime-startTime)>FinalStaticValue.SAVE_BETWEEN_TIME){
                 System.out.println("来保存咯");
             for (Map m:
                  unStorageSocketChatList) {

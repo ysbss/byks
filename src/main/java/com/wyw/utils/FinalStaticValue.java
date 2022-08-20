@@ -154,9 +154,15 @@ public class FinalStaticValue {
     public static final String S_MASTER_DEGREE ="硕士";
     public static final String S_DOCTOR_DEGREE ="博士";
 
-    public static final int saveCount=5;
-    public static final long saveBetweenTime=1000L;
+    public static final int SAVE_COUNT=5;
+    public static final long SAVE_BETWEEN_TIME=1000L;
 
     public static final Pattern IMG_PATTERN= Pattern.compile("image/.*");
+
+    public static final Pattern DOC_PATTERN=Pattern.compile("application/msword");
+
+    public static final Pattern DOCX_PATTERN=Pattern.compile("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+    public static final Pattern PDF_PATTERN=Pattern.compile("application/pdf");
 
 }

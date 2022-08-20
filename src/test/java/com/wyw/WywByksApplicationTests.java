@@ -44,8 +44,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.wyw.utils.FinalStaticValue.COMPANY_FILE_STORE_PATH_PREFIX;
-import static com.wyw.utils.FinalStaticValue.RESUME_FILE_STORE_PATH_PREFIX;
+import static com.wyw.utils.FinalStaticValue.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WywByksApplicationTests {
@@ -82,16 +81,21 @@ class WywByksApplicationTests {
 //        MediaType mediaType = new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(f)), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, f.getName());}});
 //        System.out.println(mediaType.toString());
 //        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(f)), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, f.getName());}}).toString());
-        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg").getName());}}).toString());
-        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc").getName());}}).toString());
+        System.out.println(new AutoDetectParser().getDetector().detect(
+                new BufferedInputStream(new FileInputStream(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")),
+                new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg").getName());}}).toString());
+        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"苏杉杉"+File.separator+File.separator+"新-FR3阶段测试卷答案.pdf")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"苏杉杉"+File.separator+File.separator+"新-FR3阶段测试卷答案.pdf").getName());}}).toString());
         Pattern pattern = Pattern.compile("image/.*");
 //        Matcher m = pattern.matcher(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg").getName());}}).toString());
         Matcher m = pattern.matcher(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc").getName());}}).toString());
         System.out.println("*****************");
         System.out.println(m.matches());
         System.out.println(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")));
-        System.out.println(pattern.matcher(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg"))).matches());
-        System.out.println(Pattern.compile("image/.*").matcher(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg"))).matches());
+        System.out.println(new Tika().detect(new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"苏杉杉"+File.separator+File.separator+"新-FR3阶段测试卷答案.pdf")));
+//        System.out.println(pattern.matcher(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg"))).matches());
+//        System.out.println(Pattern.compile("image/.*").matcher(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg"))).matches());
+//        System.out.println("*****************");
+//        System.out.println(PDF_PATTERN.matcher(new Tika().detect(new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"苏杉杉"+File.separator+File.separator+"新-FR3阶段测试卷答案.pdf"))).matches());
     }
 
 
@@ -101,6 +105,7 @@ class WywByksApplicationTests {
 
         System.out.println(dataSource.getConnection());
 
+        System.out.println(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg").getName());
         dataSource.getConnection().close();
     }//在测试类里面不能用awt
 

@@ -8,6 +8,8 @@ import com.wyw.pojo.Student;
 import com.wyw.service.*;
 import com.wyw.utils.FinalStaticValue;
 import com.wyw.utils.Util;
+import org.apache.tika.Tika;
+import org.apache.tika.metadata.Metadata;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -64,7 +66,7 @@ public class StudentController {
     @Resource
     FileResumeService fileResumeService;
 
-    @Autowired
+    @Resource
     JavaMailSenderImpl javaMailSender;
 
     @Resource
@@ -399,15 +401,28 @@ public class StudentController {
                                    @PathVariable(value = "fFileID") String fFileID,
                                    Model model) throws IOException {
 
+
+
         FileResume repeatedFileResume = fileResumeService.fetchFileResumeByfId(fFileID);
         System.out.println(repeatedFileResume.getFFileName());
         System.out.println(pageFileResume.getOriginalFilename());
         Student studentInfo = studentService.fetchStuById(sId);
 
             Map<String,Object> updFileResume=new HashMap<String,Object> ();
+            if (!DOC_PATTERN.matcher(new Tika().detect(pageFileResume.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, pageFileResume.getOriginalFilename());}})).matches()&&
+                    !DOCX_PATTERN.matcher(new Tika().detect(pageFileResume.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, pageFileResume.getOriginalFilename());}})).matches() &&
+            !PDF_PATTERN.matcher(new Tika().detect(pageFileResume.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, pageFileResume.getOriginalFilename());}})).matches()
+            ){
+                //            说明上传的不是word/pdf类型
+                model.addAttribute("stuInfo",studentInfo);
+                model.addAttribute("fileResumes",fileResumeService.fetchFileResumesList(new HashMap<String,Object>(){{put("fFileSid",sId);}}));
+                model.addAttribute("uploadMsg","请上传正确的简历文件格式(doc/docx/pdf)");
+                return "stuUpdate";
+            }
             File storeNewFile=new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+studentInfo.getSName()+File.separator);
             File oldFile=new File(repeatedFileResume.getFFileStorePath());
             System.out.println(oldFile.getAbsolutePath());
+
             if (oldFile.delete()){
                 System.out.println("删除成功");
 

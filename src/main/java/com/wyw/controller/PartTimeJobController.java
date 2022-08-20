@@ -11,6 +11,8 @@ import com.wyw.service.FileResumeService;
 import com.wyw.service.PartTimeJobService;
 import com.wyw.service.StudentService;
 import com.wyw.utils.Util;
+import org.apache.tika.Tika;
+import org.apache.tika.metadata.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -159,7 +161,7 @@ public class PartTimeJobController {
          * */
 
  //判断这个学生是否已经申请过该职位
-
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         Map<String, Object> detectRepeatMap = new HashMap<String, Object>();
         detectRepeatMap.put("apPid",pId);
         detectRepeatMap.put("apSid",Long.valueOf(session.getAttribute("currentStuId").toString()));
@@ -171,16 +173,30 @@ public class PartTimeJobController {
         updatePartTimeJob.setPAppointmentNum(Integer.parseInt(partTimeJob.get("pAppointmentNum").toString())+1);
 
         Util util = new Util();
+        partTimeJob.put("pSubmitTime",util.computePageDays(partTimeJob.get("pSubmitTime").toString(),sdf));
 
         model.addAttribute("partTimeJob",partTimeJob);
+        model.addAttribute("approximatePartTimeJobs",partTimeJobService.fetchApproximatePartTimeJobByPid(pId));
+
+        if (!DOC_PATTERN.matcher(new Tika().detect(resumeFile.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, resumeFile.getOriginalFilename());}})).matches()&&
+                !DOCX_PATTERN.matcher(new Tika().detect(resumeFile.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, resumeFile.getOriginalFilename());}})).matches() &&
+                !PDF_PATTERN.matcher(new Tika().detect(resumeFile.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, resumeFile.getOriginalFilename());}})).matches()
+        ){
+            //            说明上传的不是word/pdf类型
+//            model.addAttribute("approximatePartTimeJobs",partTimeJobService.fetchApproximatePartTimeJobByPid(pId));
+            System.out.println(new Tika().detect(resumeFile.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, resumeFile.getOriginalFilename());}}));
+            model.addAttribute("apMsg","请上传正确的简历文件格式(doc/docx/pdf)");
+            return "zzy";
+        }
+
+
         if(repeatedInfoInApplyPartTimeJob!=null){
             System.out.println("i came in repeated situation");
             model.addAttribute("apMsg","请勿重复申请同一个职位");
-            List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
-            model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-
-            partTimeJob.put("pSubmitTime",util.computePageDays(partTimeJob.get("pSubmitTime").toString(),sdf));
+//            List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
+//            model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
+//            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+            System.out.println(new Tika().detect(resumeFile.getInputStream(),new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, resumeFile.getOriginalFilename());}}));
             System.out.println(model.getAttribute("apMsg"));
             return "zzy";
 //            return "redirect:/PartTimeJob/fetchSpcPartTimeJob/"+pId;
@@ -201,7 +217,6 @@ public class PartTimeJobController {
             System.out.println("make directory success");
         }
         resumeFile.transferTo(new File(resumeStoreFilePath.getAbsoluteFile()+File.separator+resumeFile.getOriginalFilename()));
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         ApplyPartTimeJob applyPartTimeJob = new ApplyPartTimeJob();
         applyPartTimeJob.setApPid(pId);
         applyPartTimeJob.setApSid(Long.valueOf(session.getAttribute("currentStuId").toString()));
@@ -224,10 +239,9 @@ public class PartTimeJobController {
         //添加到了文件表
 
 
-        partTimeJob.put("pSubmitTime",util.computePageDays(partTimeJob.get("pSubmitTime").toString(),sdf));
         partTimeJobService.updatePartTimeJob(updatePartTimeJob);
-        List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
-        model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
+//        List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
+//        model.addAttribute("approximatePartTimeJobs",approximatePartTimeJobs);
         model.addAttribute("apMsg","申请成功");
 
 //        return "redirect:/PartTimeJob/fetchSpcPartTimeJob/"+pId;

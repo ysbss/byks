@@ -23,7 +23,7 @@ import static com.wyw.utils.FinalStaticValue.*;
 @Component
 public class Util {
 
-    @Autowired
+    @Resource
     private JavaMailSenderImpl javaMailSender;
 
     @Resource
