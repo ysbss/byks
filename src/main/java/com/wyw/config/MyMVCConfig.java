@@ -55,5 +55,34 @@ public class MyMVCConfig implements WebMvcConfigurer {
 //        这里不推荐用static/**会导致重定向后静态资源无法导入
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        System.out.println("============addResourceHandlers=============");
+//        我为什么不能显示图片，首先是没有配置外部静态资源映射路径，其次是配置之后仍然无法显示是因为文件路径包含了中文，导致后端encode了URL之后路径匹配不上
+//        registry.addResourceHandler("/wzx/**")
+//                前端请求链接要写成/wzx/+剩下的真实地址（即comImg之后的）的形式
+        registry.addResourceHandler("/**")
+                .addResourceLocations("file:"+System.getProperty("user.dir")+"/"
+                ,
+                "classpath:/META-INF/resources/",
+                "classpath:/resources/",
+                "classpath:/static/",
+                "classpath:/public/"
+        );
 
+//        registry.addResourceHandler("/**").addResourceLocations("file:C://Users/12605/Desktop/byks/comImg/"
+//                ,
+//                "classpath:/META-INF/resources/",
+//                "classpath:/resources/",
+//                "classpath:/static/",
+//                "classpath:/public/"
+//        );
+//        registry.addResourceHandler("/**").addResourceLocations("file:C://Users/12605/Desktop/byks/comImg/"
+//                ,
+//                "classpath:/META-INF/resources/",
+//                "classpath:/resources/",
+//                "classpath:/static/",
+//                "classpath:/public/"
+//        );
+    }
 }

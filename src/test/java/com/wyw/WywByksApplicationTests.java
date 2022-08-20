@@ -8,6 +8,11 @@ import com.wyw.utils.Util;
 import lombok.SneakyThrows;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.tika.Tika;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import org.junit.jupiter.api.Test;
@@ -17,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +44,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.wyw.utils.FinalStaticValue.COMPANY_FILE_STORE_PATH_PREFIX;
 import static com.wyw.utils.FinalStaticValue.RESUME_FILE_STORE_PATH_PREFIX;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,6 +63,37 @@ class WywByksApplicationTests {
     void sendMessageByZhenZi(){
         SendSms.send("13767484001","1234");
     }
+
+    @Test
+    void fileDetect() throws IOException {
+
+//        File f=new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg");
+//        InputStream is =new FileInputStream(f);
+//        BufferedInputStream bis = new BufferedInputStream(is);
+//        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
+//        AutoDetectParser parser = new AutoDetectParser();
+//        Detector detector = parser.getDetector();
+//        Detector detector = new AutoDetectParser().getDetector();
+//        Metadata md = new Metadata();
+//        md.add(Metadata.RESOURCE_NAME_KEY, f.getName());
+//        MediaType mediaType = detector.detect(bis, md);
+//        MediaType mediaType = new AutoDetectParser().getDetector().detect(bis, md);
+//        MediaType mediaType = new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(f)), md);
+//        MediaType mediaType = new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(f)), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, f.getName());}});
+//        System.out.println(mediaType.toString());
+//        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(f)), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, f.getName());}}).toString());
+        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg").getName());}}).toString());
+        System.out.println(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc").getName());}}).toString());
+        Pattern pattern = Pattern.compile("image/.*");
+//        Matcher m = pattern.matcher(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg").getName());}}).toString());
+        Matcher m = pattern.matcher(new AutoDetectParser().getDetector().detect(new BufferedInputStream(new FileInputStream(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc")), new Metadata(){{add(Metadata.RESOURCE_NAME_KEY, new File(RESUME_FILE_STORE_PATH_PREFIX+File.separator+"刘姝贤"+File.separator+File.separator+"4-推优登记表.doc").getName());}}).toString());
+        System.out.println("*****************");
+        System.out.println(m.matches());
+        System.out.println(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg")));
+        System.out.println(pattern.matcher(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg"))).matches());
+        System.out.println(Pattern.compile("image/.*").matcher(new Tika().detect(new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+"上海哔哩哔哩"+File.separator+File.separator+"HII.jpg"))).matches());
+    }
+
 
     @Test
     void dataSource() throws SQLException {

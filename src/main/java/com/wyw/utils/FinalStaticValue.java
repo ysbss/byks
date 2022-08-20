@@ -1,5 +1,7 @@
 package com.wyw.utils;
 
+import java.util.regex.Pattern;
+
 /**
  * @author 鱼酥不是叔
  */
@@ -154,5 +156,7 @@ public class FinalStaticValue {
 
     public static final int saveCount=5;
     public static final long saveBetweenTime=1000L;
+
+    public static final Pattern IMG_PATTERN= Pattern.compile("image/.*");
 
 }

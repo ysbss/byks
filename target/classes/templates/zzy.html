@@ -102,17 +102,15 @@
             </table>
         </div>
 
-        <form enctype="multipart/form-data" method="post" th:action="@{'/PartTimeJob/applyPartTimeJob/'+${partTimeJob.get('pId')}+'/'+${partTimeJob.get('cId')}}">
+        <form name="resumeForm" enctype="multipart/form-data" method="post" th:action="@{'/PartTimeJob/applyPartTimeJob/'+${partTimeJob.get('pId')}+'/'+${partTimeJob.get('cId')}}">
             <div id="uploadResume" style="margin-left: 345px;height: 380px; display: none">
                 <div >
                     <input type="file" class="form-control" id="resumeFile" name="resumeFile">
                 </div>
-                <input type="submit" value="申请"/>
+                <button id="btnResume" style="color: #0066cc;width: 100px;height: 50px;border-radius: 18px" type="submit">提交简历</button>
             </div>
-
-
         </form>
-        <a onclick="noSession()" th:unless="${session.loginKind eq '公司' ||session.loginKind eq  '管理员'}"  class="myButton" style="margin-left: 300px;">联系公司</a>
+        <a  onclick="noSession()" th:unless="${session.loginKind eq '公司' ||session.loginKind eq  '管理员'}"  class="myButton" style="margin-left: 300px;margin-top: 55px">联系公司</a>
 <!--        <a onclick="noSession()" th:unless="${session.loginKind eq  '管理员'}"  class="myButton" style="margin-left: 300px;">联系公司</a>-->
         <p th:if="${apMsg}" th:text="${apMsg}" style="color: red"></p>
 <!--        <div style="background: #0066cc;margin-left: 25%;margin-right: 25%; width: 35%; height: 0%; float: right"><p>123</p></div>-->
@@ -174,6 +172,16 @@
 </div><!-- maskLayer end -->
 </div>
 <!-- alpha div end -->
+<script type="text/javascript" th:inline="javascript">
+    $('#btnResume').click(function (){
+        let rsv=document.getElementById('resumeFile').value;
+        if (rsv===''){
+            alert("不要上传空简历")
+            return false;
+        }
+        $('[name="resumeForm"]').submit();
+    })
 
+</script>
 </body>
 </html>

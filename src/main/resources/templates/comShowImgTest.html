@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+</head>
+<body>
+<!--<img th:src="@{/company/showImgOfCom}"/>-->
+<!--<img src="/../static/images/dl.jpg"/>-->
+<img th:src="@{/images/dl.jpg}"/>
+<!--<img th:src="@{/wzx/comImg/深圳腾讯/ggg.png}"/>-->
+<img id="123" th:src="@{'/'+${comImgPath}}" th:value="${comImgPath}"/>
+<!--这个要和config里面的addResourceHandler里写的请求对应-->
+<script type="text/javascript">
+let path='[[${comImgPath}]]'
+console.log(path);
+</script>
+</body>
+</html>

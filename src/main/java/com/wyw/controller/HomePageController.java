@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Component
+@Deprecated
 public class HomePageController implements CommandLineRunner {
 
     @Resource

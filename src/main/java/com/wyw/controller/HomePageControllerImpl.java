@@ -17,6 +17,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/HomePage")
+@Deprecated
 public class HomePageControllerImpl {
 
     @Resource

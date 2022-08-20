@@ -126,6 +126,26 @@
         </dependency>
 <!--不加这个的话，在配置文件里配置druid的具体属性会报错-->
 
+
+        <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tika</groupId>-->
+<!--            <artifactId>tika-core</artifactId>-->
+<!--            <version>1.24.1</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.28.4</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tika</groupId>-->
+<!--            <artifactId>tika-core</artifactId>-->
+<!--            <version>2.4.1</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>

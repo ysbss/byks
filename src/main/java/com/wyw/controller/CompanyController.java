@@ -4,10 +4,16 @@ package com.wyw.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.deploy.net.HttpResponse;
+import com.sun.org.apache.regexp.internal.RE;
 import com.wyw.pojo.*;
 import com.wyw.service.*;
 import com.wyw.utils.FinalStaticValue;
 import com.wyw.utils.Util;
+import org.apache.tika.Tika;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,10 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import static com.wyw.utils.FinalStaticValue.*;
 
@@ -155,6 +159,7 @@ public class CompanyController {
                 session.setAttribute("currentName",company.getCName());
                 session.setAttribute("currentComId",company.getCId());
                 session.setAttribute("currentChatId",company.getCId());
+                session.setAttribute("userProfilePath",fileCompanyService.fetchFileCompanyList(new HashMap<String,Object>(){{put("fFileCid",company.getCId());}}).get(0).getFFileStorePath());
                 System.out.println("我进来了公司");
 //                for (Map m:allSpecialPartTimeJob
 //                     ) {
@@ -215,14 +220,23 @@ public class CompanyController {
     }
 
 
-    @RequestMapping("/downloadCompanyClassicImg/{cId}")
-    public String uploadCompanyClassicImg(MultipartFile imgFile,
+    @RequestMapping("/uploadCompanyClassicImg/{cId}")
+    @ResponseBody
+    public String uploadCompanyClassicImg(MultipartFile comImgFile,
                                           @PathVariable(value = "cId")Long cId,
                                           Model model) throws IOException {
 
         System.out.println("我进来了");
+        if (!IMG_PATTERN.matcher(new Tika().detect(comImgFile.getInputStream())).matches()){
+//            说明上传的不是图片类型
+            return "Not an Img";
+        }
+
         FileCompany repeatedCompanyFile = fileCompanyService.isRepeatedCompanyFile(cId);
         Company storeCompany = companyService.fetchCompanyByCid(cId);
+        System.out.println("++++++++++++++++++++++");
+        System.out.println(comImgFile);
+        System.out.println("++++++++++++++++++++++");
         if (repeatedCompanyFile!=null){
             FileCompany updFileCompany = new FileCompany();
             File companyImgStorePath = new File(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator);
@@ -237,16 +251,16 @@ public class CompanyController {
             if (!companyImgStorePath.exists()){
                 companyImgStorePath.mkdirs();
             }
-            imgFile.transferTo(new File(companyImgStorePath.getAbsoluteFile()+File.separator+imgFile.getOriginalFilename()));
+            comImgFile.transferTo(new File(companyImgStorePath.getAbsoluteFile()+File.separator+comImgFile.getOriginalFilename()));
 
-            updFileCompany.setFFileName(imgFile.getOriginalFilename());
-            updFileCompany.setFFileStorePath(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator+imgFile.getOriginalFilename());
+            updFileCompany.setFFileName(comImgFile.getOriginalFilename());
+            updFileCompany.setFFileStorePath(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator+comImgFile.getOriginalFilename());
             updFileCompany.setFFileCid(cId);
             updFileCompany.setFFileID(fileCompanyService.isRepeatedCompanyFile(cId).getFFileID());
             fileCompanyService.updateFileCompany(updFileCompany);
             model.addAttribute("ciMsg","更新上传图片成功");
             System.out.println("更新上传图片成功");
-            return "bz";
+            return COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator+comImgFile.getOriginalFilename();
         }
 
 
@@ -256,22 +270,32 @@ public class CompanyController {
         System.out.println(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator);
         System.out.println(companyImgStorePath.getAbsoluteFile());
 
-        System.out.println(imgFile.getContentType());
-        System.out.println(imgFile.getOriginalFilename());
+        System.out.println(comImgFile.getContentType());
+        System.out.println(comImgFile.getOriginalFilename());
         if (!companyImgStorePath.exists()){
             companyImgStorePath.mkdirs();
         }
-        imgFile.transferTo(new File(companyImgStorePath.getAbsoluteFile()+File.separator+imgFile.getOriginalFilename()));
+        comImgFile.transferTo(new File(companyImgStorePath.getAbsoluteFile()+File.separator+comImgFile.getOriginalFilename()));
         FileCompany fileCompany = new FileCompany();
         fileCompany.setFFileID(STRING_NULL);
-        fileCompany.setFFileName(imgFile.getOriginalFilename());
-        fileCompany.setFFileStorePath(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator+imgFile.getOriginalFilename());
-        System.out.println(COMPANY_FILE_STORE_PATH_PREFIX + File.separator + storeCompany.getCName() + File.separator + imgFile.getOriginalFilename());
+        fileCompany.setFFileName(comImgFile.getOriginalFilename());
+        fileCompany.setFFileStorePath(COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator+comImgFile.getOriginalFilename());
+        System.out.println(COMPANY_FILE_STORE_PATH_PREFIX + File.separator + storeCompany.getCName() + File.separator + comImgFile.getOriginalFilename());
         fileCompany.setFFileCid(cId);
         fileCompanyService.addFileCompany(fileCompany);
         model.addAttribute("ciMsg","上传成功");
-        return "bz";
+        return COMPANY_FILE_STORE_PATH_PREFIX+File.separator+storeCompany.getCName()+File.separator+comImgFile.getOriginalFilename();
     }
+
+    @RequestMapping("/showImgOfCom/{cId}")
+    public String showImgOfCom(Model model,@PathVariable("cId") Long cId){
+        Map<String, Object> fileCompany = new HashMap<>();
+        fileCompany.put("fFileCid",cId);
+        System.out.println(fileCompanyService.fetchFileCompanyList(fileCompany).get(0).getFFileStorePath());
+        model.addAttribute("comImgPath",fileCompanyService.fetchFileCompanyList(fileCompany).get(0).getFFileStorePath());
+        return "comShowImgTest";
+    }
+
 
     @RequestMapping("/fetchCompaniesList/{pageNum}")
     public String fetchCompaniesList(
@@ -391,17 +415,19 @@ public class CompanyController {
                             Model model){
 
         switch (util.isLegalInputCompanyMap(pageUpdateCom,cId)) {
-            case EMPTY_POJO:{model.addAttribute("updateMsg","请填写完整信息");model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));return "comUpdate";}
-            case ERROR_EMAIL:{model.addAttribute("updateMsg","错误的邮箱");model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));return "comUpdate";}
-            case REPEATED_EMAIL:{model.addAttribute("updateMsg","该邮箱已被注册");model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));return "comUpdate";}
+            case EMPTY_POJO:{model.addAttribute("updateMsg","请填写完整信息");        model.addAttribute("comImgPath",fileCompanyService.fetchFileCompanyList(new HashMap<String,Object>(){{put("fFileCid",cId);}}).get(0).getFFileStorePath());
+                model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));return "comUpdate";}
+            case ERROR_EMAIL:{model.addAttribute("updateMsg","错误的邮箱");        model.addAttribute("comImgPath",fileCompanyService.fetchFileCompanyList(new HashMap<String,Object>(){{put("fFileCid",cId);}}).get(0).getFFileStorePath());
+                model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));return "comUpdate";}
+            case REPEATED_EMAIL:{model.addAttribute("updateMsg","该邮箱已被注册");        model.addAttribute("comImgPath",fileCompanyService.fetchFileCompanyList(new HashMap<String,Object>(){{put("fFileCid",cId);}}).get(0).getFFileStorePath());
+                model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));return "comUpdate";}
             case SUCCESS:break;
             default:
         }
         Company exCompany = companyService.fetchCompanyByCid(cId);
 //获得未修改前的名字并为后面的找相应的文件夹名字做准备
         System.out.println("公司名"+exCompany.getCName());
-
-
+        System.out.println(pageUpdateCom.keySet());
         pageUpdateCom.put("cId",cId);
         companyService.updateCompany(pageUpdateCom);
 
@@ -422,6 +448,7 @@ public class CompanyController {
         }
 
         model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));
+        model.addAttribute("comImgPath",fileCompanyService.fetchFileCompanyList(new HashMap<String,Object>(){{put("fFileCid",cId);}}).get(0).getFFileStorePath());
         model.addAttribute("updateMsg","编辑成功");
         return "comUpdate";
     }

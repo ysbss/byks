@@ -8,9 +8,11 @@
 <!--页面top公共部分-->
 <div class="top" th:fragment="top">
     <div class="top_a">
-        <div class="top_a3">您好，欢迎来到邦邦网！
+        <div class="top_a3" style="width: 1000px"><p style="float:left;">您好，欢迎来到邦邦网！    </p>
 <!--            <span style="font-size:14px; font-weight:bold; color:#424242">三门峡&nbsp;</span>[<input id="btn_nation" type="button" value="切换市区▼" onclick="nationSelect()" />]-->
+            <img alt="" th:src="@{'/'+${session.userProfilePath}}" th:style="${session.userProfilePath}==null ? 'display: none':'margin-left: 800px;width: 25px;margin-top: 7px'"/>
         </div>
+
         <div class="top_a1">
 <!--            <div class="top_a2"><img th:src="@{/images/help.jpg}" /></div>-->
 <!--            <div class="top_a2"><img th:src="@{/images/home.jpg}" /></div>-->

@@ -732,8 +732,10 @@ public class PageController {
     @RequestMapping("/toComUpdate/{cId}")
     public String toComUpdate(@PathVariable(value = "cId") Long cId,
                               Model model){
-
+        Map<String, Object> fileCompany = new HashMap<>();
+        fileCompany.put("fFileCid",cId);
         model.addAttribute("comInfo",companyService.fetchCompanyByCid(cId));
+        model.addAttribute("comImgPath",fileCompanyService.fetchFileCompanyList(fileCompany).get(0).getFFileStorePath());
         return "comUpdate";
     }
 
@@ -834,4 +836,7 @@ public class PageController {
         model.addAttribute("pageQueryChatNews",pageQueryChatNews);
         return "chatNews";
     }
+
+
+
 }

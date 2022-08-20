@@ -168,7 +168,7 @@ public class PartTimeJobController {
         Map<String, Object> partTimeJob = partTimeJobService.fetchSpcPartTimeJobByPid(pId);
         PartTimeJob updatePartTimeJob = new PartTimeJob();
         updatePartTimeJob.setPId(Long.valueOf(partTimeJob.get("pId").toString()));
-        updatePartTimeJob.setPAppointmentNum(Integer.valueOf(partTimeJob.get("pAppointmentNum").toString())+1);
+        updatePartTimeJob.setPAppointmentNum(Integer.parseInt(partTimeJob.get("pAppointmentNum").toString())+1);
 
         Util util = new Util();
 

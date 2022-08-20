@@ -9,20 +9,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * @author 鱼酥不是叔
  * */
-@Configuration
-public class FileHandler  implements WebMvcConfigurer {
-    @Value("${company.img.path}")
-    String comImgPath;
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations(
-                "file:/"+comImgPath,
-                "classpath:/META-INF/resources/",
-                "classpath:/resources/",
-                "classpath:/static/",
-                "classpath:/public/",
-                "classpath:/static/upload/"
-        );
-    }
-}
+//@Configuration
+//@Deprecated
+//public class FileHandler  implements WebMvcConfigurer {
+//    @Value("${company.img.path}")
+//    String comImgPath;
+//
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/**").addResourceLocations(
+//                "file:/"+comImgPath,
+//                "classpath:/META-INF/resources/",
+//                "classpath:/resources/",
+//                "classpath:/static/",
+//                "classpath:/public/",
+//                "classpath:/static/upload/"
+//        );
+//    }
+//}
+//C:\Users\12605\Desktop\byks\src\main\resources\templates\test.html
+//        C:\Users\12605\Desktop\byks\comImg\深圳腾讯\ggg.png

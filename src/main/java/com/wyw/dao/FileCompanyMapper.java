@@ -36,7 +36,7 @@ public interface FileCompanyMapper {
     FileCompany isRepeatedCompanyFile(Long fFileCid);
 
     /**
-     * 查询公司文件列表（暂时是一个公司上传一个文件）
+     * 查询公司文件列表（暂时是一个公司上传一个文件(头像)）
      * @param fileCompany
      * @return list
      * */
