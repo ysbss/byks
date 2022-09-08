@@ -1,5 +1,8 @@
 package com.wyw.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wyw.pojo.ApplyPartTimeJob;
@@ -10,6 +13,7 @@ import com.wyw.service.ApplyPartTimeJobService;
 import com.wyw.service.FileResumeService;
 import com.wyw.service.PartTimeJobService;
 import com.wyw.service.StudentService;
+import com.wyw.utils.RedisUtils;
 import com.wyw.utils.Util;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
@@ -30,6 +34,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.wyw.utils.FinalStaticValue.*;
 
@@ -55,6 +60,9 @@ public class PartTimeJobController {
     @Resource
     StudentService studentService;
 
+    @Resource
+    RedisUtils redisUtils;
+
 
 
 
@@ -73,9 +81,10 @@ public class PartTimeJobController {
         Util util = new Util();
         System.out.println(pId);
         Map<String, Object> partTimeJob = partTimeJobService.fetchSpcPartTimeJobByPid(pId);
+//        System.out.println(partTimeJob);
         PartTimeJob updatePartTimeJob = new PartTimeJob();
         updatePartTimeJob.setPId(Long.valueOf(partTimeJob.get("pId").toString()));
-        updatePartTimeJob.setPBrowseNum(Integer.valueOf(partTimeJob.get("pBrowseNum").toString())+1);
+        updatePartTimeJob.setPBrowseNum(Integer.parseInt(partTimeJob.get("pBrowseNum").toString())+1);
         partTimeJobService.updatePartTimeJob(updatePartTimeJob);
         partTimeJob = partTimeJobService.fetchSpcPartTimeJobByPid(pId);
         List<Map<String, Object>> approximatePartTimeJobs = partTimeJobService.fetchApproximatePartTimeJobByPid(pId);
@@ -100,22 +109,129 @@ public class PartTimeJobController {
 
         System.out.println("pageNUm:"+pageNum);
         System.out.println("partTimeJobSearchInfo:"+pagePartTimeJobSearchInfo);
-        PageHelper.startPage(pageNum,5);
-        System.out.println(session.getAttribute("partTimeJobSearchInfo").toString());
-
-        String curPartTimeJobSearchInfo = session.getAttribute("partTimeJobSearchInfo").toString();
-
-        System.out.println("curPartTimeJobSearchInfo:"+curPartTimeJobSearchInfo);
         List<Map<String, Object>> allPartTimeJobs=new ArrayList<Map<String, Object>>();
-
+        String curPartTimeJobSearchInfo = session.getAttribute("partTimeJobSearchInfo").toString();
+        System.out.println(session.getAttribute("partTimeJobSearchInfo").toString());
         if(pagePartTimeJobSearchInfo!=null){
             curPartTimeJobSearchInfo=pagePartTimeJobSearchInfo;
             session.setAttribute("partTimeJobSearchInfo",pagePartTimeJobSearchInfo);
         }
         System.out.println("curPartTimeJobSearchInfo:"+curPartTimeJobSearchInfo);
-        allPartTimeJobs = partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo);
+//        PageHelper.startPage(pageNum,PAGE_SIZE_FIVE);
+        Page<Map<String,Object>> page = new Page<Map<String,Object>>();
 
-        PageInfo<Map<String, Object>> allPartTimeJobsPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobs);
+        page.setPageSize(PAGE_SIZE_FIVE);
+        if (redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, 0, -1).size()!=partTimeJobService.getAllPartTimeJobs(pagePartTimeJobSearchInfo).size()){
+//            page.addAll(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo));//将这里的page丢到最后的pageInfo里面
+            page.setTotal(partTimeJobService.getAllPartTimeJobs(pagePartTimeJobSearchInfo).size());
+        }else {
+//            page.addAll(JSON.parseObject(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobs" + curPartTimeJobSearchInfo, Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue())), new TypeReference<List<Map<String, Object>>>() {
+//            }.getType()));//将这里的page丢到最后的pageInfo里面
+            page.setTotal(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, 0,  -1).size());
+        }
+        if (pageNum>(page.getTotal()/PAGE_SIZE_FIVE)){
+            page.setPageNum(Double.valueOf(Math.ceil( (page.getTotal() / PAGE_SIZE_FIVE.doubleValue()))).intValue());
+            pageNum=Double.valueOf(Math.ceil( (page.getTotal() / PAGE_SIZE_FIVE.doubleValue()))).intValue();
+            System.out.println("pageNum:"+pageNum);
+        }else {
+            page.setPageNum(pageNum);
+        }
+
+//        System.out.println("**************");
+//        System.out.println(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo));
+//        System.out.println("**************");
+
+//        if (redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, 0, -1).size()!=partTimeJobService.getAllPartTimeJobs(pagePartTimeJobSearchInfo).size()){
+//            page.addAll(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo));//将这里的page丢到最后的pageInfo里面
+//        }else {
+//            System.out.println(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, 0, -1).size());
+//            page.addAll(JSON.parseObject(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, 0, -1).toString(), new TypeReference<List<Map<String, Object>>>() {
+//            }.getType()));//将这里的page丢到最后的pageInfo里面
+//
+//        }
+
+
+//        System.out.println("curPartTimeJobSearchInfo:"+curPartTimeJobSearchInfo);
+//        allPartTimeJobs= partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo);
+//        allPartTimeJobs.forEach(System.out::println);
+//        System.out.println((long) (pageNum - 1) * PAGE_SIZE_FIVE);
+//        System.out.println((((long) PAGE_SIZE_FIVE *pageNum)-1));
+        if (redisUtils.zRangeByScore("AllPartTimeJobs"+curPartTimeJobSearchInfo,Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue())==null
+    ||redisUtils.zRangeByScore("AllPartTimeJobs"+curPartTimeJobSearchInfo,Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue()).isEmpty()
+        ){
+//            System.out.println(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo).toString());
+//            System.out.println(JSON.toJSONString(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo)));
+//            redisUtils.zAdd("AllPartTimeJobs", JSON.toJSONString(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo)),pageNum.doubleValue());
+            //放入的set应该是一条一条的 而不是一整个页面数据放在第一条
+            PageHelper.startPage(pageNum,PAGE_SIZE_FIVE);//会开启分页
+            //如果没有进入下面这个if语句让if语句的sql分页那么有可能引发其他地方进行分页出现错误。
+            allPartTimeJobs = partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo);
+            //通过变量让startPage一定可以和sql语句绑定
+            int methodPageNum=(pageNum-1)*PAGE_SIZE_FIVE;
+            AtomicInteger finalMethodPageNum= new AtomicInteger(methodPageNum);
+            System.out.println(finalMethodPageNum);
+            String finalCurPartTimeJobSearchInfo = curPartTimeJobSearchInfo;
+//            partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo).forEach(apj->{
+//                redisUtils.zAdd("AllPartTimeJobs"+ finalCurPartTimeJobSearchInfo, JSON.toJSONString(apj),redisUtils.zRange("AllPartTimeJobs"+finalCurPartTimeJobSearchInfo,0,-1)==null||redisUtils.zRange("AllPartTimeJobs"+finalCurPartTimeJobSearchInfo,0,-1).isEmpty()?0:Double.parseDouble(String.valueOf(redisUtils.zRange("AllPartTimeJobs"+finalCurPartTimeJobSearchInfo,0,-1).size())));
+//            });
+//            partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo)
+                    allPartTimeJobs.forEach(apj->{
+//                        redisUtils.zAdd("AllPartTimeJobs"+ finalCurPartTimeJobSearchInfo, JSON.toJSONString(apj),Double.parseDouble(String.valueOf(finalMethodPageNum.get())));
+                        //用这个的话 会导致存在redis里的会是有转义字符的json字符串 而不是json对象
+                        redisUtils.zAdd("AllPartTimeJobs"+ finalCurPartTimeJobSearchInfo, apj,Double.parseDouble(String.valueOf(finalMethodPageNum.get())));
+                finalMethodPageNum.getAndIncrement();
+                System.out.println(finalMethodPageNum);
+            });
+//            redisUtils.zAdd("AllPartTimeJobs", JSON.toJSONString(allPartTimeJobs),pageNum.doubleValue());
+            redisUtils.expire("AllPartTimeJobs"+curPartTimeJobSearchInfo,3600);
+        }
+        System.out.println(JSON.parseArray(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobs" + curPartTimeJobSearchInfo, Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue()))));
+        System.out.println(JSON.parseArray(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobs" + curPartTimeJobSearchInfo, Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue()))).getClass());
+
+//        Object o = JSON.parseObject(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, (pageNum - 1) * PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() * pageNum) - 1)), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType());
+//        Object o = JSON.parseObject(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, (pageNum - 1) * PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() * pageNum) - 1).toString(), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType());
+//        System.out.println(o);
+//        System.out.println(o.getClass());
+//        allPartTimeJobs=JSON.parseObject(redisUtils.zRangeByScore("AllPartTimeJobs" + curPartTimeJobSearchInfo, Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue()).toString(), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType());
+        allPartTimeJobs=JSON.parseObject(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobs" + curPartTimeJobSearchInfo, Integer.valueOf((pageNum - 1) * PAGE_SIZE_FIVE).doubleValue(), Integer.valueOf((PAGE_SIZE_FIVE *pageNum)-1).doubleValue())), new TypeReference<List<Map<String, Object>>>() {
+        }.getType());
+//        allPartTimeJobs.addAll(JSON.parseArray(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, (pageNum - 1) * PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() * pageNum) - 1))));
+//        System.out.println(allPartTimeJobs);
+//        System.out.println(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs"+curPartTimeJobSearchInfo,(pageNum-1)*PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() *pageNum)-1)));
+//        allPartTimeJobs = JSON.parseObject(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs"+curPartTimeJobSearchInfo,(pageNum-1)*PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() *pageNum)-1)),new TypeReference<List<Map<String,Object>>>(){}.getType());
+//        Set<Object> objects = redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, (pageNum - 1) * PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() * pageNum) - 1);
+//        System.out.println(objects);
+//        System.out.println(JSON.parseArray(JSON.toJSONString(objects)));
+//        for (Object o:
+//        JSON.parseArray(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, (pageNum - 1) * PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() * pageNum) - 1)))) {
+//            System.out.println("来看OOOOOOOOOO");
+//            System.out.println(o);
+//            System.out.println(JSON.toJSONString(o));
+//            System.out.println(o.toString());
+//            System.out.println(JSON.parseArray(o.toString()));
+//            for (Object ok:
+//            JSON.parseArray(o.toString())) {
+//                System.out.println("我终于来了");
+//                System.out.println(ok);
+//                System.out.println(JSON.parseObject(JSON.toJSONString(ok), new TypeReference<Map<String, Object>>() {
+//                }).toString());
+//                allPartTimeJobs.add(JSON.parseObject(JSON.toJSONString(ok), new TypeReference<Map<String, Object>>() {
+//                }));
+//            }
+//            System.out.println(JSON.parseObject(o.toString()));
+//        }
+//        System.out.println(Optional.ofNullable(JSON.parseObject(JSON.toJSONString(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo)), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType())));
+//        System.out.println(Optional.ofNullable(JSON.parseObject(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs" + curPartTimeJobSearchInfo, (pageNum - 1) * PAGE_SIZE_FIVE.longValue(), (PAGE_SIZE_FIVE.longValue() * pageNum) - 1)), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType())));
+//        allPartTimeJobs=JSON.parseObject(JSON.toJSONString(partTimeJobService.getAllPartTimeJobs(curPartTimeJobSearchInfo)), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType());
+
+//        PageInfo<Map<String, Object>> allPartTimeJobsPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobs);
+        PageInfo<Map<String, Object>> allPartTimeJobsPageInfo = new PageInfo<Map<String, Object>>(page);
         model.addAttribute("allPartTimeJobs",allPartTimeJobs);
         model.addAttribute("allPartTimeJobsPageInfo",allPartTimeJobsPageInfo);
 
@@ -257,7 +373,6 @@ public class PartTimeJobController {
                                                          @PathVariable(value = "pageNum",required = false) Integer pageNum){
 
 
-        PageHelper.startPage(pageNum,3);
         if (session.getAttribute("curAddPartTimeJobComSearchInfo")==null){
             session.setAttribute("curAddPartTimeJobComSearchInfo",STRING_NULL);
         }
@@ -270,8 +385,47 @@ public class PartTimeJobController {
             session.setAttribute("curAddPartTimeJobComSearchInfo",pageAddPartTimeJobComSearchInfo);
         }
         cIdAndSearchInfo.put("partTimeJobSearchInfo",curAddPartTimeJobComSearchInfo);
-         allPartTimeJobsByCidAndSearchInfo = partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo);
-        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobsByCidAndSearchInfo);
+
+        Page<Map<String,Object>> page = new Page<Map<String,Object>>();
+        page.setPageSize(PAGE_SIZE_THREE);
+        if (redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(), 0, -1).size()!=partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo).size()){
+            page.setTotal(partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo).size());
+
+        }else {
+            page.setTotal(redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(), 0,  -1).size());
+        }
+        if (pageNum>(page.getTotal()/PAGE_SIZE_THREE)){
+            page.setPageNum(Double.valueOf(Math.ceil( (page.getTotal() / PAGE_SIZE_THREE.doubleValue()))).intValue());
+            pageNum=Double.valueOf(Math.ceil( (page.getTotal() / PAGE_SIZE_THREE.doubleValue()))).intValue();
+            System.out.println("PageNum:"+pageNum);
+        }else {
+            page.setPageNum(pageNum);
+        }
+        if (redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(),Integer.valueOf((pageNum - 1) * PAGE_SIZE_THREE).doubleValue(), Integer.valueOf((PAGE_SIZE_THREE *pageNum)-1).doubleValue())==null
+                ||redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(),Integer.valueOf((pageNum - 1) * PAGE_SIZE_THREE).doubleValue(), Integer.valueOf((PAGE_SIZE_THREE *pageNum)-1).doubleValue()).isEmpty()
+        ){
+                    PageHelper.startPage(pageNum,PAGE_SIZE_THREE);
+                    allPartTimeJobsByCidAndSearchInfo = partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo);
+            int methodPageNum=(pageNum-1)*PAGE_SIZE_THREE;
+            AtomicInteger finalMethodPageNum= new AtomicInteger(methodPageNum);
+            String finalCurAddPartTimeJobComSearchInfo = curAddPartTimeJobComSearchInfo;
+            allPartTimeJobsByCidAndSearchInfo.forEach(apjBCas->{
+//                redisUtils.zAdd("AllPartTimeJobsByCidAndSearchInfo"+ finalCurAddPartTimeJobComSearchInfo+cId.toString(), JSON.toJSONString(apjBCas),Double.parseDouble(String.valueOf(finalMethodPageNum.get())));
+
+                redisUtils.zAdd("AllPartTimeJobsByCidAndSearchInfo"+ finalCurAddPartTimeJobComSearchInfo+cId.toString(), apjBCas,Double.parseDouble(String.valueOf(finalMethodPageNum.get())));
+                finalMethodPageNum.getAndIncrement();
+                System.out.println(finalMethodPageNum);
+            });
+            redisUtils.expire("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(),3600);
+        }
+//        allPartTimeJobsByCidAndSearchInfo=JSON.parseObject(redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(), Integer.valueOf((pageNum - 1) * PAGE_SIZE_THREE).doubleValue(), Integer.valueOf((PAGE_SIZE_THREE *pageNum)-1).doubleValue()).toString(), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType());
+
+        allPartTimeJobsByCidAndSearchInfo=JSON.parseObject(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo" + curAddPartTimeJobComSearchInfo+cId.toString(), Integer.valueOf((pageNum - 1) * PAGE_SIZE_THREE).doubleValue(), Integer.valueOf((PAGE_SIZE_THREE *pageNum)-1).doubleValue())), new TypeReference<List<Map<String, Object>>>() {
+        }.getType());
+
+
+        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(page);
         model.addAttribute("allPartTimeJobsByCidAndSearchInfo",allPartTimeJobsByCidAndSearchInfo);
         model.addAttribute("allPartTimeJobsByCidAndSearchInfoPageInfo",allPartTimeJobsByCidAndSearchInfoPageInfo);
 
@@ -334,20 +488,53 @@ public class PartTimeJobController {
         /**
          * 判断输入值是否合法（比如两个数字输入框 后面的要比前面的大）
          * */
+        if (session.getAttribute("curAddPartTimeJobComSearchInfo")==null){
+            session.setAttribute("curAddPartTimeJobComSearchInfo",STRING_NULL);
+        }
         PartTimeJob addPartTimeJob = util.getPartTimeJobByPageParam(pagePartTimeJob);
 
         addPartTimeJob.setCId(cId);
         partTimeJobService.addPartTimeJob(addPartTimeJob);
-
-        PageHelper.startPage(1,3);
+        List<Map<String, Object>> allPartTimeJobsByCidAndSearchInfo=new ArrayList<Map<String, Object>>();
         Map<String, Object> cIdAndSearchInfo = new HashMap<String, Object>();
         cIdAndSearchInfo.put("cId",cId);
-        if (session.getAttribute("curAddPartTimeJobComSearchInfo")==null){
-            session.setAttribute("curAddPartTimeJobComSearchInfo",STRING_NULL);
-        }
         cIdAndSearchInfo.put("partTimeJobSearchInfo",session.getAttribute("curAddPartTimeJobComSearchInfo").toString());
-        List<Map<String, Object>> allPartTimeJobsByCidAndSearchInfo = partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo);
-        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobsByCidAndSearchInfo);
+
+
+        Page<Map<String, Object>> page = new Page<Map<String, Object>>();
+        page.setPageNum(DEFAULT_PAGE_COUNT);
+        page.setPageSize(PAGE_SIZE_THREE);
+
+        if (redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0, -1).size()!=partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo).size()){
+//            page.addAll(partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo));//将这里的page丢到最后的pageInfo里面
+            page.setTotal(partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo).size());
+        }else {
+            System.out.println(redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0, -1).size());
+//            page.addAll(JSON.parseObject(redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0, -1).toString(), new TypeReference<List<Map<String, Object>>>() {
+//            }.getType()));//将这里的page丢到最后的pageInfo里面
+            page.setTotal(redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0,  -1).size());
+        }
+
+        if (redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(),0, 2)==null
+                ||redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(),0, 2).isEmpty()
+        ){
+            PageHelper.startPage(DEFAULT_PAGE_COUNT,PAGE_SIZE_THREE);
+             allPartTimeJobsByCidAndSearchInfo = partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo);
+            AtomicInteger i=new AtomicInteger(0);
+            allPartTimeJobsByCidAndSearchInfo.forEach(apjBCas->{
+                redisUtils.zAdd("AllPartTimeJobsByCidAndSearchInfo"+ session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), apjBCas,Double.parseDouble(String.valueOf(i.get())));
+                i.getAndIncrement();
+                System.out.println(i);
+            });
+            redisUtils.expire("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(),3600);
+        }
+
+
+        allPartTimeJobsByCidAndSearchInfo=JSON.parseObject(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0, -1)), new TypeReference<List<Map<String, Object>>>() {
+        }.getType());
+//        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobsByCidAndSearchInfo);
+        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(page);
+
         model.addAttribute("allPartTimeJobsByCidAndSearchInfo",allPartTimeJobsByCidAndSearchInfo);
         model.addAttribute("allPartTimeJobsByCidAndSearchInfoPageInfo",allPartTimeJobsByCidAndSearchInfoPageInfo);
 

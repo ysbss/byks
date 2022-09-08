@@ -1,10 +1,13 @@
 package com.wyw;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.TypeReference;
+import com.wyw.pojo.Admin;
+import com.wyw.pojo.PartTimeJob;
 import com.wyw.pojo.SocketChat;
-import com.wyw.utils.FinalStaticValue;
-import com.wyw.utils.RandomStr;
-import com.wyw.utils.SendSms;
-import com.wyw.utils.Util;
+import com.wyw.service.PartTimeJobServiceImpl;
+import com.wyw.utils.*;
 import lombok.SneakyThrows;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -18,7 +21,11 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.http.HttpRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -32,6 +39,7 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -41,10 +49,12 @@ import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.wyw.utils.FinalStaticValue.*;
+import static javax.swing.text.html.HTML.Tag.TR;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WywByksApplicationTests {
@@ -57,6 +67,111 @@ class WywByksApplicationTests {
 
     @Resource
     DataSource dataSource;
+
+    @Resource
+    RedisUtils redisUtils;
+
+//    @Autowired
+//    @Qualifier("myRedisTemplate")
+    @Resource
+    RedisTemplate redisTemplate;
+
+    @Test
+    void  pageInt(){
+
+        System.out.println(Long.valueOf(6 / PAGE_SIZE_FIVE).intValue());
+        System.out.println(6 /PAGE_SIZE_FIVE.doubleValue());
+        System.out.println(Double.valueOf(Math.ceil( (6 / PAGE_SIZE_FIVE.doubleValue()))).intValue());
+
+
+    }
+
+    @Test
+    void  mapToObj() throws Exception {
+//        HashMap<String, Object> m1 = new HashMap<>();
+//        m1.put("a","123");
+//        m1.put("b","345");
+//        m1.put("c","Tue Apr 26 16:16:03 CST 2022");
+//        HashMap<String, Object> m2 = new HashMap<>();
+//        m2.put("d","123");
+//        m2.put("e","345");
+//        m2.put("f","Tue Apr 26 16:16:03 CST 2022");
+//        List<Map<String, Object>> a1=new ArrayList<Map<String,Object>>();
+//
+//        a1.add(m1);
+//        a1.add(m2);
+//        Object om1=(Object) m1;
+//        System.out.println(om1);
+//        Map<String,Object> om11 = (HashMap<String,Object>) om1;
+//        System.out.println(JSON.parseObject(JSON.toJSONString(m1), Object.class));
+//        System.out.println(JSON.parseObject(JSON.toJSONString(JSON.parseObject(JSON.toJSONString(m1), Object.class)),HashMap.class));
+//        System.out.println(om11);
+//        System.out.println(new Util().objToMap((Object) m1).get("size"));
+//        System.out.println(Arrays.toString(new Admin(1L, "123", "123", "123").getClass().getDeclaredFields()));
+//        System.out.println(Arrays.toString(m1.getClass().getDeclaredFields()));
+//        System.out.println(JSONArray.toJSONString(a1));
+//        String s = JSONArray.toJSONString(a1);
+//        Type type = new TypeReference<List<Map<String, Object>>>(){}.getType();
+//        List<Map<String, Object>> o = JSON.parseObject(JSON.toJSONString(a1), new TypeReference<List<Map<String, Object>>>(){}.getType());
+//        System.out.println(o);
+        redisUtils.hset(FinalStaticValue.TABLE_PARTTIMEJOB,"LatestSpcPartTimeJob",new PartTimeJobServiceImpl().fetchLatestSpcPartTimeJob(),3600);
+        List<Map<String, Object>> latestSpcPartTimeJob = JSON.parseObject(
+                JSON.toJSONString(
+                        redisUtils.hget(TABLE_PARTTIMEJOB, "LatestSpcPartTimeJob")
+                ), new TypeReference<List<Map<String, Object>>>() {
+                }.getType());
+        System.out.println(JSON.parseObject(
+                JSON.toJSONString(
+                        redisUtils.hget(TABLE_PARTTIMEJOB, "LatestSpcPartTimeJob")
+                ), new TypeReference<List<Map<String, Object>>>() {
+                }.getType()).getClass());
+        System.out.println();
+        System.out.println(latestSpcPartTimeJob);
+        System.out.println(latestSpcPartTimeJob.get(0));
+//        JSON.parseObject(JSONArray.toJSONString(a1), new TypeReference<List<Map<String, Object>>>() {});
+
+    }
+
+    @Test
+    void redisTest(){
+        System.out.println(redisTemplate.getConnectionFactory().getConnection().ping());
+//        System.out.println(redisUtils.get("ysbss"));
+//        windows下想看中文记得用cmd输入redis-cli --raw启动
+//        System.out.println(redisUtils.set("opo","我是谁"));
+//        System.out.println(redisUtils.get("opo"));
+//        redisUtils.zAdd("mytes","c",8.0);
+//        redisUtils.zAdd("mytes","cx",9.0);
+//        redisUtils.zAdd("mytes","cv",10.0);
+//        redisUtils.zAdd("mytes","ce",11.0);
+//        PartTimeJob partTimeJob = new PartTimeJob();
+//        partTimeJob.setCId(1L);
+//        redisUtils.zAdd("mytes",partTimeJob,12.0);
+//        System.out.println(redisUtils.zRemove("mytes", "cx", "cv", "ce", partTimeJob));
+//        redisUtils.hset("mytest","k","1");
+//        redisUtils.hset("mytest","ki","2");
+//        redisUtils.hset("mytest","uk","3");
+//        redisUtils.hset("mytest","kp","4");
+
+//        System.out.println(redisUtils.sSet("myte", "a", "ak", "ao", "an", "ab", "ac"));
+
+
+//        System.out.println(redisUtils.hScan("mytest", "k"+"*",10));
+        //对于hashScan用json是没有用的
+//        System.out.println(redisUtils.hScan("mytest", "k*",10));
+//        System.out.println(redisUtils.hScan1("mytest", "k*",10));
+////zScan要用json.toJSONString
+//        System.out.println(redisUtils.zScan("mytes", JSON.toJSONString("c*"),10));
+//        sScan也必须要用json.toJSONString
+//        System.out.println(redisUtils.sScan("myte",JSON.toJSONString("a*"),10));
+//        redisUtils.set("mb","kk");
+//        redisUtils.set("mk","po");
+//        scan可以不需要json.toJSONString,用了不能正常查
+//        System.out.println(redisUtils.scan("*"+TABLE_PARTTIMEJOB+"*"));
+//        redisUtils.scan("*"+TABLE_PARTTIMEJOB+"*").forEach(ptj->{
+//            System.out.println(ptj);
+//            redisUtils.del(ptj);
+//        });
+    }
 
     @Test
     void sendMessageByZhenZi(){

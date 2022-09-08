@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -597,5 +598,93 @@ public class Util {
         }
         return t;
     }
+
+
+    /**
+     * 将Object类型的数据转化成Map<String,Object>
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    @Deprecated
+    public Map<String,Object> objToMap(Object obj) throws Exception{
+        Map<String,Object> map=new HashMap<String, Object>();
+//        Field[] fields = obj.getClass().getDeclaredFields();
+        for(Field field:obj.getClass().getDeclaredFields()){
+            boolean flag = field.isAccessible();
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(obj));
+            field.setAccessible(flag);
+        }
+        System.out.println(map);
+        return map;
+    }
+    /**
+     * 将Map<String,Object>类型的数据转化成Object
+     * @return
+     * @throws Exception
+     */
+    @Deprecated
+    public Object mapToObj(Map<String,Object> map,Class<?> clz) throws Exception{
+        Object obj = clz.newInstance();
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for(Field field:declaredFields){
+            int mod = field.getModifiers();
+            if(Modifier.isStatic(mod) || Modifier.isFinal(mod)){
+                continue;
+            }
+            field.setAccessible(true);
+            field.set(obj, map.get(field.getName()));
+        }
+        return obj;
+    }
+    /**
+     * 将List<Object>转换为List<Map<String,Object>>
+     * @param list
+     * @return
+     *
+     */
+    @Deprecated
+    public List<Map<String,Object>> listTransToMap(List<Object> list)  {
+        List<Map<String,Object>> maps=new ArrayList<Map<String,Object>>();
+        for(Object obj:list){
+//            Field[] f = obj.getClass().getDeclaredFields();
+//            Map<String,Object> map=new HashMap<String, Object>();
+//            for(Field fie : f){
+//                try {
+//                    //反射知识
+//                    boolean flag = fie.isAccessible();
+//                    fie.setAccessible(true);//取消语言访问检查
+//                    map.put(fie.getName(), fie.get(obj));//获取私有变量值
+//                    fie.setAccessible(flag);
+//                    System.out.println(map);
+//                } catch (IllegalArgumentException | IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+
+//            }
+            //获取父类的私有属性
+//            for(Field fie : obj.getClass().getSuperclass().getDeclaredFields()){
+//                try {
+//                    fie.setAccessible(true);//取消语言访问检查
+//                    map.put(fie.getName(), fie.get(obj));//获取私有变量值
+//                } catch (IllegalArgumentException | IllegalAccessException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+            try {
+                System.out.println(objToMap(obj));
+                maps.add(objToMap(obj));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("=========");
+        System.out.println(maps.size());
+        System.out.println("=========");
+        return maps;
+    }
+
 
 }

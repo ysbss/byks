@@ -1,9 +1,13 @@
 package com.wyw.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wyw.pojo.*;
 import com.wyw.service.*;
+import com.wyw.utils.RedisUtils;
 import com.wyw.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +24,7 @@ import javax.websocket.Session;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.wyw.utils.FinalStaticValue.*;
 
@@ -66,6 +71,8 @@ public class PageController {
     @Resource
     SocketChatService socketChatService;
 
+    @Resource
+    RedisUtils redisUtils;
 
     @RequestMapping("/toWebServiceProtocolPage")
     public String toWebServiceProtocolPage(){
@@ -374,12 +381,46 @@ public class PageController {
                                 HttpSession session
                                 ){
 
-
-        PageHelper.startPage(1,5);
         session.setAttribute("partTimeJobSearchInfo",STRING_NULL);
-        List<Map<String, Object>> allPartTimeJobs = partTimeJobService.getAllPartTimeJobs(STRING_NULL);
+        Page<Map<String,Object>> page = new Page<Map<String,Object>>();
+        page.setPageSize(PAGE_SIZE_FIVE);
+        page.setPageNum(DEFAULT_PAGE_COUNT);
+        if (redisUtils.zRange("AllPartTimeJobs" + session.getAttribute("partTimeJobSearchInfo").toString(), 0, -1).size()!=partTimeJobService.getAllPartTimeJobs(STRING_NULL).size()){
+//            page.addAll(partTimeJobService.getAllPartTimeJobs(STRING_NULL));//将这里的page丢到最后的pageInfo里面
+            page.setTotal(partTimeJobService.getAllPartTimeJobs(STRING_NULL).size());
+        }else {
+            System.out.println(redisUtils.zRange("AllPartTimeJobs" + session.getAttribute("partTimeJobSearchInfo").toString(), 0, -1).size());
+//            page.addAll(JSON.parseObject(JSON.toJSONString(redisUtils.zRange("AllPartTimeJobs" + session.getAttribute("partTimeJobSearchInfo").toString(), 0, -1)), new TypeReference<List<Map<String, Object>>>() {
+//            }.getType()));//将这里的page丢到最后的pageInfo里面
+            page.setTotal(redisUtils.zRange("AllPartTimeJobs" + session.getAttribute("partTimeJobSearchInfo").toString(), 0,  -1).size());
+
+
+        }
+        System.out.println(page);
+        List<Map<String, Object>> allPartTimeJobs=new ArrayList<Map<String, Object>>();
+
+        if (redisUtils.zRangeByScore("AllPartTimeJobs"+ session.getAttribute("partTimeJobSearchInfo").toString(),0, PAGE_SIZE_FIVE-1)==null
+                ||redisUtils.zRangeByScore("AllPartTimeJobs"+session.getAttribute("partTimeJobSearchInfo").toString(),0, PAGE_SIZE_FIVE-1).isEmpty()
+        ){
+            PageHelper.startPage(DEFAULT_PAGE_COUNT,PAGE_SIZE_FIVE);
+            allPartTimeJobs = partTimeJobService.getAllPartTimeJobs(STRING_NULL);
+            AtomicInteger i=new AtomicInteger(0);
+            allPartTimeJobs.forEach(apj->{
+//                redisUtils.zAdd("AllPartTimeJobs"+ session.getAttribute("partTimeJobSearchInfo").toString(), JSON.toJSONString(apj),Double.parseDouble(String.valueOf(i.get())));
+                redisUtils.zAdd("AllPartTimeJobs"+ session.getAttribute("partTimeJobSearchInfo").toString(), apj,Double.parseDouble(String.valueOf(i.get())));
+                i.getAndIncrement();
+        });
+                    redisUtils.expire("AllPartTimeJobs"+session.getAttribute("partTimeJobSearchInfo").toString(),3600);
+        }
+//        allPartTimeJobs=JSON.parseObject(redisUtils.zRangeByScore("AllPartTimeJobs" + session.getAttribute("partTimeJobSearchInfo"), 0, 4).toString(), new TypeReference<List<Map<String, Object>>>() {
+//        }.getType());
+        allPartTimeJobs=JSON.parseObject(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobs" + session.getAttribute("partTimeJobSearchInfo"), 0, 4)), new TypeReference<List<Map<String, Object>>>() {
+        }.getType());
+
+
         System.out.println(allPartTimeJobs.size());
-        PageInfo<Map<String, Object>> allPartTimeJobsPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobs);
+//        PageInfo<Map<String, Object>> allPartTimeJobsPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobs);
+        PageInfo<Map<String, Object>> allPartTimeJobsPageInfo = new PageInfo<Map<String, Object>>(page);
 
 
         model.addAttribute("allPartTimeJobs",allPartTimeJobs);
@@ -553,16 +594,48 @@ public class PageController {
     public String toComAddPartTimeJobList(Model model,
                                       HttpSession session,
                                       @PathVariable(value = "cId") Long cId){
-        PageHelper.startPage(1,3);
+
+
+
+
 
         Map<String, Object> cIdAndSearchInfo = new HashMap<String, Object>();
         cIdAndSearchInfo.put("cId",cId);
 
-
         cIdAndSearchInfo.put("partTimeJobSearchInfo",session.getAttribute("curAddPartTimeJobComSearchInfo").toString());
+        Page<Map<String,Object>> page = new Page<Map<String,Object>>();
+        page.setPageSize(PAGE_SIZE_THREE);
+        page.setPageNum(DEFAULT_PAGE_COUNT);
+        if (redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0, -1).size()!=partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo).size()){
+            page.setTotal(partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo).size());
+        }else {
+            page.setTotal(redisUtils.zRange("AllPartTimeJobsByCidAndSearchInfo" + session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0,  -1).size());
+        }
 
-        List<Map<String, Object>> allPartTimeJobsByCidAndSearchInfo = partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo);
-        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(allPartTimeJobsByCidAndSearchInfo);
+
+        List<Map<String, Object>> allPartTimeJobsByCidAndSearchInfo=new ArrayList<Map<String, Object>>();
+        if (redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo"+ session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(),0, PAGE_SIZE_FIVE-1)==null
+                ||redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo"+ session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(),0, PAGE_SIZE_FIVE-1).isEmpty()
+        ){
+            PageHelper.startPage(DEFAULT_PAGE_COUNT,PAGE_SIZE_THREE);
+             allPartTimeJobsByCidAndSearchInfo = partTimeJobService.getAllPartTimeJobsByCidAndSearchInfo(cIdAndSearchInfo);
+            AtomicInteger i=new AtomicInteger(0);
+            allPartTimeJobsByCidAndSearchInfo.forEach(apjBCas->{
+                redisUtils.zAdd("AllPartTimeJobsByCidAndSearchInfo"+ session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), apjBCas,Double.parseDouble(String.valueOf(i.get())));
+                i.getAndIncrement();
+            });
+            redisUtils.expire("AllPartTimeJobsByCidAndSearchInfo"+ session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(),3600);
+        }
+        allPartTimeJobsByCidAndSearchInfo=JSON.parseObject(JSON.toJSONString(redisUtils.zRangeByScore("AllPartTimeJobsByCidAndSearchInfo"+ session.getAttribute("curAddPartTimeJobComSearchInfo").toString()+cId.toString(), 0, 4)), new TypeReference<List<Map<String, Object>>>() {
+        }.getType());
+
+
+
+
+
+
+
+        PageInfo<Map<String, Object>> allPartTimeJobsByCidAndSearchInfoPageInfo = new PageInfo<Map<String, Object>>(page);
         model.addAttribute("allPartTimeJobsByCidAndSearchInfo",allPartTimeJobsByCidAndSearchInfo);
         model.addAttribute("allPartTimeJobsByCidAndSearchInfoPageInfo",allPartTimeJobsByCidAndSearchInfoPageInfo);
         return "comAddPartTimeJobList";

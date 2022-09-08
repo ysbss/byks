@@ -35,6 +35,7 @@ public interface PartTimeJobService {
      * 查询所有兼职
      * @param partTimeJob
      * @return list
+     * 用在删除公司的地方了
      * */
     List<PartTimeJob> fetchAllPartTimeJobs(PartTimeJob partTimeJob);
 

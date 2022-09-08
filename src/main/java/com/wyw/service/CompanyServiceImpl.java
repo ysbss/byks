@@ -1,10 +1,15 @@
 package com.wyw.service;
 
+import com.alibaba.fastjson.JSON;
 import com.wyw.dao.CompanyMapper;
+import com.wyw.pojo.Admin;
 import com.wyw.pojo.Company;
+import com.wyw.utils.FinalStaticValue;
+import com.wyw.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +22,15 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     CompanyMapper companyMapper;
 
+    @Resource
+    RedisUtils redisUtils;
+
     @Override
     public Company fetchCompanyByName(String cName) {
-        return companyMapper.fetchCompanyByName(cName);
+        if (redisUtils.hget(FinalStaticValue.TABLE_COMPANY, cName) == null){
+            redisUtils.hset(FinalStaticValue.TABLE_COMPANY, cName, companyMapper.fetchCompanyByName(cName),3600);
+        }
+                return JSON.parseObject(JSON.toJSONString(redisUtils.hget(FinalStaticValue.TABLE_COMPANY, cName)), Company.class);
     }
 
     @Override

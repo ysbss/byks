@@ -9,6 +9,7 @@ public class FinalStaticValue {
 
 
 
+
     public static final int DELETED_FLAG=-1;
 
     public static String PHONE_REGEX="^\\d{11}$";
@@ -164,5 +165,25 @@ public class FinalStaticValue {
     public static final Pattern DOCX_PATTERN=Pattern.compile("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
     public static final Pattern PDF_PATTERN=Pattern.compile("application/pdf");
+
+    public static final String TABLE_ADMIN="Admin";
+    public static final String TABLE_APPLYLOCALINFORMATION="ApplyLocalInformation";
+    public static final String TABLE_APPLYPARTTIMEJOB="ApplyPartTimeJob";
+    public static final String TABLE_APPLYSERVICEPROVIDE="ApplyServiceProvide";
+    public static final String TABLE_COMPANY="Company";
+    public static final String TABLE_FILECOMPANY="FileCompany";
+    public static final String TABLE_LOCALINFORMATION="LocalInformation";
+    public static final String TABLE_PARTTIMEJOB="PartTimeJob";
+    public static final String TABLE_SERVICEPROVIDE="ServiceProvide";
+    public static final String TABLE_SOCKETCHAT="SocketChat";
+    public static final String TABLE_STUDENT="Student";
+    public static final String TABLE_WEBADVICE="WebAdvice";
+
+    public static final Integer PAGE_SIZE_FIVE=5;
+    public static final Integer PAGE_SIZE_THREE=3;
+
+    public static final Long REDIS_SCAN_COUNT=9999L;
+
+    public static final Integer DEFAULT_PAGE_COUNT=1;
 
 }

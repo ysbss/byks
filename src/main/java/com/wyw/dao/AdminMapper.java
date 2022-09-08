@@ -41,7 +41,7 @@ public interface AdminMapper {
     List<Admin> fetchAdminsList(Map<String,Object> admin);
 
     /**
-     * 查询存在的学生
+     * 查询存在的管理员
      * @param findExistAdmin
      * @return admin
      * */

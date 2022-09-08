@@ -27,5 +27,3 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //        );
 //    }
 //}
-//C:\Users\12605\Desktop\byks\src\main\resources\templates\test.html
-//        C:\Users\12605\Desktop\byks\comImg\深圳腾讯\ggg.png
