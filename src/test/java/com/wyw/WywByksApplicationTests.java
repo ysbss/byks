@@ -3,6 +3,8 @@ package com.wyw;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wyw.dao.AdminMapper;
 import com.wyw.pojo.Admin;
 import com.wyw.pojo.PartTimeJob;
 import com.wyw.pojo.SocketChat;
@@ -75,6 +77,13 @@ class WywByksApplicationTests {
 //    @Qualifier("myRedisTemplate")
     @Resource
     RedisTemplate redisTemplate;
+
+    @Resource
+    AdminMapper adminMapper;
+    @Test
+    void MyBatisPlusTest(){
+        adminMapper.selectList(new QueryWrapper<Admin>().eq("ANAME","卢天惠")).forEach(System.out::println);
+    }
 
     @Test
     void  pageInt(){
